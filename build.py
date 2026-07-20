@@ -16,6 +16,7 @@ Arquitetura em camadas:
 """
 import json
 import os
+from urllib.parse import urlparse
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -33,6 +34,10 @@ LANGS = {code: load("_data", "i18n", f"{code}.json") for code in SITE["languages
 
 PAGE_KEYS = ["home", "activities", "how", "teachers", "families",
              "about", "faq", "contact", "terms", "privacy"]
+
+# Caminho-base absoluto (ex.: "/educa4good"). O 404 do GitHub Pages é servido em
+# QUALQUER profundidade de URL, então precisa de caminhos absolutos com a base.
+BASE = urlparse(SITE.get("site_url", "")).path.rstrip("/")
 
 # ---------------------------------------------------------------- ícones SVG
 IC = {
@@ -675,14 +680,14 @@ def build_root_index():
 
 def build_404():
     links = "".join(
-        f'<p><a href="/{code}/index.html">{LX["lang_name"]}</a></p>' for code, LX in LANGS.items()
+        f'<p><a href="{BASE}/{code}/index.html">{LX["lang_name"]}</a></p>' for code, LX in LANGS.items()
     )
     return f"""<!DOCTYPE html>
 <html lang="pt">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>404 — Educa4Good</title>
-  <link rel="icon" type="image/svg+xml" href="/assets/images/brand/mark.svg">
+  <link rel="icon" type="image/svg+xml" href="{BASE}/assets/images/brand/mark.svg">
   <style>body{{font-family:system-ui,sans-serif;text-align:center;padding:4rem 1rem;color:#223344}}
   h1{{color:#2b6ca3;font-size:3rem;margin-bottom:.3em}}a{{color:#2b6ca3}}</style>
 </head>

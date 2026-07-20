@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://estmat-ufv.github.io/educa4good/sitemap.xml

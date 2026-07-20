@@ -1,7 +1,7 @@
 {
   "_comment": "Configuração central do site. Edite aqui e rode: python build.py",
-  "site_url": "",
-  "_site_url_hint": "URL pública final, ex.: https://fsbmat-ufv.github.io/Educa4Good/Pagina — usada em canonical/hreflang/og. Vazio = usa caminhos relativos.",
+  "site_url": "https://estmat-ufv.github.io/educa4good",
+  "_site_url_hint": "URL pública final (SEM barra no fim). Usada em canonical/hreflang/og/sitemap e no caminho-base do 404. Se o site estiver no repo estmat-ufv/educa4good, é https://estmat-ufv.github.io/educa4good. Vazio = caminhos relativos (site funciona, mas SEO fica incompleto).",
   "brand_name": "Educa4Good",
   "default_lang": "pt",
   "languages": ["pt", "en", "es"],
