@@ -1,0 +1,26 @@
+{
+  "_comment": "Dados comerciais do produto. Preços e URLs de compra são placeholders configuráveis — integre com Hotmart/Gumroad/Kiwify/Amazon preenchendo purchase_url por idioma.",
+  "product_name": {
+    "pt": "Coleção Educa4Good",
+    "en": "Educa4Good Collection",
+    "es": "Colección Educa4Good"
+  },
+  "price": {
+    "pt": { "display": "R$ 19,90", "note": "pagamento único" },
+    "en": { "display": "$7.90", "note": "one-time payment" },
+    "es": { "display": "US$ 7,90", "note": "pago único" }
+  },
+  "_price_hint": "Preços provisórios baseados na faixa praticada (R$ 14,90–19,90). Ajuste antes de publicar.",
+  "purchase_url": {
+    "pt": "#",
+    "en": "#",
+    "es": "#"
+  },
+  "_purchase_url_hint": "Substitua # pela URL de checkout real (Hotmart, Kiwify, Gumroad, Amazon...). Enquanto for #, o botão leva à seção de contato.",
+  "sample_url": {
+    "pt": "#",
+    "en": "#",
+    "es": "#"
+  },
+  "_sample_url_hint": "URL do PDF da amostra grátis por idioma (há uma amostra de 10 atividades em dados/amostra_gratis_ids.csv para gerar)."
+}

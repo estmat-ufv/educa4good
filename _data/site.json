@@ -1,0 +1,28 @@
+{
+  "_comment": "Configuração central do site. Edite aqui e rode: python build.py",
+  "site_url": "",
+  "_site_url_hint": "URL pública final, ex.: https://fsbmat-ufv.github.io/Educa4Good/Pagina — usada em canonical/hreflang/og. Vazio = usa caminhos relativos.",
+  "brand_name": "Educa4Good",
+  "default_lang": "pt",
+  "languages": ["pt", "en", "es"],
+
+  "stats": {
+    "_comment": "Números AUDITÁVEIS — conferidos no catálogo dados/catalogo_geral_atividades.csv em 2026-07-19 (451 atividades, 8 áreas). Atualize quando o catálogo crescer.",
+    "activities_count": "450+",
+    "categories_count": "8",
+    "formats": "PDF A4"
+  },
+
+  "contact": {
+    "email": "",
+    "_email_hint": "Preencha com o e-mail comercial real antes de publicar."
+  },
+
+  "social": {
+    "_comment": "Preencha apenas redes que realmente existirem. Vazias = não aparecem no site.",
+    "instagram": "",
+    "pinterest": "",
+    "youtube": "",
+    "facebook": ""
+  }
+}

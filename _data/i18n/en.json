@@ -1,0 +1,306 @@
+{
+  "lang": "en",
+  "locale": "en_US",
+  "lang_label": "EN",
+  "lang_name": "English",
+
+  "slugs": {
+    "home": "index",
+    "activities": "activities",
+    "how": "how-it-works",
+    "teachers": "for-teachers",
+    "families": "for-families",
+    "about": "about",
+    "faq": "faq",
+    "contact": "contact",
+    "terms": "terms",
+    "privacy": "privacy"
+  },
+
+  "meta": {
+    "home": {
+      "title": "Educa4Good — Beautiful print-ready learning worksheets",
+      "desc": "A library of beautifully typeset literacy, math and logic activities. Pick, print and teach — less time searching, more time teaching."
+    },
+    "activities": { "title": "Activities — Educa4Good", "desc": "Browse real sample pages from the Educa4Good library: literacy, math, logic, fine motor skills and more." },
+    "how": { "title": "How it works — Educa4Good", "desc": "Pick, print, learn: see how to use the Educa4Good activity library in three simple steps." },
+    "teachers": { "title": "For teachers — Educa4Good", "desc": "Organized, print-ready activities that give planning time back to the people who teach." },
+    "families": { "title": "For families — Educa4Good", "desc": "Printed activities for screen-free learning at home, one discovery at a time." },
+    "about": { "title": "About — Educa4Good", "desc": "Meet Educa4Good: a library of learning activities crafted with book-level typography and a teacher's eye." },
+    "faq": { "title": "FAQ — Educa4Good", "desc": "Answers about the Educa4Good collection: formats, printing, classroom use and licensing." },
+    "contact": { "title": "Contact — Educa4Good", "desc": "Get in touch with Educa4Good." },
+    "terms": { "title": "Terms of use — Educa4Good", "desc": "Terms of use for the Educa4Good website and materials license." },
+    "privacy": { "title": "Privacy policy — Educa4Good", "desc": "Privacy policy for the Educa4Good website." }
+  },
+
+  "nav": {
+    "activities": "Activities",
+    "how": "How it works",
+    "teachers": "For teachers",
+    "families": "For families",
+    "faq": "FAQ",
+    "about": "About",
+    "cta": "Get the collection"
+  },
+
+  "hero": {
+    "title": "Less time hunting for worksheets. More time teaching.",
+    "lead": "A library of beautiful, organized, print-ready learning activities — made for people who believe learning should feel special.",
+    "cta_primary": "Explore the activities",
+    "cta_secondary": "See examples",
+    "note": "A4 PDFs · ink-friendly, works in black & white · print as often as your class needs",
+    "img_alts": ["Match-the-shadow activity sheet", "Bar graph activity sheet", "Color-by-code activity sheet"]
+  },
+
+  "tagline": {
+    "text": "Worksheets kids <em>actually enjoy</em>. Materials teachers <em>love to use</em>."
+  },
+
+  "problem": {
+    "kicker": "We know the feeling",
+    "title": "How many evenings have you lost searching for one decent worksheet?",
+    "pains": [
+      "Hours of scrolling to find a single usable PDF",
+      "Blurry scans, crooked layouts, cluttered pages",
+      "The same recycled ideas over and over",
+      "Dark backgrounds that drain your ink cartridge",
+      "Random files with no organization or sequence",
+      "A whole evening of prep for a twenty-minute activity"
+    ],
+    "solution": "That is why we built Educa4Good: to turn hours of searching into minutes of choosing."
+  },
+
+  "categories": {
+    "kicker": "Discover Educa4Good",
+    "title": "A library built for teaching",
+    "lead": "Activities crafted with pedagogical and typographic care, organized by skill so you can find what you need fast.",
+    "see_examples": "See examples",
+    "items": [
+      { "key": "alfabetizacao", "title": "Early literacy", "desc": "Letters, syllables, rhymes, sight words and first readings." },
+      { "key": "leitura", "title": "Reading & writing", "desc": "Short texts, comprehension, dictation and guided writing." },
+      { "key": "matematica", "title": "Math", "desc": "Counting, operations, shapes, measurement, money and graphs." },
+      { "key": "coordenacao", "title": "Fine motor skills", "desc": "Tracing, dotted lines, paths and pencil control." },
+      { "key": "logica", "title": "Logic & reasoning", "desc": "Sequences, sorting, comparisons and attention challenges." },
+      { "key": "percepcao", "title": "Visual perception", "desc": "Shadows, differences, spatial orientation and visual discrimination." },
+      { "key": "jogos", "title": "Learning games", "desc": "Bingo, dominoes, board tracks, memory and cut-outs." },
+      { "key": "criativas", "title": "Creative activities", "desc": "Color by code, guided drawing and open-ended creation." }
+    ]
+  },
+
+  "gallery": {
+    "kicker": "A closer look",
+    "title": "Care in every detail",
+    "lead": "These are real pages from the collection — no retouching. Click to enlarge.",
+    "filters": {
+      "all": "All",
+      "alfabetizacao": "Literacy",
+      "matematica": "Math",
+      "leitura": "Reading",
+      "coordenacao": "Fine motor",
+      "logica": "Logic",
+      "jogos": "Games",
+      "infantil": "Pre-K & K"
+    },
+    "age_prefix": "ages",
+    "zoom_hint": "Enlarge",
+    "more": "And the library keeps growing: new activities are added regularly."
+  },
+
+  "differentials": {
+    "kicker": "Why Educa4Good",
+    "title": "What makes these worksheets different",
+    "items": [
+      { "title": "Book-level typography", "desc": "Every page is typeset with the care of a published book: alignment, spacing and letterforms designed for children." },
+      { "title": "Print-ready", "desc": "Pick, print, use. A4 format, safe margins, nothing clipped at the edge." },
+      { "title": "Ink-friendly", "desc": "Clean layouts that also work beautifully in black and white — no ink-hungry backgrounds." },
+      { "title": "Real variety", "desc": "Hundreds of activities across different skills and learning moments." },
+      { "title": "Answer keys included", "desc": "A teacher's version with highlighted answers, ready for marking." },
+      { "title": "A growing library", "desc": "A living collection that keeps gaining new activities and new mechanics." },
+      { "title": "Built for many languages", "desc": "Portuguese available today; English and Spanish editions in preparation.", "status": "in preparation" }
+    ]
+  },
+
+  "teachers": {
+    "kicker": "For teachers",
+    "title": "You teach. We help you prepare.",
+    "lead": "Planning a good lesson is demanding enough. Finding and formatting worksheets should not eat the rest of your evening.",
+    "benefits": [
+      "Find an activity for the exact skill you are teaching, in minutes",
+      "Visually consistent materials that feel like one coherent workbook",
+      "Answer keys ready for quick marking",
+      "Print for the whole class, as many times as you need",
+      "Enough variety to revisit a skill without repeating the same sheet"
+    ],
+    "cta": "See activities for your class"
+  },
+
+  "families": {
+    "kicker": "For parents & families",
+    "title": "Learning happens at home, too",
+    "lead": "Homework support, school breaks, a rainy Sunday: there is always a good moment to learn through play — with paper, pencil and your company.",
+    "benefits": [
+      "Simple instructions that are easy to follow along",
+      "Focused, screen-free moments",
+      "Gentle practice of reading, writing and math",
+      "Small study rituals that grow into habits",
+      "Quality time together — the worksheet is just the start of the conversation"
+    ],
+    "note": "These activities complement school — they do not replace teachers.",
+    "cta": "See activities for home"
+  },
+
+  "offline": {
+    "kicker": "Paper & pencil",
+    "title": "Screen off. Curiosity on.",
+    "lead": "A printed page invites a child to write, draw, cut, color — and proudly show the result. It is hands-on focus, with room for grown-ups to join in.",
+    "points": [
+      "Handwriting at the right size for small hands",
+      "Real coloring, cutting and manipulating",
+      "Side-by-side learning you can be part of",
+      "Keep the sheets and watch progress over time"
+    ]
+  },
+
+  "how": {
+    "kicker": "How it works",
+    "title": "Three steps. That's it.",
+    "steps": [
+      { "title": "Pick", "desc": "Find activities for the skill you want to work on." },
+      { "title": "Print", "desc": "Get A4 PDFs prepared for printing — black & white included." },
+      { "title": "Learn", "desc": "Use them in class or at home — and repeat whenever you like." }
+    ]
+  },
+
+  "stats": {
+    "kicker": "The size of the library",
+    "title": "A collection that keeps on growing",
+    "labels": { "activities": "activities in the catalog", "categories": "skill categories", "format": "print-ready format" }
+  },
+
+  "offer": {
+    "kicker": "Complete collection",
+    "title": "All of this for less than a handful of single worksheets",
+    "product_includes": [
+      "Hundreds of PDF activities (A4), organized by skill",
+      "Answer keys for quick marking",
+      "Ink-friendly layouts that work in black and white",
+      "License to print and reuse with your class or family",
+      "Access to collection updates as described in your plan"
+    ],
+    "cta": "Get the collection",
+    "cta_pending": "Talk to us",
+    "guarantee": "No fine print: what you see in the examples is the standard across the whole collection."
+  },
+
+  "sample": {
+    "kicker": "Try before you buy",
+    "title": "Download a free sample",
+    "lead": "See the Educa4Good quality for yourself by printing a few complimentary activities. No hoops to jump through — just download and use.",
+    "cta": "Download free sample",
+    "cta_pending": "Sample coming soon — talk to us"
+  },
+
+  "testimonials": {
+    "kicker": "From our users",
+    "title": "Stories from people who teach with Educa4Good"
+  },
+
+  "faq": {
+    "kicker": "Questions",
+    "title": "Frequently asked questions",
+    "items": [
+      { "q": "What do I receive after purchase?", "a": "You receive the activity collection as PDFs, organized by category, with the matching answer keys, as described in the offer at the time of purchase." },
+      { "q": "Are the activities digital or physical?", "a": "They are digital PDF files in A4 format, made for you to print wherever you prefer — at home, at school or at a print shop." },
+      { "q": "Can I print as many times as I want?", "a": "Yes. The license allows you to print as many copies as you need for use with your own class or family, under the terms of use." },
+      { "q": "Can I use them with my students?", "a": "Absolutely — the activities were designed for the classroom. Teachers may print for their own classes." },
+      { "q": "Can I share the files?", "a": "No. The PDFs are licensed to the buyer. Sharing, reselling or posting the files online is not allowed — that is what keeps the project alive." },
+      { "q": "What ages are they for?", "a": "The focus is preschool through the early elementary years — generally ages 4 to 8, with age guidance on the activities." },
+      { "q": "Do I need to install any software?", "a": "No. Any PDF reader will do, and one is already installed on most computers and phones." },
+      { "q": "Do the activities work in black and white?", "a": "Yes. Every layout is designed to stay beautiful and legible when printed in black and white." },
+      { "q": "Are there activities in other languages?", "a": "The current catalog is in Portuguese. English and Spanish editions are in preparation — the activities were architected with that in mind." },
+      { "q": "Will new activities be added?", "a": "Yes, the library grows continuously. How you access updates depends on the plan available at the time of purchase." }
+    ]
+  },
+
+  "final": {
+    "title": "A good worksheet can turn a few minutes into a discovery.",
+    "lead": "Bring more possibilities to your classroom, your home, and every child's learning.",
+    "cta": "Start now"
+  },
+
+  "footer": {
+    "tagline": "Education that inspires. Learning can be beautiful; teaching can be simpler.",
+    "nav_title": "Navigation",
+    "categories_title": "Categories",
+    "info_title": "Information",
+    "lang_title": "Language",
+    "contact": "Contact",
+    "terms": "Terms of use",
+    "privacy": "Privacy",
+    "license": "Materials license",
+    "copyright": "Educa4Good. All rights reserved.",
+    "made": "Made with care — and with LaTeX."
+  },
+
+  "pages": {
+    "activities": {
+      "hero_title": "The activities",
+      "hero_lead": "A showcase of real pages from the collection. Use the filters to browse by category — and remember this is only a sample of the catalog."
+    },
+    "how": {
+      "hero_title": "How it works",
+      "hero_lead": "From the catalog to a child's desk in three simple steps.",
+      "receive_title": "What you receive",
+      "receive_lead": "A4 PDF files with book-quality typography, vector icons and answer keys — ready for any printer."
+    },
+    "teachers": {
+      "hero_title": "For teachers",
+      "hero_lead": "Less time formatting sheets, more time with your class.",
+      "body_title": "Designed for real school days",
+      "body": "Every activity is born from a clear pedagogical mechanic — matching, sorting, ordering, completing, comparing — and typeset with the same typography and visual structure. The result feels like one coherent workbook, not a patchwork of random PDFs."
+    },
+    "families": {
+      "hero_title": "For parents & families",
+      "hero_lead": "Learning moments at home, at your child's pace.",
+      "body_title": "Learning together is the secret",
+      "body": "You do not need to be an expert to follow along: instructions are short and direct, written for the child. Pick an activity, print it together and let curiosity lead. When it is done, it deserves a spot on the fridge."
+    },
+    "about": {
+      "hero_title": "About Educa4Good",
+      "hero_lead": "A library of learning activities built with a teacher's eye and an editor's care.",
+      "body": [
+        "Educa4Good was born from a simple observation: preparing good activities takes time — and materials that are beautiful, organized and pedagogically honest are rarer than they should be.",
+        "Behind the project there is an unusual level of craft: every page is typeset in LaTeX, the same typographic system used for books and scientific publishing. That is why spacing is consistent, letterforms are the right size for each age, and pages print cleanly even in black and white.",
+        "Activities are organized by skill, aligned where possible with Brazil's national curriculum (BNCC), and produced as a living library: new mechanics and themes join the catalog continuously.",
+        "The name says it all: education for good. Accessible materials, made with care, for those who teach and those who learn."
+      ]
+    },
+    "contact": {
+      "hero_title": "Contact",
+      "hero_lead": "Questions, special requests or partnerships? Talk to us.",
+      "email_label": "Email",
+      "email_pending": "Contact channel being set up — the project's business email will appear here soon.",
+      "social_label": "Social media"
+    },
+    "terms": {
+      "hero_title": "Terms of use",
+      "hero_lead": "A short, transparent version — no unnecessary legalese.",
+      "note": "[DRAFT — review before commercial launch]",
+      "sections": [
+        { "h": "Use of this site", "p": "This site presents the Educa4Good activity library. The site's texts, images and visual identity belong to the project and may not be reproduced without permission." },
+        { "h": "Materials license", "p": "Purchased activities are licensed for personal use or use with your own class: you may print as many copies as you need in that context. Reselling, redistributing digitally, sharing in groups or posting the files online is not permitted." },
+        { "h": "Purchases", "p": "Pricing, delivery and refund conditions are those stated by the payment platform at the time of purchase." }
+      ]
+    },
+    "privacy": {
+      "hero_title": "Privacy policy",
+      "hero_lead": "Respect for your data, kept simple.",
+      "note": "[DRAFT — review before commercial launch]",
+      "sections": [
+        { "h": "What we collect", "p": "This site uses no tracking cookies of its own and requires no account to browse. Your language preference is stored only in your browser (localStorage)." },
+        { "h": "Purchases", "p": "Payments are processed by external platforms (such as Gumroad or similar), which have their own privacy policies. We do not store card data." },
+        { "h": "Contact", "p": "Messages sent by email are used only to reply to you." }
+      ]
+    }
+  }
+}

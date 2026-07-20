@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="Educa4Good">
+  <g>
+    <ellipse cx="80" cy="132" rx="62" ry="8" fill="#2B6CA3" opacity="0.12"/>
+    <path d="M18 62 C42 50 66 50 80 60 C94 50 118 50 142 62 L142 116 C118 104 94 104 80 114 C66 104 42 104 18 116 Z"
+          fill="#ffffff" stroke="#2B6CA3" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M80 60 L80 114" stroke="#2B6CA3" stroke-width="7" stroke-linecap="round"/>
+    <g stroke="#7FA8CB" stroke-width="5" stroke-linecap="round">
+      <path d="M32 74 L64 70"/><path d="M32 86 L64 82"/><path d="M32 98 L64 94"/>
+      <path d="M96 70 L128 74"/><path d="M96 82 L128 86"/><path d="M96 94 L128 98"/>
+    </g>
+    <path d="M80 58 C80 40 80 30 80 22" stroke="#E8A020" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <path d="M80 34 C66 34 56 26 54 14 C68 14 78 20 80 34 Z" fill="#F7CD58" stroke="#E8A020" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M80 26 C92 26 102 20 104 8 C90 8 80 14 80 26 Z" fill="#2B6CA3" stroke="#2B6CA3" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="116" cy="26" r="7" fill="#2B6CA3"/>
+  </g>
+</svg>

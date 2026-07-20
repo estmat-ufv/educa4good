@@ -1,0 +1,137 @@
+{
+  "_comment": "Galeria de atividades. Para adicionar: coloque a imagem (WebP, ~780px de largura) em assets/images/activities/ e acrescente uma entrada aqui. Categorias válidas: alfabetizacao, matematica, leitura, coordenacao, logica, jogos, infantil. Rode python build.py depois.",
+  "items": [
+    {
+      "image": "grafico-barras.webp",
+      "categories": ["matematica", "logica"],
+      "age": "6–8",
+      "title": { "pt": "Gráfico de barras", "en": "Bar graph reading", "es": "Gráfico de barras" },
+      "desc": {
+        "pt": "Ler o gráfico e responder quantas figuras há de cada tipo.",
+        "en": "Read the graph and count how many of each figure.",
+        "es": "Leer el gráfico y responder cuántas figuras hay de cada tipo."
+      }
+    },
+    {
+      "image": "emocoes.webp",
+      "categories": ["infantil"],
+      "age": "4–6",
+      "title": { "pt": "Como ele está se sentindo?", "en": "How are they feeling?", "es": "¿Cómo se siente?" },
+      "desc": {
+        "pt": "Ligar situações às emoções e desenhar o próprio sentimento.",
+        "en": "Match situations to emotions and draw your own feeling.",
+        "es": "Unir situaciones con emociones y dibujar el propio sentimiento."
+      }
+    },
+    {
+      "image": "caminhos-tracados.webp",
+      "categories": ["coordenacao", "infantil"],
+      "age": "4–6",
+      "title": { "pt": "Os caminhos dos bichinhos", "en": "Animal trails tracing", "es": "Los caminos de los animalitos" },
+      "desc": {
+        "pt": "Traçar caminhos ondulados e em zigue-zague com os animais.",
+        "en": "Trace wavy and zigzag paths with friendly animals.",
+        "es": "Trazar caminos ondulados y en zigzag con los animalitos."
+      }
+    },
+    {
+      "image": "multipla-escolha-ciencias.webp",
+      "categories": ["leitura", "logica"],
+      "age": "6–8",
+      "title": { "pt": "Múltipla escolha — Ciências", "en": "Multiple choice — Science", "es": "Opción múltiple — Ciencias" },
+      "desc": {
+        "pt": "Ler cada pergunta sobre a natureza e marcar a alternativa correta.",
+        "en": "Read each nature question and mark the correct answer.",
+        "es": "Leer cada pregunta sobre la naturaleza y marcar la respuesta correcta."
+      }
+    },
+    {
+      "image": "classificar-formas.webp",
+      "categories": ["matematica", "logica"],
+      "age": "6–8",
+      "title": { "pt": "Classificar formas", "en": "Sorting shapes", "es": "Clasificar formas" },
+      "desc": {
+        "pt": "Marcar a coluna certa conforme o número de lados de cada forma.",
+        "en": "Tick the right column by the number of sides of each shape.",
+        "es": "Marcar la columna correcta según el número de lados de cada forma."
+      }
+    },
+    {
+      "image": "colorir-codigo.webp",
+      "categories": ["jogos", "matematica"],
+      "age": "5–7",
+      "title": { "pt": "Colorir por código", "en": "Color by code", "es": "Colorear por código" },
+      "desc": {
+        "pt": "Pintar a grade seguindo a legenda e descobrir a figura misteriosa.",
+        "en": "Color the grid using the key and reveal the mystery picture.",
+        "es": "Pintar la cuadrícula siguiendo la clave y descubrir la figura misteriosa."
+      }
+    },
+    {
+      "image": "vitrine-loja.webp",
+      "categories": ["matematica"],
+      "age": "6–8",
+      "title": { "pt": "Organize a vitrine da loja", "en": "Set up the shop window", "es": "Organiza la vitrina de la tienda" },
+      "desc": {
+        "pt": "Comparar preços e resolver pequenas situações de compra.",
+        "en": "Compare prices and solve simple shopping problems.",
+        "es": "Comparar precios y resolver pequeñas situaciones de compra."
+      }
+    },
+    {
+      "image": "ache-o-igual.webp",
+      "categories": ["logica"],
+      "age": "4–6",
+      "title": { "pt": "Ache o igual ao modelo", "en": "Find the matching one", "es": "Encuentra el igual" },
+      "desc": {
+        "pt": "Observar a orientação das figuras e circular a igual ao modelo.",
+        "en": "Observe orientation and circle the figure that matches the model.",
+        "es": "Observar la orientación y rodear la figura igual al modelo."
+      }
+    },
+    {
+      "image": "ligue-sombras.webp",
+      "categories": ["logica", "infantil"],
+      "age": "4–6",
+      "title": { "pt": "Ligue à sombra", "en": "Match the shadow", "es": "Une con la sombra" },
+      "desc": {
+        "pt": "Ligar cada figura colorida à sua silhueta correspondente.",
+        "en": "Connect each colorful figure to its matching silhouette.",
+        "es": "Unir cada figura de color con su silueta correspondiente."
+      }
+    },
+    {
+      "image": "numero-do-dia.webp",
+      "categories": ["matematica", "infantil"],
+      "age": "5–7",
+      "title": { "pt": "O número do dia", "en": "Number of the day", "es": "El número del día" },
+      "desc": {
+        "pt": "Escrever, mostrar no quadro de dez, vizinhos e par ou ímpar.",
+        "en": "Write it, show it on a ten frame, neighbours, odd or even.",
+        "es": "Escribirlo, mostrarlo en el marco de diez, vecinos y par o impar."
+      }
+    },
+    {
+      "image": "palavras-que-rimam.webp",
+      "categories": ["alfabetizacao", "leitura"],
+      "age": "5–7",
+      "title": { "pt": "Palavras que rimam", "en": "Rhyming words", "es": "Palabras que riman" },
+      "desc": {
+        "pt": "Ler os pares de palavras e circular SIM quando rimarem.",
+        "en": "Read the word pairs and circle YES when they rhyme.",
+        "es": "Leer los pares de palabras y rodear SÍ cuando rimen."
+      }
+    },
+    {
+      "image": "som-final.webp",
+      "categories": ["alfabetizacao"],
+      "age": "5–7",
+      "title": { "pt": "Qual é o som final?", "en": "What is the final sound?", "es": "¿Cuál es el sonido final?" },
+      "desc": {
+        "pt": "Ler cada palavra e circular a letra do som final.",
+        "en": "Read each word and circle the letter of its final sound.",
+        "es": "Leer cada palabra y rodear la letra del sonido final."
+      }
+    }
+  ]
+}

@@ -1,0 +1,306 @@
+{
+  "lang": "pt",
+  "locale": "pt_BR",
+  "lang_label": "PT",
+  "lang_name": "Português",
+
+  "slugs": {
+    "home": "index",
+    "activities": "atividades",
+    "how": "como-funciona",
+    "teachers": "professores",
+    "families": "familias",
+    "about": "sobre",
+    "faq": "faq",
+    "contact": "contato",
+    "terms": "termos",
+    "privacy": "privacidade"
+  },
+
+  "meta": {
+    "home": {
+      "title": "Educa4Good — Atividades pedagógicas bonitas e prontas para imprimir",
+      "desc": "Biblioteca de atividades de alfabetização, matemática e lógica com alta qualidade tipográfica. Escolha, imprima e ensine — menos tempo procurando, mais tempo ensinando."
+    },
+    "activities": { "title": "Atividades — Educa4Good", "desc": "Explore exemplos reais das atividades do Educa4Good: alfabetização, matemática, lógica, coordenação motora e muito mais." },
+    "how": { "title": "Como funciona — Educa4Good", "desc": "Escolha, imprima e aprenda: veja como usar a biblioteca de atividades do Educa4Good em três passos simples." },
+    "teachers": { "title": "Para professores — Educa4Good", "desc": "Atividades organizadas e prontas para imprimir que devolvem tempo de planejamento para quem ensina." },
+    "families": { "title": "Para famílias — Educa4Good", "desc": "Atividades impressas para aprender em casa, longe das telas, com momentos de descoberta em família." },
+    "about": { "title": "Sobre — Educa4Good", "desc": "Conheça o Educa4Good: uma biblioteca de atividades pedagógicas criada com cuidado tipográfico e olhar de professor." },
+    "faq": { "title": "Perguntas frequentes — Educa4Good", "desc": "Dúvidas sobre a coleção de atividades do Educa4Good: formatos, impressão, uso em sala e licença." },
+    "contact": { "title": "Contato — Educa4Good", "desc": "Fale com o Educa4Good." },
+    "terms": { "title": "Termos de uso — Educa4Good", "desc": "Termos de uso do site e licença de uso dos materiais do Educa4Good." },
+    "privacy": { "title": "Política de privacidade — Educa4Good", "desc": "Política de privacidade do site Educa4Good." }
+  },
+
+  "nav": {
+    "activities": "Atividades",
+    "how": "Como funciona",
+    "teachers": "Para professores",
+    "families": "Para famílias",
+    "faq": "FAQ",
+    "about": "Sobre",
+    "cta": "Quero minha coleção"
+  },
+
+  "hero": {
+    "title": "Menos tempo procurando atividades. Mais tempo ensinando.",
+    "lead": "Uma biblioteca de atividades pedagógicas bonitas, organizadas e prontas para imprimir — criada para quem acredita que aprender pode ser uma experiência especial.",
+    "cta_primary": "Conheça as atividades",
+    "cta_secondary": "Ver exemplos",
+    "note": "PDF em A4 · funciona em preto e branco · imprima quantas vezes quiser com sua turma",
+    "img_alts": ["Atividade de ligar figuras às sombras", "Atividade de gráfico de barras", "Atividade de colorir por código"]
+  },
+
+  "tagline": {
+    "text": "Atividades que as crianças <em>gostam de fazer</em>. Materiais que professores <em>gostam de usar</em>."
+  },
+
+  "problem": {
+    "kicker": "A gente sabe como é",
+    "title": "Quanto tempo você já gastou procurando uma boa atividade?",
+    "pains": [
+      "Horas de busca para achar um único PDF aproveitável",
+      "Arquivos borrados, desalinhados ou visualmente confusos",
+      "Atividades repetitivas, sempre as mesmas ideias",
+      "Fundos escuros que devoram a tinta da impressora",
+      "Materiais soltos, sem organização nem sequência",
+      "Uma noite de preparação para uma atividade de vinte minutos"
+    ],
+    "solution": "Foi por isso que criamos o Educa4Good: para transformar horas de procura em poucos minutos de escolha."
+  },
+
+  "categories": {
+    "kicker": "Descubra o Educa4Good",
+    "title": "Uma biblioteca feita para ensinar",
+    "lead": "Atividades desenvolvidas com cuidado pedagógico e tipográfico, organizadas por habilidade para você encontrar rápido o que precisa.",
+    "see_examples": "Ver exemplos",
+    "items": [
+      { "key": "alfabetizacao", "title": "Alfabetização", "desc": "Letras, sílabas, rimas, palavras frequentes e primeiros textos." },
+      { "key": "leitura", "title": "Leitura e escrita", "desc": "Pequenos textos, interpretação, ditados e escrita guiada." },
+      { "key": "matematica", "title": "Matemática", "desc": "Contagem, operações, formas, medidas, dinheiro e gráficos." },
+      { "key": "coordenacao", "title": "Coordenação motora", "desc": "Traçados, pontilhados, caminhos e controle do lápis." },
+      { "key": "logica", "title": "Raciocínio lógico", "desc": "Sequências, classificação, comparações e desafios de atenção." },
+      { "key": "percepcao", "title": "Percepção visual", "desc": "Sombras, diferenças, orientação espacial e discriminação visual." },
+      { "key": "jogos", "title": "Jogos educativos", "desc": "Bingos, dominós, trilhas, memória e recortáveis para brincar." },
+      { "key": "criativas", "title": "Atividades criativas", "desc": "Colorir por código, desenho dirigido e produção própria." }
+    ]
+  },
+
+  "gallery": {
+    "kicker": "Veja de perto",
+    "title": "Feitas com cuidado em cada detalhe",
+    "lead": "Estas são páginas reais da coleção — sem retoques. Clique para ampliar.",
+    "filters": {
+      "all": "Todas",
+      "alfabetizacao": "Alfabetização",
+      "matematica": "Matemática",
+      "leitura": "Leitura",
+      "coordenacao": "Coordenação",
+      "logica": "Lógica",
+      "jogos": "Jogos",
+      "infantil": "Educação Infantil"
+    },
+    "age_prefix": "anos",
+    "zoom_hint": "Ampliar",
+    "more": "E a biblioteca continua crescendo: novas atividades são adicionadas com frequência."
+  },
+
+  "differentials": {
+    "kicker": "Por que o Educa4Good",
+    "title": "O que torna estas atividades diferentes",
+    "items": [
+      { "title": "Alta qualidade tipográfica", "desc": "Cada página é composta com o mesmo cuidado de um livro: alinhamento, espaçamento e letras pensadas para crianças." },
+      { "title": "Prontas para imprimir", "desc": "Escolha, imprima e use. Formato A4, margens seguras e nada de cortar conteúdo na borda." },
+      { "title": "Economia de tinta", "desc": "Layouts claros que funcionam também em preto e branco — sem fundos que esgotam o cartucho." },
+      { "title": "Grande variedade", "desc": "Centenas de atividades para diferentes habilidades e momentos da aprendizagem." },
+      { "title": "Com gabarito", "desc": "Versão do professor com as respostas destacadas, pronta para corrigir." },
+      { "title": "Biblioteca em expansão", "desc": "Uma coleção viva, que continua ganhando novas atividades e novas mecânicas." },
+      { "title": "Preparadas para vários idiomas", "desc": "Português disponível agora; edições em inglês e espanhol em preparação.", "status": "em preparação" }
+    ]
+  },
+
+  "teachers": {
+    "kicker": "Para professores",
+    "title": "Você ensina. Nós ajudamos a preparar.",
+    "lead": "Planejar uma boa aula já exige muito. Encontrar e formatar atividades não deveria consumir o restante do seu tempo.",
+    "benefits": [
+      "Encontre em minutos uma atividade para a habilidade que vai trabalhar",
+      "Materiais visualmente consistentes, que parecem parte de um mesmo caderno",
+      "Gabaritos prontos para a correção",
+      "Imprima para a turma inteira quantas vezes precisar",
+      "Variedade para revisitar a mesma habilidade sem repetir a mesma folha"
+    ],
+    "cta": "Ver atividades para a sua turma"
+  },
+
+  "families": {
+    "kicker": "Para pais e famílias",
+    "title": "Aprender também acontece em casa",
+    "lead": "Reforço escolar, férias, fim de semana chuvoso: sempre há um bom momento para aprender brincando — com papel, lápis e a sua companhia.",
+    "benefits": [
+      "Atividades com instruções simples, fáceis de acompanhar",
+      "Momentos de concentração longe das telas",
+      "Reforço leve de leitura, escrita e matemática",
+      "Pequenos rituais de estudo que viram hábito",
+      "Tempo de qualidade entre vocês — a atividade é só o começo da conversa"
+    ],
+    "note": "As atividades complementam a escola — elas não substituem professores.",
+    "cta": "Ver atividades para casa"
+  },
+
+  "offline": {
+    "kicker": "Papel e lápis",
+    "title": "Desligue a tela. Ligue a curiosidade.",
+    "lead": "Uma folha impressa convida a criança a escrever, desenhar, recortar, pintar e mostrar orgulhosa o resultado. É concentração com as mãos — e participação de quem está por perto.",
+    "points": [
+      "Escrever à mão, no tamanho certo para mãos pequenas",
+      "Pintar, recortar e manipular de verdade",
+      "Acompanhar de perto, sentados lado a lado",
+      "Guardar as folhas e ver o progresso com o tempo"
+    ]
+  },
+
+  "how": {
+    "kicker": "Como funciona",
+    "title": "Três passos. Só isso.",
+    "steps": [
+      { "title": "Escolha", "desc": "Encontre atividades para a habilidade que deseja trabalhar." },
+      { "title": "Imprima", "desc": "Receba PDFs em A4 preparados para impressão, inclusive em preto e branco." },
+      { "title": "Aprenda", "desc": "Use em sala de aula ou em casa — e repita quando quiser." }
+    ]
+  },
+
+  "stats": {
+    "kicker": "O tamanho da biblioteca",
+    "title": "Uma coleção que não para de crescer",
+    "labels": { "activities": "atividades no catálogo", "categories": "categorias de habilidades", "format": "formato pronto para imprimir" }
+  },
+
+  "offer": {
+    "kicker": "Coleção completa",
+    "title": "Tudo isso por menos do que algumas folhas avulsas",
+    "product_includes": [
+      "Centenas de atividades em PDF (A4), organizadas por habilidade",
+      "Gabaritos para correção rápida",
+      "Layouts econômicos, que funcionam em preto e branco",
+      "Licença para imprimir e reutilizar com sua turma ou família",
+      "Acesso às novidades da coleção conforme o plano adquirido"
+    ],
+    "cta": "Quero a coleção",
+    "cta_pending": "Falar com a gente",
+    "guarantee": "Sem letras miúdas: o que você vê nos exemplos é o padrão de toda a coleção."
+  },
+
+  "sample": {
+    "kicker": "Experimente antes",
+    "title": "Baixe uma amostra gratuita",
+    "lead": "Conheça a qualidade do Educa4Good imprimindo algumas atividades de cortesia. Sem cadastro complicado — é só baixar e usar.",
+    "cta": "Baixar amostra gratuita",
+    "cta_pending": "Amostra em preparação — fale com a gente"
+  },
+
+  "testimonials": {
+    "kicker": "Quem usa, conta",
+    "title": "Histórias de quem ensina com o Educa4Good"
+  },
+
+  "faq": {
+    "kicker": "Dúvidas",
+    "title": "Perguntas frequentes",
+    "items": [
+      { "q": "O que recebo após a compra?", "a": "Você recebe a coleção de atividades em PDF, organizada por categoria, com os respectivos gabaritos, conforme descrito na oferta vigente no momento da compra." },
+      { "q": "As atividades são digitais ou físicas?", "a": "São arquivos digitais em PDF, no formato A4, feitos para você imprimir onde preferir — em casa, na escola ou numa gráfica." },
+      { "q": "Posso imprimir quantas vezes quiser?", "a": "Sim. A licença permite imprimir quantas cópias precisar para uso com a própria turma ou família, conforme os termos de uso." },
+      { "q": "Posso usar com meus alunos?", "a": "Sim! As atividades foram criadas justamente para a sala de aula. Professores podem imprimir para as próprias turmas." },
+      { "q": "Posso compartilhar os arquivos?", "a": "Não. Os PDFs são licenciados para o comprador. Compartilhar, revender ou publicar os arquivos na internet não é permitido — é isso que mantém o projeto vivo." },
+      { "q": "Para quais idades são indicadas?", "a": "O foco é a Educação Infantil e os anos iniciais do Ensino Fundamental — em geral, crianças de 4 a 8 anos, com indicação de faixa etária nas atividades." },
+      { "q": "Preciso instalar algum programa?", "a": "Não. Basta um leitor de PDF, que já vem instalado na maioria dos computadores e celulares." },
+      { "q": "As atividades funcionam em preto e branco?", "a": "Sim. Todos os layouts são desenhados para continuar bonitos e legíveis na impressão em preto e branco." },
+      { "q": "Existem atividades em outros idiomas?", "a": "O acervo atual é em português. Edições em inglês e espanhol estão em preparação — a arquitetura das atividades já foi pensada para isso." },
+      { "q": "Novas atividades serão adicionadas?", "a": "Sim, a biblioteca está em expansão contínua. A forma de acesso às novidades depende do plano vigente no momento da compra." }
+    ]
+  },
+
+  "final": {
+    "title": "Uma boa atividade pode transformar alguns minutos em uma descoberta.",
+    "lead": "Leve mais possibilidades para a sala de aula, para casa e para o aprendizado de cada criança.",
+    "cta": "Comece agora"
+  },
+
+  "footer": {
+    "tagline": "Educação que inspira. Aprender pode ser bonito; ensinar pode ser mais simples.",
+    "nav_title": "Navegação",
+    "categories_title": "Categorias",
+    "info_title": "Informações",
+    "lang_title": "Idioma",
+    "contact": "Contato",
+    "terms": "Termos de uso",
+    "privacy": "Privacidade",
+    "license": "Licença dos materiais",
+    "copyright": "Educa4Good. Todos os direitos reservados.",
+    "made": "Feito com cuidado — e com LaTeX."
+  },
+
+  "pages": {
+    "activities": {
+      "hero_title": "As atividades",
+      "hero_lead": "Uma vitrine com páginas reais da coleção. Use os filtros para navegar por categoria — e lembre que isto é só uma amostra do acervo."
+    },
+    "how": {
+      "hero_title": "Como funciona",
+      "hero_lead": "Do catálogo à mesa da criança em três passos simples.",
+      "receive_title": "O que você recebe",
+      "receive_lead": "Arquivos PDF em A4, com tipografia de livro, ícones vetoriais e gabaritos — prontos para qualquer impressora."
+    },
+    "teachers": {
+      "hero_title": "Para professores",
+      "hero_lead": "Menos tempo formatando folhas, mais tempo com a turma.",
+      "body_title": "Pensado para o dia a dia da escola",
+      "body": "Cada atividade nasce de uma mecânica pedagógica clara — associar, classificar, ordenar, completar, comparar — e é composta com a mesma tipografia e a mesma organização visual. O resultado é um material que parece um caderno único, não uma colcha de retalhos de PDFs."
+    },
+    "families": {
+      "hero_title": "Para pais e famílias",
+      "hero_lead": "Momentos de aprendizado em casa, no ritmo do seu filho.",
+      "body_title": "Aprender junto é o segredo",
+      "body": "Você não precisa ser especialista para acompanhar: as instruções são curtas e diretas, escritas para a criança. Escolha uma atividade, imprimam juntos e deixe a curiosidade guiar. Quando terminar, vale pendurar na geladeira."
+    },
+    "about": {
+      "hero_title": "Sobre o Educa4Good",
+      "hero_lead": "Uma biblioteca de atividades criada com olhar de professor e capricho de editor.",
+      "body": [
+        "O Educa4Good nasceu de uma constatação simples: preparar boas atividades toma tempo — e material bonito, organizado e pedagogicamente honesto é mais raro do que deveria.",
+        "Por trás do projeto há um cuidado incomum: cada página é composta em LaTeX, o mesmo sistema tipográfico usado em livros e publicações científicas. É por isso que os espaçamentos são consistentes, as letras têm o tamanho certo para cada idade e a impressão sai limpa até em preto e branco.",
+        "As atividades são organizadas por habilidade, alinhadas quando possível à BNCC (a Base Nacional Comum Curricular brasileira), e produzidas como uma biblioteca viva: novas mecânicas e novos temas entram continuamente no acervo.",
+        "O nome resume a intenção: educação a serviço do bem. Materiais acessíveis, feitos com carinho, para quem ensina e para quem aprende."
+      ]
+    },
+    "contact": {
+      "hero_title": "Contato",
+      "hero_lead": "Dúvidas, pedidos especiais ou parcerias? Fale com a gente.",
+      "email_label": "E-mail",
+      "email_pending": "Canal de contato em configuração — em breve você encontrará aqui o e-mail comercial do projeto.",
+      "social_label": "Redes sociais"
+    },
+    "terms": {
+      "hero_title": "Termos de uso",
+      "hero_lead": "Versão resumida e transparente — sem juridiquês desnecessário.",
+      "note": "[RASCUNHO — revisar antes de publicar comercialmente]",
+      "sections": [
+        { "h": "Uso do site", "p": "Este site apresenta a biblioteca de atividades Educa4Good. Os textos, imagens e a identidade visual do site pertencem ao projeto e não podem ser reproduzidos sem autorização." },
+        { "h": "Licença dos materiais", "p": "As atividades adquiridas são licenciadas para uso pessoal ou com a própria turma: você pode imprimir quantas cópias precisar nesse contexto. Não é permitido revender, redistribuir digitalmente, compartilhar em grupos ou publicar os arquivos na internet." },
+        { "h": "Compras", "p": "Condições de preço, entrega e reembolso são as informadas na plataforma de pagamento no momento da compra." }
+      ]
+    },
+    "privacy": {
+      "hero_title": "Política de privacidade",
+      "hero_lead": "Respeito pelos seus dados, com simplicidade.",
+      "note": "[RASCUNHO — revisar antes de publicar comercialmente]",
+      "sections": [
+        { "h": "O que coletamos", "p": "Este site não usa cookies de rastreamento próprios e não exige cadastro para navegação. A preferência de idioma é guardada apenas no seu navegador (localStorage)." },
+        { "h": "Compras", "p": "Pagamentos são processados por plataformas externas (como Hotmart ou similar), que possuem políticas de privacidade próprias. Não armazenamos dados de cartão." },
+        { "h": "Contato", "p": "Mensagens enviadas por e-mail são usadas apenas para responder você." }
+      ]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "_comment": "IMPORTANTE: não publique depoimentos fictícios. Deixe enabled=false até ter depoimentos REAIS autorizados. Cada item precisa de texto e autoria verdadeiros.",
+  "enabled": false,
+  "items": [
+    {
+      "text": { "pt": "[Adicionar depoimento real aqui]", "en": "[Add a real testimonial here]", "es": "[Añadir testimonio real aquí]" },
+      "who": { "pt": "[Nome, papel — ex.: professora do 1º ano]", "en": "[Name, role]", "es": "[Nombre, rol]" }
+    }
+  ]
+}
