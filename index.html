@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Educa4Good</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/svg+xml" href="assets/images/brand/mark.svg">
+  <script>
+    (function () {
+      var langs = ["pt", "en", "es"];
+      var pick = null;
+      try { pick = localStorage.getItem("e4g-lang"); } catch (e) {}
+      if (langs.indexOf(pick) === -1) {
+        var nav = (navigator.language || "pt").slice(0, 2).toLowerCase();
+        pick = langs.indexOf(nav) !== -1 ? nav : "pt";
+      }
+      location.replace(pick + "/index.html");
+    })();
+  </script>
+</head>
+<body>
+  <p style="font-family:sans-serif;text-align:center;margin-top:3rem">
+    Educa4Good — <a href="pt/index.html">Português</a> · <a href="en/index.html">English</a> · <a href="es/index.html">Español</a>
+  </p>
+</body>
+</html>
