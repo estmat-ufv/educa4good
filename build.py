@@ -1141,7 +1141,7 @@ def build_memory_game_pt(L):
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/site.css">
-  <link rel="stylesheet" href="../assets/css/memory-game.css">
+  <link rel="stylesheet" href="../assets/css/memory-game.css?v=20260722-cardfix2">
 </head>
 <body>
 """
@@ -1308,7 +1308,7 @@ def build_memory_game_pt(L):
     </div>
   </div>
 </section>
-<script src="../assets/js/memory-game.js"></script>
+<script src="../assets/js/memory-game.js?v=20260722-cardfix2"></script>
 """
     return head_html + header(L, "tools") + body + footer(L)
 

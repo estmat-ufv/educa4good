@@ -7,10 +7,10 @@
   var MAX_FILE_SIZE = 8 * 1024 * 1024;
   var DEFAULT_WORDS = ["SOL", "LUA", "CASA", "FLOR", "LIVRO"];
   var CARD_LAYOUTS = {
-    compact: { columns: 3, rows: 4, perPage: 12, size: "54mm", label: "pequeno" },
-    medium: { columns: 2, rows: 3, perPage: 6, size: "72mm", label: "médio" },
-    large: { columns: 2, rows: 2, perPage: 4, size: "86mm", label: "grande" },
-    xlarge: { columns: 1, rows: 2, perPage: 2, size: "108mm", label: "extra grande" }
+    compact: { columns: 3, rows: 4, perPage: 12, width: "58mm", height: "42mm", label: "pequeno" },
+    medium: { columns: 2, rows: 3, perPage: 6, width: "86mm", height: "58mm", label: "médio" },
+    large: { columns: 2, rows: 2, perPage: 4, width: "88mm", height: "72mm", label: "grande" },
+    xlarge: { columns: 1, rows: 2, perPage: 2, width: "118mm", height: "88mm", label: "extra grande" }
   };
 
   var dom = {};
@@ -205,7 +205,7 @@
       '<div class="mg__meta">' + metaHtml(config) + "</div>" +
       '<h2 class="mg__page-title">' + escapeHtml(config.title || "Jogo da memória") + "</h2>" +
       '<p class="mg__instruction">Recorte as cartas, embaralhe com a face virada para baixo e encontre os pares.</p>' +
-      '<div class="mg__cards" style="--mg-card-columns:' + layout.columns + ';--mg-card-rows:' + layout.rows + ';--mg-card-size:' + layout.size + '">' +
+      '<div class="mg__cards" style="--mg-card-columns:' + layout.columns + ';--mg-card-rows:' + layout.rows + ';--mg-card-width:' + layout.width + ';--mg-card-height:' + layout.height + '">' +
       cards.map(function (card) { return cardHtml(card, config); }).join("") +
       "</div>" +
       '<footer class="mg__sheet-footer"><span>' + escapeHtml(pageFooter(pageNumber, totalPages, layout)) + "</span></footer>" +
@@ -233,7 +233,7 @@
       '<div class="mg__meta">' + metaHtml(config) + "</div>" +
       '<h2 class="mg__page-title">' + escapeHtml(config.title || "Jogo da memória") + "</h2>" +
       '<p class="mg__instruction">Recorte as cartas, embaralhe com a face virada para baixo e encontre os pares.</p>' +
-      '<div class="mg__cards" style="--mg-card-columns:' + layout.columns + ';--mg-card-rows:' + layout.rows + ';--mg-card-size:' + layout.size + '">' +
+      '<div class="mg__cards" style="--mg-card-columns:' + layout.columns + ';--mg-card-rows:' + layout.rows + ';--mg-card-width:' + layout.width + ';--mg-card-height:' + layout.height + '">' +
       '<div class="mg__placeholder"><div class="mg__mini-cards" aria-hidden="true"><span>1A</span><span>1B</span><span>2A</span><span>2B</span><span>3A</span><span>3B</span></div><p>Escolha imagens ou palavras e gere as cartas.</p></div>' +
       "</div>" +
       '<footer class="mg__sheet-footer"><span>Educa4Good</span></footer>' +
