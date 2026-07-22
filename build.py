@@ -713,10 +713,14 @@ def build_tools(L):
 
     cards = ""
     for it in S["items"]:
-        cards += f"""      <div class="card reveal">
+        card_class = "card reveal tool-card" if it.get("href") else "card reveal"
+        action = (f'\n        <p class="tool-card__action"><a class="btn btn--ghost" '
+                  f'href="{it["href"]}">{it.get("cta", "Abrir")}</a></p>'
+                  if it.get("href") else "")
+        cards += f"""      <div class="{card_class}">
         <div class="icon">{IC['jogos']}</div>
         <h3>{it['title']} <span class="badge">{it['badge']}</span></h3>
-        <p>{it['desc']}</p>
+        <p>{it['desc']}</p>{action}
       </div>
 """
     soon = f"""<section class="section" id="more-tools">
@@ -735,6 +739,191 @@ def build_tools(L):
     body = (page_hero(P["hero_title"], P["hero_lead"]) + puzzle + pdf + soon
             + '<script src="../assets/js/puzzle.js"></script>\n')
     return head(L, "tools") + header(L, "tools") + body + footer(L)
+
+
+def build_connect_dots_pt(L):
+    title = "Ligar os Pontos — Educa4Good"
+    desc = "Gere folhas de ligar os pontos a partir de uma figura, direto no navegador e sem enviar a imagem para servidores."
+    url_base = SITE.get("site_url", "").rstrip("/")
+    canonical = f"{url_base}/pt/ligar-os-pontos.html" if url_base else ""
+    links = f'  <link rel="canonical" href="{canonical}">\n' if canonical else ""
+    og_url = f'  <meta property="og:url" content="{canonical}">\n' if canonical else ""
+    og_img = (f"{url_base}/assets/images/activities/caminhos-tracados.webp"
+              if url_base else "../assets/images/activities/caminhos-tracados.webp")
+    head_html = f"""<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content="{desc}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Educa4Good">
+  <meta property="og:title" content="{title}">
+  <meta property="og:description" content="{desc}">
+  <meta property="og:image" content="{og_img}">
+  <meta property="og:locale" content="pt_BR">
+{og_url}  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{title}">
+  <meta name="twitter:description" content="{desc}">
+{links}  <link rel="icon" type="image/svg+xml" href="../assets/images/brand/mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <link rel="stylesheet" href="../assets/css/connect-the-dots.css">
+</head>
+<body>
+"""
+    body = """<section class="page-hero dots-hero">
+  <div class="container">
+    <h1>Ligar os Pontos</h1>
+    <p>Gere uma folha A4 numerada a partir de uma figura. A imagem fica no seu navegador: nada é enviado, armazenado ou processado fora do seu aparelho.</p>
+  </div>
+</section>
+<section class="section dots" id="ligar-os-pontos">
+  <div class="container">
+    <div class="section-head dots__intro reveal">
+      <span class="kicker">Gerador local</span>
+      <h2>Da imagem para a atividade impressa</h2>
+      <p>Para melhores resultados, use desenhos com contorno nítido, fundo simples e bom contraste. Fotografias muito detalhadas podem gerar pontos menos previsíveis.</p>
+    </div>
+
+    <div class="dots__workspace">
+      <div class="dots__controls">
+        <section class="dots__panel reveal" aria-labelledby="dots-upload-title">
+          <h2 id="dots-upload-title">1. Escolha uma imagem</h2>
+          <label class="dots__dropzone" id="dots-dropzone" for="dots-file">
+            <span class="dots__drop-icon" aria-hidden="true">+</span>
+            <strong>Arraste uma imagem aqui</strong>
+            <span>ou clique para selecionar no computador</span>
+          </label>
+          <input class="dots__file" type="file" id="dots-file" accept="image/png,image/jpeg,image/webp,image/*" aria-describedby="dots-file-help">
+          <p class="dots__note" id="dots-file-help">PNG, JPG, WebP e formatos aceitos pelo navegador, até 12 MB.</p>
+          <p class="dots__message" id="dots-message" role="status" aria-live="polite"></p>
+          <figure class="dots__original" id="dots-original" hidden>
+            <img id="dots-original-img" alt="Imagem original escolhida">
+            <figcaption>Imagem original</figcaption>
+          </figure>
+        </section>
+
+        <form class="dots__panel dots__settings reveal" id="dots-settings" aria-labelledby="dots-settings-title">
+          <h2 id="dots-settings-title">2. Configure a atividade</h2>
+
+          <div class="dots__field">
+            <label for="dots-title">Título da atividade</label>
+            <input type="text" id="dots-title" value="Ligar os pontos" maxlength="80">
+          </div>
+
+          <div class="dots__grid-2">
+            <div class="dots__field">
+              <label for="dots-count">Total de pontos <output id="dots-count-output">45</output></label>
+              <input type="range" id="dots-count" min="8" max="140" step="1" value="45">
+            </div>
+            <div class="dots__field">
+              <label for="dots-start">Numeração inicial</label>
+              <input type="number" id="dots-start" min="0" step="1" value="1">
+            </div>
+          </div>
+
+          <div class="dots__grid-2">
+            <div class="dots__field">
+              <label for="dots-point-size">Tamanho dos pontos <output id="dots-point-output">5</output></label>
+              <input type="range" id="dots-point-size" min="2" max="12" step="1" value="5">
+            </div>
+            <div class="dots__field">
+              <label for="dots-number-size">Tamanho dos números <output id="dots-number-output">16</output></label>
+              <input type="range" id="dots-number-size" min="10" max="28" step="1" value="16">
+            </div>
+          </div>
+
+          <div class="dots__grid-2">
+            <div class="dots__field">
+              <label for="dots-line-width">Espessura do traço guia <output id="dots-line-output">0.8</output></label>
+              <input type="range" id="dots-line-width" min="0" max="3" step="0.2" value="0.8">
+            </div>
+            <div class="dots__field">
+              <label for="dots-line-color">Cor do traço guia</label>
+              <input type="color" id="dots-line-color" value="#9aa9b7">
+            </div>
+          </div>
+
+          <div class="dots__field">
+            <label for="dots-paper">Formato do papel</label>
+            <select id="dots-paper">
+              <option value="portrait">A4 retrato</option>
+              <option value="landscape">A4 paisagem</option>
+            </select>
+          </div>
+
+          <fieldset class="dots__fieldset">
+            <legend>Identificação opcional</legend>
+            <div class="dots__grid-3">
+              <div class="dots__field">
+                <label for="dots-child">Nome</label>
+                <input type="text" id="dots-child" maxlength="40" placeholder="Nome da criança">
+              </div>
+              <div class="dots__field">
+                <label for="dots-date">Data</label>
+                <input type="text" id="dots-date" maxlength="20" placeholder="__/__/____">
+              </div>
+              <div class="dots__field">
+                <label for="dots-class">Turma</label>
+                <input type="text" id="dots-class" maxlength="24" placeholder="Turma">
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="dots__field dots__check">
+            <input type="checkbox" id="dots-show-inspiration" checked>
+            <label for="dots-show-inspiration">Mostrar imagem de inspiração na prévia</label>
+          </div>
+
+          <div class="dots__field">
+            <label for="dots-hidden-pairs">Conexões que não devem aparecer</label>
+            <textarea id="dots-hidden-pairs" rows="3" placeholder="5-6, 12-13" aria-describedby="dots-hidden-help"></textarea>
+            <p class="dots__note" id="dots-hidden-help">Exemplo: <code>12-13, 28-29</code> remove apenas as linhas entre esses pares consecutivos. Os pontos e números continuam aparecendo.</p>
+          </div>
+
+          <div class="dots__actions">
+            <button type="button" class="btn btn--primary" id="dots-generate"><span aria-hidden="true">↻</span> Gerar/Atualizar atividade</button>
+            <button type="button" class="btn btn--ghost" id="dots-print" disabled><span aria-hidden="true">⎙</span> Imprimir atividade</button>
+            <button type="button" class="btn btn--ghost" id="dots-download" disabled><span aria-hidden="true">↓</span> Baixar PNG</button>
+          </div>
+        </form>
+      </div>
+
+      <section class="dots__preview-panel reveal" aria-labelledby="dots-preview-title">
+        <div class="dots__preview-head">
+          <span class="kicker">Pré-visualização</span>
+          <h2 id="dots-preview-title">Atividade gerada</h2>
+        </div>
+        <p class="dots__status" id="dots-status" role="status" aria-live="polite">Envie uma imagem para começar.</p>
+        <div class="dots__print-area" id="dots-print-area">
+          <div class="dots__print-page dots__print-page--portrait dots__print-page--no-reference" id="dots-print-page">
+            <div class="dots__print-layout">
+              <div class="dots__activity" id="dots-activity" aria-label="Pré-visualização da atividade">
+                <div class="dots__placeholder">
+                  <div class="dots__placeholder-dots" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                  </div>
+                  <p>Escolha uma imagem e gere a atividade.</p>
+                </div>
+              </div>
+              <aside class="dots__reference" id="dots-reference" hidden>
+                <span>Imagem de inspiração</span>
+                <img id="dots-reference-img" alt="Imagem de inspiração">
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+<script src="../assets/js/connect-the-dots.js"></script>
+"""
+    return head_html + header(L, "tools") + body + footer(L)
 
 
 # ---------------------------------------------------------------- raiz e extras
@@ -802,6 +991,8 @@ def build_sitemap():
         for key in PAGE_KEYS:
             loc = f"{base}/{code}/{L['slugs'][key]}.html" if base else f"{code}/{L['slugs'][key]}.html"
             urls += f"  <url><loc>{loc}</loc></url>\n"
+    extra = f"{base}/pt/ligar-os-pontos.html" if base else "pt/ligar-os-pontos.html"
+    urls += f"  <url><loc>{extra}</loc></url>\n"
     return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n'
 
 
@@ -830,6 +1021,10 @@ def main():
             with open(os.path.join(outdir, fname), "w", encoding="utf-8") as f:
                 f.write(html)
             count += 1
+
+    with open(os.path.join(ROOT, "pt", "ligar-os-pontos.html"), "w", encoding="utf-8") as f:
+        f.write(build_connect_dots_pt(LANGS["pt"]))
+    count += 1
 
     with open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8") as f:
         f.write(build_root_index())

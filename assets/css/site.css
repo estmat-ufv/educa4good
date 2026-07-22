@@ -173,6 +173,8 @@ p  { margin: 0 0 1em; }
 .card p { color: var(--color-text-soft); font-size: 0.95rem; margin-bottom: 0; }
 .card .icon { width: 52px; height: 52px; display: grid; place-items: center; border-radius: var(--radius-s); background: var(--color-primary-soft); }
 .card .icon svg { width: 30px; height: 30px; }
+.tool-card__action { margin-top: var(--space-2); }
+.tool-card__action .btn { font-size: 0.9rem; padding: 0.58rem 1.1rem; }
 
 /* lista de dores (problema) */
 .pain-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.7rem; }
