@@ -926,6 +926,191 @@ def build_connect_dots_pt(L):
     return head_html + header(L, "tools") + body + footer(L)
 
 
+def build_word_search_pt(L):
+    title = "Caça-palavras — Educa4Good"
+    desc = "Crie caça-palavras personalizados com até 10 palavras e imprima uma folha A4 com gabarito opcional."
+    url_base = SITE.get("site_url", "").rstrip("/")
+    canonical = f"{url_base}/pt/caca-palavras.html" if url_base else ""
+    links = f'  <link rel="canonical" href="{canonical}">\n' if canonical else ""
+    og_url = f'  <meta property="og:url" content="{canonical}">\n' if canonical else ""
+    og_img = (f"{url_base}/assets/images/activities/palavras-que-rimam.webp"
+              if url_base else "../assets/images/activities/palavras-que-rimam.webp")
+    head_html = f"""<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content="{desc}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Educa4Good">
+  <meta property="og:title" content="{title}">
+  <meta property="og:description" content="{desc}">
+  <meta property="og:image" content="{og_img}">
+  <meta property="og:locale" content="pt_BR">
+{og_url}  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{title}">
+  <meta name="twitter:description" content="{desc}">
+{links}  <link rel="icon" type="image/svg+xml" href="../assets/images/brand/mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <link rel="stylesheet" href="../assets/css/word-search.css">
+</head>
+<body>
+"""
+    body = """<section class="page-hero ws-hero">
+  <div class="container">
+    <h1>Caça-palavras</h1>
+    <p>Monte uma atividade pronta para imprimir com as suas próprias palavras. A lista fica no seu navegador, a grade é criada automaticamente e o gabarito pode sair junto no mesmo PDF.</p>
+  </div>
+</section>
+<section class="section ws" id="caca-palavras">
+  <div class="container">
+    <div class="section-head ws__intro reveal">
+      <span class="kicker">Gerador local</span>
+      <h2>Da lista de palavras para a folha A4</h2>
+      <p>Digite até 10 palavras, escolha o nível e gere uma folha no padrão Educa4Good para imprimir ou salvar como PDF pelo navegador.</p>
+    </div>
+
+    <div class="ws__workspace">
+      <div class="ws__controls">
+        <section class="ws__panel reveal" aria-labelledby="ws-words-title">
+          <h2 id="ws-words-title">1. Escreva as palavras</h2>
+          <div class="ws__field">
+            <label for="ws-words">Palavras do caça-palavras</label>
+            <textarea id="ws-words" rows="8" aria-describedby="ws-words-help">LEITURA
+ESCOLA
+AMIZADE
+NATUREZA
+NUMERO
+BRINCAR
+CRIAR
+APRENDER</textarea>
+            <p class="ws__note" id="ws-words-help">Use uma palavra por linha ou separe por vírgulas. A grade usa letras maiúsculas, sem acentos e sem espaços.</p>
+            <p class="ws__counter" id="ws-counter"><span><strong id="ws-word-count">0</strong>/<span id="ws-word-limit">10</span> palavras</span><span>máximo 18 letras por palavra</span></p>
+            <p class="ws__message" id="ws-message" role="status" aria-live="polite"></p>
+          </div>
+          <div class="ws__examples" aria-label="Sugestões rápidas">
+            <button type="button" data-ws-preset="natureza">Natureza</button>
+            <button type="button" data-ws-preset="leitura">Leitura</button>
+            <button type="button" data-ws-preset="gentileza">Convivência</button>
+          </div>
+        </section>
+
+        <form class="ws__panel ws__settings reveal" id="ws-settings" aria-labelledby="ws-settings-title">
+          <h2 id="ws-settings-title">2. Configure a atividade</h2>
+
+          <div class="ws__field">
+            <label for="ws-title">Título da folha</label>
+            <input type="text" id="ws-title" value="Caça-palavras" maxlength="80">
+          </div>
+
+          <div class="ws__grid-2">
+            <div class="ws__field">
+              <label for="ws-level">Nível</label>
+              <select id="ws-level">
+                <option value="facil">Fácil: horizontal e vertical</option>
+                <option value="medio" selected>Médio: com diagonais</option>
+                <option value="desafio">Desafio: todas as direções</option>
+              </select>
+            </div>
+            <div class="ws__field">
+              <label for="ws-size">Tamanho da grade</label>
+              <select id="ws-size">
+                <option value="auto" selected>Automático</option>
+                <option value="10">10 x 10</option>
+                <option value="12">12 x 12</option>
+                <option value="14">14 x 14</option>
+                <option value="16">16 x 16</option>
+                <option value="18">18 x 18</option>
+              </select>
+            </div>
+          </div>
+
+          <fieldset class="ws__fieldset">
+            <legend>Identificação opcional</legend>
+            <div class="ws__grid-3">
+              <div class="ws__field">
+                <label for="ws-child">Nome</label>
+                <input type="text" id="ws-child" maxlength="40" placeholder="Nome da criança">
+              </div>
+              <div class="ws__field">
+                <label for="ws-date">Data</label>
+                <input type="text" id="ws-date" maxlength="20" placeholder="__/__/____">
+              </div>
+              <div class="ws__field">
+                <label for="ws-class">Turma</label>
+                <input type="text" id="ws-class" maxlength="24" placeholder="Turma">
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="ws__field ws__check">
+            <input type="checkbox" id="ws-answer" checked>
+            <label for="ws-answer">Incluir gabarito em uma segunda página</label>
+          </div>
+
+          <div class="ws__actions">
+            <button type="button" class="btn btn--primary" id="ws-generate"><span aria-hidden="true">↻</span> Gerar caça-palavras</button>
+            <button type="button" class="btn btn--ghost" id="ws-shuffle" disabled><span aria-hidden="true">✦</span> Nova grade</button>
+            <button type="button" class="btn btn--ghost" id="ws-print" disabled><span aria-hidden="true">⎙</span> Imprimir / salvar PDF</button>
+          </div>
+        </form>
+      </div>
+
+      <section class="ws__preview-panel reveal" aria-labelledby="ws-preview-title">
+        <div class="ws__preview-head">
+          <span class="kicker">Pré-visualização</span>
+          <h2 id="ws-preview-title">Atividade gerada</h2>
+        </div>
+        <p class="ws__status" id="ws-status" role="status" aria-live="polite">Gerando uma grade inicial...</p>
+
+        <div class="ws__print-area" id="ws-print-area">
+          <article class="ws__page ws__page--activity" id="ws-activity-page" aria-label="Página do caça-palavras">
+            <header class="ws__sheet-header">
+              <div class="ws__brand"><img src="../assets/images/brand/mark.svg" alt=""><span>Educa4Good</span></div>
+              <span class="ws__sheet-kind">Caça-palavras</span>
+            </header>
+            <div class="ws__meta" id="ws-activity-meta"></div>
+            <h2 class="ws__page-title" id="ws-activity-title">Caça-palavras</h2>
+            <p class="ws__instruction" id="ws-activity-instruction">Encontre as palavras na grade.</p>
+            <div class="ws__grid-wrap" id="ws-activity-grid">
+              <div class="ws__placeholder">
+                <div class="ws__mini-grid" aria-hidden="true"><span>C</span><span>A</span><span>Ç</span><span>A</span><span>R</span><span>P</span><span>A</span><span>L</span><span>A</span><span>V</span><span>R</span><span>A</span><span>S</span><span>E</span><span>!</span></div>
+                <p>Digite as palavras e gere a atividade.</p>
+              </div>
+            </div>
+            <section class="ws__word-bank" id="ws-word-bank" aria-label="Banco de palavras"></section>
+            <footer class="ws__sheet-footer"><span id="ws-activity-footer">Educa4Good</span></footer>
+          </article>
+
+          <article class="ws__page ws__page--answer" id="ws-answer-page" aria-label="Página do gabarito" hidden>
+            <header class="ws__sheet-header">
+              <div class="ws__brand"><img src="../assets/images/brand/mark.svg" alt=""><span>Educa4Good</span></div>
+              <span class="ws__sheet-kind">Gabarito</span>
+            </header>
+            <div class="ws__meta" id="ws-answer-meta"></div>
+            <h2 class="ws__page-title" id="ws-answer-title">Caça-palavras - gabarito</h2>
+            <p class="ws__instruction" id="ws-answer-instruction">Confira as palavras destacadas.</p>
+            <div class="ws__grid-wrap" id="ws-answer-grid"></div>
+            <section class="ws__word-bank" aria-label="Lista de respostas">
+              <h3>Posição das palavras</h3>
+              <div id="ws-answer-list"></div>
+            </section>
+            <footer class="ws__sheet-footer"><span id="ws-answer-footer">Gabarito do professor</span></footer>
+          </article>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+<script src="../assets/js/word-search.js"></script>
+"""
+    return head_html + header(L, "tools") + body + footer(L)
+
+
 # ---------------------------------------------------------------- raiz e extras
 def build_root_index():
     default = SITE["default_lang"]
@@ -991,8 +1176,9 @@ def build_sitemap():
         for key in PAGE_KEYS:
             loc = f"{base}/{code}/{L['slugs'][key]}.html" if base else f"{code}/{L['slugs'][key]}.html"
             urls += f"  <url><loc>{loc}</loc></url>\n"
-    extra = f"{base}/pt/ligar-os-pontos.html" if base else "pt/ligar-os-pontos.html"
-    urls += f"  <url><loc>{extra}</loc></url>\n"
+    for extra_path in ["pt/ligar-os-pontos.html", "pt/caca-palavras.html"]:
+        extra = f"{base}/{extra_path}" if base else extra_path
+        urls += f"  <url><loc>{extra}</loc></url>\n"
     return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n'
 
 
@@ -1024,6 +1210,10 @@ def main():
 
     with open(os.path.join(ROOT, "pt", "ligar-os-pontos.html"), "w", encoding="utf-8") as f:
         f.write(build_connect_dots_pt(LANGS["pt"]))
+    count += 1
+
+    with open(os.path.join(ROOT, "pt", "caca-palavras.html"), "w", encoding="utf-8") as f:
+        f.write(build_word_search_pt(LANGS["pt"]))
     count += 1
 
     with open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8") as f:

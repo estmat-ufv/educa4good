@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Caça-palavras — Educa4Good</title>
+  <meta name="description" content="Crie caça-palavras personalizados com até 10 palavras e imprima uma folha A4 com gabarito opcional.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Educa4Good">
+  <meta property="og:title" content="Caça-palavras — Educa4Good">
+  <meta property="og:description" content="Crie caça-palavras personalizados com até 10 palavras e imprima uma folha A4 com gabarito opcional.">
+  <meta property="og:image" content="https://estmat-ufv.github.io/educa4good/assets/images/activities/palavras-que-rimam.webp">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:url" content="https://estmat-ufv.github.io/educa4good/pt/caca-palavras.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Caça-palavras — Educa4Good">
+  <meta name="twitter:description" content="Crie caça-palavras personalizados com até 10 palavras e imprima uma folha A4 com gabarito opcional.">
+  <link rel="canonical" href="https://estmat-ufv.github.io/educa4good/pt/caca-palavras.html">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/brand/mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <link rel="stylesheet" href="../assets/css/word-search.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="index.html" aria-label="Educa4Good — Atividades">
+      <img src="../assets/images/brand/mark.svg" alt="" width="44" height="44">
+      <span class="brand__name">Educa<b>4</b>Good</span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="atividades.html">Atividades</a></li>
+        <li><a href="jogos.html" aria-current="page">Jogos</a></li>
+        <li><a href="como-funciona.html">Como funciona</a></li>
+        <li><a href="professores.html">Para professores</a></li>
+        <li><a href="familias.html">Para famílias</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="sobre.html">Sobre</a></li>
+        <li><a class="btn btn--accent" href="contato.html">Quero minha coleção</a></li>
+      </ul>
+    </nav>
+    <div class="lang-switch" aria-label="Idioma">
+      <a href="../pt/jogos.html" data-lang="pt" hreflang="pt" aria-current="true">PT</a>
+      <a href="../en/games.html" data-lang="en" hreflang="en">EN</a>
+      <a href="../es/juegos.html" data-lang="es" hreflang="es">ES</a>
+    </div>
+  </div>
+</header>
+<main id="main">
+<section class="page-hero ws-hero">
+  <div class="container">
+    <h1>Caça-palavras</h1>
+    <p>Monte uma atividade pronta para imprimir com as suas próprias palavras. A lista fica no seu navegador, a grade é criada automaticamente e o gabarito pode sair junto no mesmo PDF.</p>
+  </div>
+</section>
+<section class="section ws" id="caca-palavras">
+  <div class="container">
+    <div class="section-head ws__intro reveal">
+      <span class="kicker">Gerador local</span>
+      <h2>Da lista de palavras para a folha A4</h2>
+      <p>Digite até 10 palavras, escolha o nível e gere uma folha no padrão Educa4Good para imprimir ou salvar como PDF pelo navegador.</p>
+    </div>
+
+    <div class="ws__workspace">
+      <div class="ws__controls">
+        <section class="ws__panel reveal" aria-labelledby="ws-words-title">
+          <h2 id="ws-words-title">1. Escreva as palavras</h2>
+          <div class="ws__field">
+            <label for="ws-words">Palavras do caça-palavras</label>
+            <textarea id="ws-words" rows="8" aria-describedby="ws-words-help">LEITURA
+ESCOLA
+AMIZADE
+NATUREZA
+NUMERO
+BRINCAR
+CRIAR
+APRENDER</textarea>
+            <p class="ws__note" id="ws-words-help">Use uma palavra por linha ou separe por vírgulas. A grade usa letras maiúsculas, sem acentos e sem espaços.</p>
+            <p class="ws__counter" id="ws-counter"><span><strong id="ws-word-count">0</strong>/<span id="ws-word-limit">10</span> palavras</span><span>máximo 18 letras por palavra</span></p>
+            <p class="ws__message" id="ws-message" role="status" aria-live="polite"></p>
+          </div>
+          <div class="ws__examples" aria-label="Sugestões rápidas">
+            <button type="button" data-ws-preset="natureza">Natureza</button>
+            <button type="button" data-ws-preset="leitura">Leitura</button>
+            <button type="button" data-ws-preset="gentileza">Convivência</button>
+          </div>
+        </section>
+
+        <form class="ws__panel ws__settings reveal" id="ws-settings" aria-labelledby="ws-settings-title">
+          <h2 id="ws-settings-title">2. Configure a atividade</h2>
+
+          <div class="ws__field">
+            <label for="ws-title">Título da folha</label>
+            <input type="text" id="ws-title" value="Caça-palavras" maxlength="80">
+          </div>
+
+          <div class="ws__grid-2">
+            <div class="ws__field">
+              <label for="ws-level">Nível</label>
+              <select id="ws-level">
+                <option value="facil">Fácil: horizontal e vertical</option>
+                <option value="medio" selected>Médio: com diagonais</option>
+                <option value="desafio">Desafio: todas as direções</option>
+              </select>
+            </div>
+            <div class="ws__field">
+              <label for="ws-size">Tamanho da grade</label>
+              <select id="ws-size">
+                <option value="auto" selected>Automático</option>
+                <option value="10">10 x 10</option>
+                <option value="12">12 x 12</option>
+                <option value="14">14 x 14</option>
+                <option value="16">16 x 16</option>
+                <option value="18">18 x 18</option>
+              </select>
+            </div>
+          </div>
+
+          <fieldset class="ws__fieldset">
+            <legend>Identificação opcional</legend>
+            <div class="ws__grid-3">
+              <div class="ws__field">
+                <label for="ws-child">Nome</label>
+                <input type="text" id="ws-child" maxlength="40" placeholder="Nome da criança">
+              </div>
+              <div class="ws__field">
+                <label for="ws-date">Data</label>
+                <input type="text" id="ws-date" maxlength="20" placeholder="__/__/____">
+              </div>
+              <div class="ws__field">
+                <label for="ws-class">Turma</label>
+                <input type="text" id="ws-class" maxlength="24" placeholder="Turma">
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="ws__field ws__check">
+            <input type="checkbox" id="ws-answer" checked>
+            <label for="ws-answer">Incluir gabarito em uma segunda página</label>
+          </div>
+
+          <div class="ws__actions">
+            <button type="button" class="btn btn--primary" id="ws-generate"><span aria-hidden="true">↻</span> Gerar caça-palavras</button>
+            <button type="button" class="btn btn--ghost" id="ws-shuffle" disabled><span aria-hidden="true">✦</span> Nova grade</button>
+            <button type="button" class="btn btn--ghost" id="ws-print" disabled><span aria-hidden="true">⎙</span> Imprimir / salvar PDF</button>
+          </div>
+        </form>
+      </div>
+
+      <section class="ws__preview-panel reveal" aria-labelledby="ws-preview-title">
+        <div class="ws__preview-head">
+          <span class="kicker">Pré-visualização</span>
+          <h2 id="ws-preview-title">Atividade gerada</h2>
+        </div>
+        <p class="ws__status" id="ws-status" role="status" aria-live="polite">Gerando uma grade inicial...</p>
+
+        <div class="ws__print-area" id="ws-print-area">
+          <article class="ws__page ws__page--activity" id="ws-activity-page" aria-label="Página do caça-palavras">
+            <header class="ws__sheet-header">
+              <div class="ws__brand"><img src="../assets/images/brand/mark.svg" alt=""><span>Educa4Good</span></div>
+              <span class="ws__sheet-kind">Caça-palavras</span>
+            </header>
+            <div class="ws__meta" id="ws-activity-meta"></div>
+            <h2 class="ws__page-title" id="ws-activity-title">Caça-palavras</h2>
+            <p class="ws__instruction" id="ws-activity-instruction">Encontre as palavras na grade.</p>
+            <div class="ws__grid-wrap" id="ws-activity-grid">
+              <div class="ws__placeholder">
+                <div class="ws__mini-grid" aria-hidden="true"><span>C</span><span>A</span><span>Ç</span><span>A</span><span>R</span><span>P</span><span>A</span><span>L</span><span>A</span><span>V</span><span>R</span><span>A</span><span>S</span><span>E</span><span>!</span></div>
+                <p>Digite as palavras e gere a atividade.</p>
+              </div>
+            </div>
+            <section class="ws__word-bank" id="ws-word-bank" aria-label="Banco de palavras"></section>
+            <footer class="ws__sheet-footer"><span id="ws-activity-footer">Educa4Good</span></footer>
+          </article>
+
+          <article class="ws__page ws__page--answer" id="ws-answer-page" aria-label="Página do gabarito" hidden>
+            <header class="ws__sheet-header">
+              <div class="ws__brand"><img src="../assets/images/brand/mark.svg" alt=""><span>Educa4Good</span></div>
+              <span class="ws__sheet-kind">Gabarito</span>
+            </header>
+            <div class="ws__meta" id="ws-answer-meta"></div>
+            <h2 class="ws__page-title" id="ws-answer-title">Caça-palavras - gabarito</h2>
+            <p class="ws__instruction" id="ws-answer-instruction">Confira as palavras destacadas.</p>
+            <div class="ws__grid-wrap" id="ws-answer-grid"></div>
+            <section class="ws__word-bank" aria-label="Lista de respostas">
+              <h3>Posição das palavras</h3>
+              <div id="ws-answer-list"></div>
+            </section>
+            <footer class="ws__sheet-footer"><span id="ws-answer-footer">Gabarito do professor</span></footer>
+          </article>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+<script src="../assets/js/word-search.js"></script>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../assets/images/brand/logo-light.svg" alt="Educa4Good">
+        <p>Educação que inspira. Aprender pode ser bonito; ensinar pode ser mais simples.</p>
+      </div>
+      <div>
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="atividades.html">Atividades</a></li>
+          <li><a href="como-funciona.html">Como funciona</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="sobre.html">Sobre</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Categorias</h4>
+        <ul><li><a href="atividades.html">Alfabetização</a></li><li><a href="atividades.html">Leitura e escrita</a></li><li><a href="atividades.html">Matemática</a></li><li><a href="atividades.html">Coordenação motora</a></li><li><a href="atividades.html">Raciocínio lógico</a></li></ul>
+      </div>
+      <div>
+        <h4>Informações</h4>
+        <ul>
+          <li><a href="contato.html">Contato</a></li>
+          <li><a href="termos.html">Termos de uso</a></li>
+          <li><a href="termos.html#license">Licença dos materiais</a></li>
+          <li><a href="privacidade.html">Privacidade</a></li>
+          
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Educa4Good. Todos os direitos reservados.</span>
+      <span>Feito com cuidado — e com LaTeX.</span>
+    </div>
+  </div>
+</footer>
+<script src="../assets/js/site.js"></script>
+</body>
+</html>
