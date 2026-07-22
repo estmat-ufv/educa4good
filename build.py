@@ -1204,6 +1204,17 @@ def build_memory_game_pt(L):
             <input type="text" id="mg-title" value="Jogo da memória" maxlength="80">
           </div>
 
+          <div class="mg__field">
+            <label for="mg-card-size">Tamanho das cartas</label>
+            <select id="mg-card-size">
+              <option value="compact">Compacto: 10 cartas por página</option>
+              <option value="medium" selected>Médio: 8 cartas por página</option>
+              <option value="large">Grande: 6 cartas por página</option>
+              <option value="xlarge">Extra grande: 4 cartas por página</option>
+            </select>
+            <p class="mg__note">Quando as cartas não couberem em uma folha A4, o jogo é dividido automaticamente em mais páginas.</p>
+          </div>
+
           <fieldset class="mg__fieldset">
             <legend>Identificação opcional</legend>
             <div class="mg__grid-3">

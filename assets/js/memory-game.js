@@ -6,6 +6,12 @@
   var MAX_ITEMS = 5;
   var MAX_FILE_SIZE = 8 * 1024 * 1024;
   var DEFAULT_WORDS = ["SOL", "LUA", "CASA", "FLOR", "LIVRO"];
+  var CARD_LAYOUTS = {
+    compact: { columns: 2, rows: 5, perPage: 10, label: "compacto" },
+    medium: { columns: 2, rows: 4, perPage: 8, label: "médio" },
+    large: { columns: 2, rows: 3, perPage: 6, label: "grande" },
+    xlarge: { columns: 2, rows: 2, perPage: 4, label: "extra grande" }
+  };
 
   var dom = {};
   var state = {
@@ -74,9 +80,14 @@
       child: dom.child.value.trim(),
       date: dom.date.value.trim(),
       klass: dom.klass.value.trim(),
+      cardSize: dom.cardSize.value,
       shuffle: dom.shuffle.checked,
       showPairNumbers: dom.pairNumbers.checked
     };
+  }
+
+  function cardLayout(config) {
+    return CARD_LAYOUTS[config.cardSize] || CARD_LAYOUTS.medium;
   }
 
   function metaHtml(config) {
@@ -113,12 +124,12 @@
     entries.slice(0, MAX_ITEMS).forEach(function (entry) {
       var label = entry.toLocaleUpperCase("pt-BR");
       if (label.length > 28) {
-        errors.push("\"" + entry + "\" é longa demais. Use até 28 caracteres.");
+        errors.push('"' + entry + '" é longa demais. Use até 28 caracteres.');
         return;
       }
       var key = label.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       if (seen.has(key)) {
-        errors.push("A palavra \"" + entry + "\" aparece repetida.");
+        errors.push('A palavra "' + entry + '" aparece repetida.');
         return;
       }
       seen.add(key);
@@ -179,24 +190,67 @@
       "</article>";
   }
 
+  function pageFooter(pageNumber, totalPages, layout) {
+    var pageText = totalPages > 1 ? " Página " + pageNumber + " de " + totalPages + "." : "";
+    return "Recorte nas linhas pontilhadas. Tamanho " + layout.label + "." + pageText;
+  }
+
+  function pageHtml(cards, config, layout, pageNumber, totalPages) {
+    var pageLabel = totalPages > 1 ? "Folha " + pageNumber + " de " + totalPages : "Folha do jogo";
+    return '<article class="mg__page" aria-label="' + pageLabel + '">' +
+      '<header class="mg__sheet-header">' +
+      '<div class="mg__brand"><img src="../assets/images/brand/mark.svg" alt=""><span>Educa4Good</span></div>' +
+      '<span class="mg__sheet-kind">Jogo da memória</span>' +
+      "</header>" +
+      '<div class="mg__meta">' + metaHtml(config) + "</div>" +
+      '<h2 class="mg__page-title">' + escapeHtml(config.title || "Jogo da memória") + "</h2>" +
+      '<p class="mg__instruction">Recorte as cartas, embaralhe com a face virada para baixo e encontre os pares.</p>' +
+      '<div class="mg__cards" style="--mg-card-columns:' + layout.columns + ';--mg-card-rows:' + layout.rows + '">' +
+      cards.map(function (card) { return cardHtml(card, config); }).join("") +
+      "</div>" +
+      '<footer class="mg__sheet-footer"><span>' + escapeHtml(pageFooter(pageNumber, totalPages, layout)) + "</span></footer>" +
+      "</article>";
+  }
+
+  function pagesHtml(cards, config) {
+    var layout = cardLayout(config);
+    var pages = [];
+    for (var i = 0; i < cards.length; i += layout.perPage) {
+      pages.push(cards.slice(i, i + layout.perPage));
+    }
+    return pages.map(function (pageCards, index) {
+      return pageHtml(pageCards, config, layout, index + 1, pages.length);
+    }).join("");
+  }
+
+  function placeholderHtml(config) {
+    var layout = cardLayout(config);
+    return '<article class="mg__page" aria-label="Prévia do jogo da memória">' +
+      '<header class="mg__sheet-header">' +
+      '<div class="mg__brand"><img src="../assets/images/brand/mark.svg" alt=""><span>Educa4Good</span></div>' +
+      '<span class="mg__sheet-kind">Jogo da memória</span>' +
+      "</header>" +
+      '<div class="mg__meta">' + metaHtml(config) + "</div>" +
+      '<h2 class="mg__page-title">' + escapeHtml(config.title || "Jogo da memória") + "</h2>" +
+      '<p class="mg__instruction">Recorte as cartas, embaralhe com a face virada para baixo e encontre os pares.</p>' +
+      '<div class="mg__cards" style="--mg-card-columns:' + layout.columns + ';--mg-card-rows:' + layout.rows + '">' +
+      '<div class="mg__placeholder"><div class="mg__mini-cards" aria-hidden="true"><span>1A</span><span>1B</span><span>2A</span><span>2B</span><span>3A</span><span>3B</span></div><p>Escolha imagens ou palavras e gere as cartas.</p></div>' +
+      "</div>" +
+      '<footer class="mg__sheet-footer"><span>Educa4Good</span></footer>' +
+      "</article>";
+  }
+
   function renderCards() {
     var config = getConfig();
-    dom.pageTitle.textContent = config.title || "Jogo da memória";
-    dom.meta.innerHTML = metaHtml(config);
 
     if (!state.generated.length) {
-      dom.cards.style.setProperty("--mg-card-rows", "1");
-      dom.cards.innerHTML = '<div class="mg__placeholder"><div class="mg__mini-cards" aria-hidden="true"><span>1A</span><span>1B</span><span>2A</span><span>2B</span><span>3A</span><span>3B</span></div><p>Escolha imagens ou palavras e gere as cartas.</p></div>';
+      dom.printArea.innerHTML = placeholderHtml(config);
       dom.print.disabled = true;
       dom.newOrder.disabled = true;
       return;
     }
 
-    dom.cards.style.setProperty("--mg-card-rows", String(Math.ceil(state.generated.length / 2)));
-    dom.cards.innerHTML = state.generated.map(function (card) {
-      return cardHtml(card, config);
-    }).join("");
-    dom.footer.textContent = "Recorte nas linhas pontilhadas. Embaralhe as cartas viradas para baixo e encontre os pares.";
+    dom.printArea.innerHTML = pagesHtml(state.generated, config);
     dom.print.disabled = false;
     dom.newOrder.disabled = false;
   }
@@ -217,8 +271,11 @@
 
     state.generated = makePairs(parsed.items, config);
     renderCards();
+
+    var layout = cardLayout(config);
+    var pages = Math.ceil(state.generated.length / layout.perPage);
     setMessage("Tudo pronto: " + parsed.items.length + " par(es), " + state.generated.length + " cartas.", "ok");
-    setStatus("Folha A4 gerada com " + state.generated.length + " cartas para recortar.", "ok");
+    setStatus("Jogo gerado no tamanho " + layout.label + ": " + state.generated.length + " cartas em " + pages + " página(s).", "ok");
     return true;
   }
 
@@ -330,7 +387,7 @@
     dom.newOrder.addEventListener("click", generateCards);
     dom.print.addEventListener("click", printCards);
 
-    [dom.title, dom.child, dom.date, dom.klass, dom.shuffle, dom.pairNumbers].forEach(function (element) {
+    [dom.title, dom.cardSize, dom.child, dom.date, dom.klass, dom.shuffle, dom.pairNumbers].forEach(function (element) {
       element.addEventListener("input", renderCards);
       element.addEventListener("change", renderCards);
     });
@@ -350,6 +407,7 @@
     dom.message = byId("mg-message");
     dom.status = byId("mg-status");
     dom.title = byId("mg-title");
+    dom.cardSize = byId("mg-card-size");
     dom.child = byId("mg-child");
     dom.date = byId("mg-date");
     dom.klass = byId("mg-class");
@@ -358,10 +416,7 @@
     dom.generate = byId("mg-generate");
     dom.newOrder = byId("mg-new-order");
     dom.print = byId("mg-print");
-    dom.pageTitle = byId("mg-page-title");
-    dom.meta = byId("mg-meta");
-    dom.cards = byId("mg-cards");
-    dom.footer = byId("mg-footer");
+    dom.printArea = byId("mg-print-area");
 
     dom.words.value = DEFAULT_WORDS.join("\n");
     updateCounter();
