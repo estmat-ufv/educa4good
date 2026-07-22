@@ -24,7 +24,7 @@
       "desc": "Biblioteca de atividades de alfabetização, matemática e lógica com alta qualidade tipográfica. Escolha, imprima e ensine — menos tempo procurando, mais tempo ensinando."
     },
     "activities": { "title": "Atividades — Educa4Good", "desc": "Explore exemplos reais das atividades do Educa4Good: alfabetização, matemática, lógica, coordenação motora e muito mais." },
-    "tools": { "title": "Jogos e Utilidades — Educa4Good", "desc": "Monte quebra-cabeças de imagens, gere folhas de ligar os pontos, crie caça-palavras personalizados e conheça as utilidades interativas do Educa4Good." },
+    "tools": { "title": "Jogos e Utilidades — Educa4Good", "desc": "Monte quebra-cabeças de imagens, gere folhas de ligar os pontos, crie caça-palavras e jogos da memória personalizados no Educa4Good." },
     "how": { "title": "Como funciona — Educa4Good", "desc": "Escolha, imprima e aprenda: veja como usar a biblioteca de atividades do Educa4Good em três passos simples." },
     "teachers": { "title": "Para professores — Educa4Good", "desc": "Atividades organizadas e prontas para imprimir que devolvem tempo de planejamento para quem ensina." },
     "families": { "title": "Para famílias — Educa4Good", "desc": "Atividades impressas para aprender em casa, longe das telas, com momentos de descoberta em família." },
@@ -248,7 +248,7 @@
   "pages": {
     "tools": {
       "hero_title": "Jogos e Utilidades",
-      "hero_lead": "Um cantinho interativo do Educa4Good: brinque direto no navegador, sem instalar nada. Comece pelo quebra-cabeça de imagens, gere folhas de ligar os pontos ou crie um caça-palavras com as suas próprias palavras.",
+      "hero_lead": "Um cantinho interativo do Educa4Good: brinque direto no navegador, sem instalar nada. Comece pelo quebra-cabeça de imagens, gere folhas de ligar os pontos, crie caça-palavras ou monte um jogo da memória para imprimir.",
       "puzzle": {
         "kicker": "Jogue online",
         "title": "Quebra-cabeça de imagens",
@@ -280,13 +280,13 @@
         "note": "Envie a imagem desejada e a gente prepara o seu quebra-cabeça em PDF."
       },
       "soon": {
-        "kicker": "Em breve",
-        "title": "Mais jogos e utilidades a caminho",
-        "lead": "Esta página vai crescer com novas brincadeiras e ferramentas criativas do Educa4Good.",
+        "kicker": "Ferramentas",
+        "title": "Geradores prontos para usar",
+        "lead": "Crie atividades personalizadas direto no navegador e imprima no padrão visual do Educa4Good.",
         "items": [
           { "title": "Ligar os Pontos", "desc": "Transforme uma imagem em uma atividade numerada para a criança revelar o desenho ligando os pontos.", "badge": "novo", "href": "ligar-os-pontos.html", "cta": "Abrir gerador" },
           { "title": "Caça-palavras", "desc": "Monte caça-palavras com até 10 palavras próprias e imprima uma folha A4 com gabarito opcional.", "badge": "novo", "href": "caca-palavras.html", "cta": "Criar caça-palavras" },
-          { "title": "Jogo da memória", "desc": "Crie cartas de memória com imagens e palavras.", "badge": "em breve" }
+          { "title": "Jogo da memória", "desc": "Crie cartas de memória com até 5 imagens ou até 5 palavras e imprima uma folha A4 para recortar.", "badge": "novo", "href": "jogo-da-memoria.html", "cta": "Criar jogo" }
         ]
       }
     },

@@ -1,0 +1,697 @@
+/* Educa4Good - Jogo da memoria.
+   Estilos isolados para o gerador client-side e para cartas A4 imprimiveis. */
+
+.mg-hero {
+  background:
+    linear-gradient(135deg, rgba(234, 241, 248, 0.96), rgba(255, 241, 224, 0.88)),
+    var(--color-primary-soft);
+}
+
+.mg {
+  background:
+    linear-gradient(180deg, #ffffff 0%, #f7fafd 100%);
+}
+
+.mg__intro {
+  margin-bottom: var(--space-3);
+}
+
+.mg__workspace {
+  display: grid;
+  grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.mg__controls {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.mg__panel,
+.mg__preview-panel,
+.mg-offer__box {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow-s);
+}
+
+.mg__panel,
+.mg__preview-panel {
+  padding: var(--space-3);
+}
+
+.mg__panel h2,
+.mg__preview-panel h2 {
+  font-size: 1.2rem;
+}
+
+.mg__mode {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.mg__mode label {
+  display: grid;
+  gap: 0.2rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-s);
+  padding: 0.75rem;
+  cursor: pointer;
+  background: #fff;
+}
+
+.mg__mode label:has(input:checked) {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.mg__mode input {
+  accent-color: var(--color-primary);
+}
+
+.mg__mode strong {
+  color: var(--color-primary-dark);
+  font-family: var(--font-display);
+  font-weight: 900;
+}
+
+.mg__mode span {
+  color: var(--color-text-soft);
+  font-size: var(--fs-small);
+}
+
+.mg__field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.mg__field label,
+.mg__fieldset legend {
+  font-family: var(--font-display);
+  font-size: 0.94rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+}
+
+.mg__field input,
+.mg__field select,
+.mg__field textarea {
+  width: 100%;
+  font: inherit;
+  color: var(--color-text);
+  background: #fff;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-s);
+  padding: 0.65rem 0.75rem;
+}
+
+.mg__field textarea {
+  resize: vertical;
+  min-height: 138px;
+  line-height: 1.48;
+}
+
+.mg__field input[type="file"] {
+  font-size: 0.92rem;
+}
+
+.mg__note,
+.mg__counter {
+  color: var(--color-text-soft);
+  font-size: var(--fs-small);
+  margin: 0.55rem 0 0;
+}
+
+.mg__counter {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-1);
+}
+
+.mg__counter strong {
+  color: var(--color-primary);
+}
+
+.mg__counter.is-error,
+.mg__counter.is-error strong {
+  color: #a33b4f;
+  font-weight: 800;
+}
+
+.mg__message,
+.mg__status {
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-soft);
+  font-size: 0.94rem;
+}
+
+.mg__message.is-error,
+.mg__status.is-error {
+  color: #a33b4f;
+  font-weight: 700;
+}
+
+.mg__message.is-ok,
+.mg__status.is-ok {
+  color: var(--color-green);
+  font-weight: 700;
+}
+
+.mg__upload,
+.mg__words {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.mg__upload[hidden],
+.mg__words[hidden] {
+  display: none;
+}
+
+.mg__thumbs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin-top: var(--space-2);
+}
+
+.mg__thumbs img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  background: #fff;
+}
+
+.mg__settings {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.mg__grid-2,
+.mg__grid-3 {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.mg__grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mg__grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mg__fieldset {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  padding: var(--space-2);
+  margin: 0;
+}
+
+.mg__fieldset legend {
+  padding-inline: 0.25rem;
+}
+
+.mg__check {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: var(--color-primary-soft);
+  border-radius: var(--radius-s);
+  padding: 0.8rem;
+}
+
+.mg__check input {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: var(--color-primary);
+}
+
+.mg__check label {
+  margin: 0;
+}
+
+.mg__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-top: 0.35rem;
+}
+
+.mg__actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 46px;
+  padding: 0.72rem 1.15rem;
+}
+
+.mg__actions .btn[disabled],
+.mg-offer__actions .btn[aria-disabled="true"] {
+  opacity: 0.56;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.mg__preview-panel {
+  position: sticky;
+  top: 92px;
+}
+
+.mg__preview-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+
+.mg__preview-head .kicker {
+  color: var(--color-accent-dark);
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mg__preview-head h2 {
+  margin: 0;
+}
+
+.mg__print-area {
+  margin-top: var(--space-2);
+}
+
+.mg__page {
+  width: 100%;
+  max-width: 860px;
+  aspect-ratio: 210 / 297;
+  margin-inline: auto;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow-m);
+  padding: 18px;
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto;
+  gap: 12px;
+}
+
+.mg__sheet-header,
+.mg__sheet-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mg__brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-primary);
+  font-family: var(--font-display);
+  font-weight: 900;
+}
+
+.mg__brand img {
+  width: 28px;
+  height: 28px;
+}
+
+.mg__sheet-kind {
+  border: 1px solid #c9dceb;
+  border-radius: 999px;
+  color: var(--color-primary-dark);
+  background: var(--color-primary-soft);
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  font-weight: 800;
+  padding: 0.2rem 0.65rem;
+  text-transform: uppercase;
+}
+
+.mg__meta {
+  display: grid;
+  grid-template-columns: 1.5fr 0.75fr 0.75fr;
+  gap: 8px;
+  color: var(--color-text-soft);
+  font-family: var(--font-display);
+  font-size: clamp(0.55rem, 1.35vw, 0.8rem);
+  font-weight: 800;
+}
+
+.mg__meta span {
+  border-bottom: 1px solid #bfcfdd;
+  min-height: 1.55em;
+}
+
+.mg__page-title {
+  color: var(--color-primary-dark);
+  font-size: clamp(1.05rem, 2.7vw, 1.8rem);
+  text-align: center;
+  margin: 0;
+}
+
+.mg__instruction {
+  color: var(--color-text-soft);
+  font-size: clamp(0.62rem, 1.35vw, 0.9rem);
+  line-height: 1.35;
+  margin: 0;
+  text-align: center;
+}
+
+.mg__cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  min-height: 0;
+}
+
+.mg-card {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 0;
+  aspect-ratio: 1.45 / 1;
+  border: 2px dashed #7d95aa;
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, #ffffff 0%, #fafdff 100%);
+  overflow: hidden;
+  padding: 0.45rem;
+}
+
+.mg-card::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(43, 108, 163, 0.26);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+.mg-card__pair {
+  position: absolute;
+  top: 7px;
+  left: 8px;
+  z-index: 2;
+  min-width: 1.6rem;
+  text-align: center;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: #4a3608;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 900;
+  padding: 0.12rem 0.42rem;
+}
+
+.mg-card__image {
+  width: 86%;
+  height: 74%;
+  object-fit: contain;
+}
+
+.mg-card__word {
+  max-width: 92%;
+  color: var(--color-primary-dark);
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 3.1vw, 2rem);
+  font-weight: 900;
+  line-height: 1.08;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.mg-card__caption {
+  position: absolute;
+  right: 9px;
+  bottom: 7px;
+  left: 9px;
+  color: var(--color-text-soft);
+  font-size: clamp(0.48rem, 1.1vw, 0.68rem);
+  line-height: 1.15;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mg__sheet-footer {
+  color: var(--color-text-soft);
+  font-size: clamp(0.52rem, 1.18vw, 0.76rem);
+  line-height: 1.3;
+}
+
+.mg__sheet-footer strong {
+  color: var(--color-primary-dark);
+}
+
+.mg__placeholder {
+  grid-column: 1 / -1;
+  display: grid;
+  place-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 360px;
+  border: 2px dashed #c8d6e2;
+  border-radius: var(--radius-s);
+  background:
+    linear-gradient(135deg, rgba(234, 241, 248, 0.82), rgba(255, 241, 224, 0.76));
+  color: var(--color-text-soft);
+  text-align: center;
+  padding: var(--space-3);
+}
+
+.mg__placeholder p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.mg__mini-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 58px);
+  gap: 8px;
+}
+
+.mg__mini-cards span {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 42px;
+  border-radius: 7px;
+  background: #fff;
+  color: var(--color-primary-dark);
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+  font-weight: 900;
+  box-shadow: 0 0 0 1px #c9dceb;
+}
+
+.mg__mini-cards span:nth-child(2n) {
+  background: #fff0b8;
+}
+
+.mg__mini-cards span:nth-child(3n) {
+  color: var(--color-green);
+}
+
+.mg-offer {
+  background: var(--color-surface);
+}
+
+.mg-offer__box {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-4);
+}
+
+.mg-offer__price {
+  display: grid;
+  gap: 0.2rem;
+  justify-items: start;
+  border-left: 6px solid var(--color-accent);
+  padding-left: var(--space-3);
+}
+
+.mg-offer__price strong {
+  color: var(--color-primary-dark);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.mg-offer__price span {
+  color: var(--color-text-soft);
+  font-size: var(--fs-small);
+}
+
+.mg-offer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: var(--space-2);
+}
+
+.mg-offer__soon {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+}
+
+@media (max-width: 1120px) {
+  .mg__workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .mg__preview-panel {
+    position: static;
+  }
+}
+
+@media (max-width: 720px) {
+  .mg__mode,
+  .mg__grid-2,
+  .mg__grid-3,
+  .mg__meta,
+  .mg-offer__box {
+    grid-template-columns: 1fr;
+  }
+
+  .mg__panel,
+  .mg__preview-panel {
+    padding: var(--space-2);
+  }
+
+  .mg__actions .btn,
+  .mg-offer__actions .btn {
+    width: 100%;
+  }
+
+  .mg__page {
+    padding: 10px;
+  }
+}
+
+@page {
+  size: A4 portrait;
+  margin: 10mm;
+}
+
+@media print {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    background: #fff;
+    color: #111;
+  }
+
+  .site-header,
+  .site-footer,
+  .mg-hero,
+  .mg__intro,
+  .mg__controls,
+  .mg__preview-head,
+  .mg__status,
+  .mg-offer {
+    display: none !important;
+  }
+
+  .section.mg {
+    padding: 0 !important;
+    background: #fff !important;
+  }
+
+  .mg .container {
+    max-width: none;
+    padding: 0;
+  }
+
+  .mg__workspace {
+    display: block;
+  }
+
+  .mg__preview-panel {
+    display: block;
+    position: static;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .mg__print-area {
+    margin: 0;
+  }
+
+  .mg__page {
+    width: 100%;
+    max-width: none;
+    aspect-ratio: auto;
+    min-height: calc(297mm - 20mm);
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .mg__brand img {
+    width: 9mm;
+    height: 9mm;
+  }
+
+  .mg__sheet-kind {
+    font-size: 8pt;
+  }
+
+  .mg__cards {
+    gap: 3mm;
+  }
+
+  .mg-card {
+    border-width: 1.2pt;
+    border-radius: 2mm;
+    break-inside: avoid;
+  }
+
+  .mg-card::after {
+    inset: 2mm;
+    border-radius: 1.5mm;
+  }
+
+  .mg-card__pair {
+    top: 2mm;
+    left: 2.4mm;
+    font-size: 8pt;
+  }
+
+  .mg-card__word {
+    font-size: min(24pt, 7vw);
+  }
+
+  .mg-card__caption {
+    bottom: 2mm;
+    font-size: 7pt;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

@@ -1111,6 +1111,197 @@ APRENDER</textarea>
     return head_html + header(L, "tools") + body + footer(L)
 
 
+def build_memory_game_pt(L):
+    title = "Jogo da memória — Educa4Good"
+    desc = "Crie cartas de memória imprimíveis com até 5 imagens ou até 5 palavras, no layout Educa4Good."
+    url_base = SITE.get("site_url", "").rstrip("/")
+    canonical = f"{url_base}/pt/jogo-da-memoria.html" if url_base else ""
+    links = f'  <link rel="canonical" href="{canonical}">\n' if canonical else ""
+    og_url = f'  <meta property="og:url" content="{canonical}">\n' if canonical else ""
+    og_img = (f"{url_base}/assets/images/activities/ache-o-igual.webp"
+              if url_base else "../assets/images/activities/ache-o-igual.webp")
+    head_html = f"""<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content="{desc}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Educa4Good">
+  <meta property="og:title" content="{title}">
+  <meta property="og:description" content="{desc}">
+  <meta property="og:image" content="{og_img}">
+  <meta property="og:locale" content="pt_BR">
+{og_url}  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{title}">
+  <meta name="twitter:description" content="{desc}">
+{links}  <link rel="icon" type="image/svg+xml" href="../assets/images/brand/mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <link rel="stylesheet" href="../assets/css/memory-game.css">
+</head>
+<body>
+"""
+    body = """<section class="page-hero mg-hero">
+  <div class="container">
+    <h1>Jogo da memória</h1>
+    <p>Crie cartas de memória com imagens ou palavras, prontas para imprimir, recortar e jogar. Tudo acontece no seu navegador: suas imagens não são enviadas para servidores.</p>
+  </div>
+</section>
+<section class="section mg" id="jogo-da-memoria">
+  <div class="container">
+    <div class="section-head mg__intro reveal">
+      <span class="kicker">Gerador local</span>
+      <h2>De imagens ou palavras para cartas A4</h2>
+      <p>Escolha até 5 imagens ou escreva até 5 palavras. Cada item vira um par de cartas no layout do Educa4Good.</p>
+    </div>
+
+    <div class="mg__workspace">
+      <div class="mg__controls">
+        <section class="mg__panel reveal" aria-labelledby="mg-items-title">
+          <h2 id="mg-items-title">1. Escolha o tipo de cartas</h2>
+          <div class="mg__mode" role="radiogroup" aria-label="Tipo de jogo da memória">
+            <label>
+              <input type="radio" name="mg-mode" value="words" checked>
+              <strong>Palavras</strong>
+              <span>Até 5 palavras, duplicadas em pares.</span>
+            </label>
+            <label>
+              <input type="radio" name="mg-mode" value="images">
+              <strong>Imagens</strong>
+              <span>Até 5 imagens do seu computador.</span>
+            </label>
+          </div>
+
+          <div class="mg__words" id="mg-words-panel">
+            <div class="mg__field">
+              <label for="mg-words">Palavras do jogo</label>
+              <textarea id="mg-words" rows="6" aria-describedby="mg-items-help"></textarea>
+            </div>
+          </div>
+
+          <div class="mg__upload" id="mg-upload-panel" hidden>
+            <div class="mg__field">
+              <label for="mg-file">Imagens do jogo</label>
+              <input type="file" id="mg-file" accept="image/png,image/jpeg,image/webp,image/*" multiple aria-describedby="mg-items-help">
+            </div>
+            <div class="mg__thumbs" id="mg-thumbs" aria-label="Prévia das imagens escolhidas"></div>
+          </div>
+
+          <p class="mg__note" id="mg-items-help">Para a versão gratuita, use no máximo 5 itens. Cada item aparece duas vezes na folha.</p>
+          <p class="mg__counter" id="mg-counter"><span><strong id="mg-item-count">0</strong>/<span id="mg-item-limit">5</span> itens</span><span>2 cartas por item</span></p>
+          <p class="mg__message" id="mg-message" role="status" aria-live="polite"></p>
+        </section>
+
+        <form class="mg__panel mg__settings reveal" id="mg-settings" aria-labelledby="mg-settings-title">
+          <h2 id="mg-settings-title">2. Configure a folha</h2>
+
+          <div class="mg__field">
+            <label for="mg-title">Título da folha</label>
+            <input type="text" id="mg-title" value="Jogo da memória" maxlength="80">
+          </div>
+
+          <fieldset class="mg__fieldset">
+            <legend>Identificação opcional</legend>
+            <div class="mg__grid-3">
+              <div class="mg__field">
+                <label for="mg-child">Nome</label>
+                <input type="text" id="mg-child" maxlength="40" placeholder="Nome da criança">
+              </div>
+              <div class="mg__field">
+                <label for="mg-date">Data</label>
+                <input type="text" id="mg-date" maxlength="20" placeholder="__/__/____">
+              </div>
+              <div class="mg__field">
+                <label for="mg-class">Turma</label>
+                <input type="text" id="mg-class" maxlength="24" placeholder="Turma">
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="mg__field mg__check">
+            <input type="checkbox" id="mg-shuffle" checked>
+            <label for="mg-shuffle">Embaralhar a ordem das cartas na folha</label>
+          </div>
+
+          <div class="mg__field mg__check">
+            <input type="checkbox" id="mg-pair-numbers">
+            <label for="mg-pair-numbers">Mostrar número pequeno do par para conferência</label>
+          </div>
+
+          <div class="mg__actions">
+            <button type="button" class="btn btn--primary" id="mg-generate"><span aria-hidden="true">↻</span> Gerar jogo</button>
+            <button type="button" class="btn btn--ghost" id="mg-new-order" disabled><span aria-hidden="true">✦</span> Nova ordem</button>
+            <button type="button" class="btn btn--ghost" id="mg-print" disabled><span aria-hidden="true">⎙</span> Imprimir / salvar PDF</button>
+          </div>
+        </form>
+      </div>
+
+      <section class="mg__preview-panel reveal" aria-labelledby="mg-preview-title">
+        <div class="mg__preview-head">
+          <span class="kicker">Pré-visualização</span>
+          <h2 id="mg-preview-title">Cartas geradas</h2>
+        </div>
+        <p class="mg__status" id="mg-status" role="status" aria-live="polite">Gerando um jogo inicial com palavras...</p>
+
+        <div class="mg__print-area" id="mg-print-area">
+          <article class="mg__page" id="mg-page" aria-label="Folha do jogo da memória">
+            <header class="mg__sheet-header">
+              <div class="mg__brand"><img src="../assets/images/brand/mark.svg" alt=""><span>Educa4Good</span></div>
+              <span class="mg__sheet-kind">Jogo da memória</span>
+            </header>
+            <div class="mg__meta" id="mg-meta"></div>
+            <h2 class="mg__page-title" id="mg-page-title">Jogo da memória</h2>
+            <p class="mg__instruction">Recorte as cartas, embaralhe com a face virada para baixo e encontre os pares.</p>
+            <div class="mg__cards" id="mg-cards">
+              <div class="mg__placeholder">
+                <div class="mg__mini-cards" aria-hidden="true"><span>1A</span><span>1B</span><span>2A</span><span>2B</span><span>3A</span><span>3B</span></div>
+                <p>Escolha imagens ou palavras e gere as cartas.</p>
+              </div>
+            </div>
+            <footer class="mg__sheet-footer"><span id="mg-footer">Educa4Good</span></footer>
+          </article>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+
+<section class="section mg-offer" id="jogo-memoria-encomenda">
+  <div class="container">
+    <div class="mg-offer__box reveal">
+      <div>
+        <span class="kicker" style="color:var(--color-accent-dark);font-family:var(--font-display);font-weight:800;text-transform:uppercase;font-size:var(--fs-small);letter-spacing:.08em;">Sob encomenda</span>
+        <h2>Precisa de um jogo da memória maior?</h2>
+        <p class="muted">O Educa4Good também prepara jogos personalizados com até 100 imagens ou até 100 palavras, em PDF organizado para imprimir, recortar e usar em sala ou em casa.</p>
+        <ul class="pain-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#3e8e58" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg><span>Até 100 imagens ou até 100 palavras</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#3e8e58" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg><span>PDF no layout Educa4Good, pronto para impressão</span></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#3e8e58" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg><span>Pagamento via Pix e envio dos arquivos por Google Forms</span></li>
+        </ul>
+      </div>
+      <div>
+        <div class="mg-offer__price">
+          <strong>R$ 19,90</strong>
+          <span>por jogo personalizado</span>
+        </div>
+        <div class="mg-offer__actions">
+          <span class="btn btn--accent mg-offer__soon" aria-disabled="true">Google Forms em breve</span>
+          <a class="btn btn--ghost" href="contato.html">Quero ser avisado</a>
+        </div>
+        <p class="mg__note">O link do formulário ainda não está disponível. Assim que for liberado, o pedido poderá seguir por Pix e envio das imagens ou palavras pelo Google Forms.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="../assets/js/memory-game.js"></script>
+"""
+    return head_html + header(L, "tools") + body + footer(L)
+
+
 # ---------------------------------------------------------------- raiz e extras
 def build_root_index():
     default = SITE["default_lang"]
@@ -1176,7 +1367,7 @@ def build_sitemap():
         for key in PAGE_KEYS:
             loc = f"{base}/{code}/{L['slugs'][key]}.html" if base else f"{code}/{L['slugs'][key]}.html"
             urls += f"  <url><loc>{loc}</loc></url>\n"
-    for extra_path in ["pt/ligar-os-pontos.html", "pt/caca-palavras.html"]:
+    for extra_path in ["pt/ligar-os-pontos.html", "pt/caca-palavras.html", "pt/jogo-da-memoria.html"]:
         extra = f"{base}/{extra_path}" if base else extra_path
         urls += f"  <url><loc>{extra}</loc></url>\n"
     return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n'
@@ -1214,6 +1405,10 @@ def main():
 
     with open(os.path.join(ROOT, "pt", "caca-palavras.html"), "w", encoding="utf-8") as f:
         f.write(build_word_search_pt(LANGS["pt"]))
+    count += 1
+
+    with open(os.path.join(ROOT, "pt", "jogo-da-memoria.html"), "w", encoding="utf-8") as f:
+        f.write(build_memory_game_pt(LANGS["pt"]))
     count += 1
 
     with open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8") as f:
