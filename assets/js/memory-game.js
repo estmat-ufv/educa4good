@@ -185,12 +185,14 @@
     dom.meta.innerHTML = metaHtml(config);
 
     if (!state.generated.length) {
+      dom.cards.style.setProperty("--mg-card-rows", "1");
       dom.cards.innerHTML = '<div class="mg__placeholder"><div class="mg__mini-cards" aria-hidden="true"><span>1A</span><span>1B</span><span>2A</span><span>2B</span><span>3A</span><span>3B</span></div><p>Escolha imagens ou palavras e gere as cartas.</p></div>';
       dom.print.disabled = true;
       dom.newOrder.disabled = true;
       return;
     }
 
+    dom.cards.style.setProperty("--mg-card-rows", String(Math.ceil(state.generated.length / 2)));
     dom.cards.innerHTML = state.generated.map(function (card) {
       return cardHtml(card, config);
     }).join("");
