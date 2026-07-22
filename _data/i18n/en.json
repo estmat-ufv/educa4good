@@ -7,6 +7,7 @@
   "slugs": {
     "home": "index",
     "activities": "activities",
+    "tools": "games",
     "how": "how-it-works",
     "teachers": "for-teachers",
     "families": "for-families",
@@ -23,6 +24,7 @@
       "desc": "A library of beautifully typeset literacy, math and logic activities. Pick, print and teach — less time searching, more time teaching."
     },
     "activities": { "title": "Activities — Educa4Good", "desc": "Browse real sample pages from the Educa4Good library: literacy, math, logic, fine motor skills and more." },
+    "tools": { "title": "Games & Tools — Educa4Good", "desc": "Solve the image sliding puzzle right in your browser and explore Educa4Good's interactive tools." },
     "how": { "title": "How it works — Educa4Good", "desc": "Pick, print, learn: see how to use the Educa4Good activity library in three simple steps." },
     "teachers": { "title": "For teachers — Educa4Good", "desc": "Organized, print-ready activities that give planning time back to the people who teach." },
     "families": { "title": "For families — Educa4Good", "desc": "Printed activities for screen-free learning at home, one discovery at a time." },
@@ -35,6 +37,7 @@
 
   "nav": {
     "activities": "Activities",
+    "tools": "Games",
     "how": "How it works",
     "teachers": "For teachers",
     "families": "For families",
@@ -243,6 +246,50 @@
   },
 
   "pages": {
+    "tools": {
+      "hero_title": "Games & Tools",
+      "hero_lead": "An interactive corner of Educa4Good: play right in your browser, nothing to install. Start with the image puzzle — and come back often, new activities land here.",
+      "puzzle": {
+        "kicker": "Play online",
+        "title": "Image sliding puzzle",
+        "lead": "Upload a photo, choose the size and solve the sliding puzzle right on the screen. Your image stays on your device — nothing is uploaded to the internet.",
+        "upload_label": "1. Choose an image",
+        "upload_hint": "PNG, JPG or any image format",
+        "size_label": "2. Size",
+        "size_suffix": "pieces per side",
+        "shuffle": "Shuffle",
+        "board_title": "Solve the image",
+        "model_title": "Model",
+        "empty_hint": "Choose an image to start.",
+        "move_hint": "Click or tap a tile next to the empty space to slide it.",
+        "win": "Well done! You solved it! 🎉",
+        "download": "Download image"
+      },
+      "pdf": {
+        "kicker": "Play at home",
+        "title": "Take the puzzle to your computer",
+        "lead": "Want to play with the SAME image outside the browser? We prepare an interactive PDF version that slides in Adobe Acrobat Reader — perfect to play at home, on your computer, as many times as you like.",
+        "points": [
+          "A PDF with your image, ready to play",
+          "Tiles really slide in Adobe Acrobat Reader (free)",
+          "Save it, reopen it and play offline anytime"
+        ],
+        "price": "$3.90",
+        "price_note": "one-time, per image",
+        "cta": "I want the PDF version",
+        "note": "Send us the image you want and we'll prepare your puzzle as a PDF."
+      },
+      "soon": {
+        "kicker": "Coming soon",
+        "title": "More games and tools on the way",
+        "lead": "This page will keep growing with new creative games and tools from Educa4Good.",
+        "items": [
+          { "title": "Connect the dots", "desc": "Generate connect-the-dots sheets from a picture.", "badge": "soon" },
+          { "title": "Word search", "desc": "Build word searches with your own words.", "badge": "soon" },
+          { "title": "Memory game", "desc": "Create memory cards with images and words.", "badge": "soon" }
+        ]
+      }
+    },
     "activities": {
       "hero_title": "The activities",
       "hero_lead": "A showcase of real pages from the collection. Use the filters to browse by category — and remember this is only a sample of the catalog."

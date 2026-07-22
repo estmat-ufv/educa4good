@@ -32,7 +32,7 @@ ACTIVITIES = load("_data", "activities.json")["items"]
 TESTIMONIALS = load("_data", "testimonials.json")
 LANGS = {code: load("_data", "i18n", f"{code}.json") for code in SITE["languages"]}
 
-PAGE_KEYS = ["home", "activities", "how", "teachers", "families",
+PAGE_KEYS = ["home", "activities", "tools", "how", "teachers", "families",
              "about", "faq", "contact", "terms", "privacy"]
 
 # Caminho-base absoluto (ex.: "/educa4good"). O 404 do GitHub Pages é servido em
@@ -127,8 +127,9 @@ def head(L, page_key, extra_meta=""):
 
 def header(L, active_key):
     nav_items = ""
-    for key, label_key in [("activities", "activities"), ("how", "how"),
-                           ("teachers", "teachers"), ("families", "families"),
+    for key, label_key in [("activities", "activities"), ("tools", "tools"),
+                           ("how", "how"), ("teachers", "teachers"),
+                           ("families", "families"),
                            ("faq", "faq"), ("about", "about")]:
         current = ' aria-current="page"' if key == active_key else ""
         nav_items += f'        <li><a href="{href(L, key)}"{current}>{L["nav"][label_key]}</a></li>\n'
@@ -642,6 +643,100 @@ def build_legal(L, key):
     return head(L, key) + header(L, key) + body + footer(L)
 
 
+# ---------------------------------------------------------------- Jogos e Utilidades
+def build_tools(L):
+    P = L["pages"]["tools"]
+    Q = P["puzzle"]
+    D = P["pdf"]
+    S = P["soon"]
+
+    puzzle = f"""<section class="section" id="puzzle-tool">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">{Q['kicker']}</span>
+      <h2>{Q['title']}</h2>
+      <p>{Q['lead']}</p>
+    </div>
+    <div class="qc reveal" id="qc">
+      <div class="qc__controls">
+        <div class="qc__field">
+          <label for="qc-file">{Q['upload_label']}</label>
+          <input type="file" id="qc-file" accept="image/*">
+          <small class="muted">{Q['upload_hint']}</small>
+        </div>
+        <div class="qc__field">
+          <label for="qc-n">{Q['size_label']}: <b id="qc-n-label">3</b> {Q['size_suffix']}</label>
+          <input type="range" id="qc-n" min="1" max="5" step="1" value="3">
+        </div>
+        <button type="button" class="btn btn--primary" id="qc-shuffle">{Q['shuffle']}</button>
+      </div>
+      <div class="qc__stage">
+        <div class="qc__board-wrap">
+          <h3 class="qc__label">{Q['board_title']}</h3>
+          <div class="qc__board" id="qc-board" style="--qc-n:3">
+            <p class="qc__empty" id="qc-empty">{Q['empty_hint']}</p>
+          </div>
+          <p class="qc__hint" id="qc-hint">{Q['move_hint']}</p>
+          <p class="qc__win" id="qc-win" hidden>{Q['win']}</p>
+        </div>
+        <aside class="qc__model">
+          <h3 class="qc__label">{Q['model_title']}</h3>
+          <div class="qc__model-img" id="qc-model">{Q['model_title']}</div>
+          <button type="button" class="btn btn--ghost qc__download" id="qc-download" hidden>{Q['download']}</button>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+"""
+
+    points = "".join(f'<li>{CHECK}<span>{p}</span></li>' for p in D["points"])
+    pdf = f"""<section class="section section--alt" id="puzzle-pdf">
+  <div class="container split">
+    <div class="reveal">
+      <span class="kicker" style="color:var(--color-accent-dark);font-family:var(--font-display);font-weight:800;text-transform:uppercase;font-size:var(--fs-small);letter-spacing:.08em;">{D['kicker']}</span>
+      <h2>{D['title']}</h2>
+      <p class="muted">{D['lead']}</p>
+      <ul class="pain-list">{points}</ul>
+      <div class="qc-price">
+        <div class="qc-price__tag"><span class="qc-price__value">{D['price']}</span><span class="qc-price__note">{D['price_note']}</span></div>
+        <a class="btn btn--accent btn--big" href="{href(L, 'contact')}">{D['cta']}</a>
+      </div>
+      <p class="muted"><em>{D['note']}</em></p>
+    </div>
+    <div class="split__img reveal">
+      <div class="qc-adshot" id="qc-adshot"><span class="qc-adshot__badge">PDF &middot; Adobe Reader</span><span class="qc-adshot__ph">{Q['model_title']}</span></div>
+    </div>
+  </div>
+</section>
+"""
+
+    cards = ""
+    for it in S["items"]:
+        cards += f"""      <div class="card reveal">
+        <div class="icon">{IC['jogos']}</div>
+        <h3>{it['title']} <span class="badge">{it['badge']}</span></h3>
+        <p>{it['desc']}</p>
+      </div>
+"""
+    soon = f"""<section class="section" id="more-tools">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">{S['kicker']}</span>
+      <h2>{S['title']}</h2>
+      <p>{S['lead']}</p>
+    </div>
+    <div class="grid grid--3">
+{cards}    </div>
+  </div>
+</section>
+"""
+
+    body = (page_hero(P["hero_title"], P["hero_lead"]) + puzzle + pdf + soon
+            + '<script src="../assets/js/puzzle.js"></script>\n')
+    return head(L, "tools") + header(L, "tools") + body + footer(L)
+
+
 # ---------------------------------------------------------------- raiz e extras
 def build_root_index():
     default = SITE["default_lang"]
@@ -715,6 +810,7 @@ def main():
     builders = {
         "home": build_home,
         "activities": build_activities,
+        "tools": build_tools,
         "how": build_how,
         "teachers": lambda L: build_audience(L, "teachers"),
         "families": lambda L: build_audience(L, "families"),

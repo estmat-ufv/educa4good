@@ -7,6 +7,7 @@
   "slugs": {
     "home": "index",
     "activities": "actividades",
+    "tools": "juegos",
     "how": "como-funciona",
     "teachers": "docentes",
     "families": "familias",
@@ -23,6 +24,7 @@
       "desc": "Una biblioteca de actividades de lectoescritura, matemáticas y lógica con tipografía de libro. Elige, imprime y enseña — menos tiempo buscando, más tiempo enseñando."
     },
     "activities": { "title": "Actividades — Educa4Good", "desc": "Explora páginas reales de la biblioteca Educa4Good: lectoescritura, matemáticas, lógica, motricidad fina y más." },
+    "tools": { "title": "Juegos y Utilidades — Educa4Good", "desc": "Arma el rompecabezas de imágenes en el navegador y descubre las utilidades interactivas de Educa4Good." },
     "how": { "title": "Cómo funciona — Educa4Good", "desc": "Elige, imprime y aprende: descubre cómo usar la biblioteca de actividades Educa4Good en tres pasos." },
     "teachers": { "title": "Para docentes — Educa4Good", "desc": "Actividades organizadas y listas para imprimir que devuelven tiempo de planificación a quien enseña." },
     "families": { "title": "Para familias — Educa4Good", "desc": "Actividades impresas para aprender en casa, lejos de las pantallas, un descubrimiento a la vez." },
@@ -35,6 +37,7 @@
 
   "nav": {
     "activities": "Actividades",
+    "tools": "Juegos",
     "how": "Cómo funciona",
     "teachers": "Para docentes",
     "families": "Para familias",
@@ -243,6 +246,50 @@
   },
 
   "pages": {
+    "tools": {
+      "hero_title": "Juegos y Utilidades",
+      "hero_lead": "Un rincón interactivo de Educa4Good: juega directamente en el navegador, sin instalar nada. Empieza por el rompecabezas de imágenes — y vuelve seguido, porque aquí llegan nuevos juegos.",
+      "puzzle": {
+        "kicker": "Juega en línea",
+        "title": "Rompecabezas de imágenes",
+        "lead": "Sube una foto, elige el tamaño y arma el rompecabezas deslizante en la pantalla. Tu imagen se queda solo en tu dispositivo — no se envía nada a internet.",
+        "upload_label": "1. Elige una imagen",
+        "upload_hint": "PNG, JPG o cualquier formato de imagen",
+        "size_label": "2. Tamaño",
+        "size_suffix": "piezas por lado",
+        "shuffle": "Mezclar",
+        "board_title": "Arma la imagen",
+        "model_title": "Modelo",
+        "empty_hint": "Elige una imagen para empezar.",
+        "move_hint": "Haz clic o toca una pieza junto al espacio vacío para deslizarla.",
+        "win": "¡Felicidades! ¡Armaste la imagen! 🎉",
+        "download": "Descargar imagen"
+      },
+      "pdf": {
+        "kicker": "Para jugar en casa",
+        "title": "Lleva el rompecabezas a tu computadora",
+        "lead": "¿Quieres jugar con la MISMA imagen fuera del navegador? Preparamos una versión en PDF interactivo que se desliza en Adobe Acrobat Reader — perfecta para jugar en casa, en la computadora, cuantas veces quieras.",
+        "points": [
+          "Un PDF con tu imagen, listo para jugar",
+          "Las piezas se deslizan de verdad en Adobe Acrobat Reader (gratis)",
+          "Guárdalo, ábrelo de nuevo y juega sin conexión cuando quieras"
+        ],
+        "price": "US$ 3,90",
+        "price_note": "pago único, por imagen",
+        "cta": "Quiero la versión en PDF",
+        "note": "Envíanos la imagen que quieras y preparamos tu rompecabezas en PDF."
+      },
+      "soon": {
+        "kicker": "Próximamente",
+        "title": "Más juegos y utilidades en camino",
+        "lead": "Esta página seguirá creciendo con nuevos juegos y herramientas creativas de Educa4Good.",
+        "items": [
+          { "title": "Unir los puntos", "desc": "Genera hojas de unir puntos a partir de una figura.", "badge": "pronto" },
+          { "title": "Sopa de letras", "desc": "Crea sopas de letras con tus propias palabras.", "badge": "pronto" },
+          { "title": "Juego de memoria", "desc": "Crea cartas de memoria con imágenes y palabras.", "badge": "pronto" }
+        ]
+      }
+    },
     "activities": {
       "hero_title": "Las actividades",
       "hero_lead": "Una vitrina con páginas reales de la colección. Usa los filtros para navegar por categoría — recuerda que esto es solo una muestra del catálogo."

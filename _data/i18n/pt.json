@@ -7,6 +7,7 @@
   "slugs": {
     "home": "index",
     "activities": "atividades",
+    "tools": "jogos",
     "how": "como-funciona",
     "teachers": "professores",
     "families": "familias",
@@ -23,6 +24,7 @@
       "desc": "Biblioteca de atividades de alfabetização, matemática e lógica com alta qualidade tipográfica. Escolha, imprima e ensine — menos tempo procurando, mais tempo ensinando."
     },
     "activities": { "title": "Atividades — Educa4Good", "desc": "Explore exemplos reais das atividades do Educa4Good: alfabetização, matemática, lógica, coordenação motora e muito mais." },
+    "tools": { "title": "Jogos e Utilidades — Educa4Good", "desc": "Monte o quebra-cabeça de imagens direto no navegador e conheça as utilidades interativas do Educa4Good." },
     "how": { "title": "Como funciona — Educa4Good", "desc": "Escolha, imprima e aprenda: veja como usar a biblioteca de atividades do Educa4Good em três passos simples." },
     "teachers": { "title": "Para professores — Educa4Good", "desc": "Atividades organizadas e prontas para imprimir que devolvem tempo de planejamento para quem ensina." },
     "families": { "title": "Para famílias — Educa4Good", "desc": "Atividades impressas para aprender em casa, longe das telas, com momentos de descoberta em família." },
@@ -35,6 +37,7 @@
 
   "nav": {
     "activities": "Atividades",
+    "tools": "Jogos",
     "how": "Como funciona",
     "teachers": "Para professores",
     "families": "Para famílias",
@@ -243,6 +246,50 @@
   },
 
   "pages": {
+    "tools": {
+      "hero_title": "Jogos e Utilidades",
+      "hero_lead": "Um cantinho interativo do Educa4Good: brinque direto no navegador, sem instalar nada. Comece pelo quebra-cabeça de imagens — e volte sempre, porque novas brincadeiras chegam por aqui.",
+      "puzzle": {
+        "kicker": "Jogue online",
+        "title": "Quebra-cabeça de imagens",
+        "lead": "Envie uma foto, escolha o tamanho e monte o quebra-cabeça deslizante direto na tela. Sua imagem fica só no seu aparelho — nada é enviado para a internet.",
+        "upload_label": "1. Escolha uma imagem",
+        "upload_hint": "PNG, JPG ou qualquer formato de imagem",
+        "size_label": "2. Tamanho",
+        "size_suffix": "peças por lado",
+        "shuffle": "Embaralhar",
+        "board_title": "Monte a imagem",
+        "model_title": "Modelo",
+        "empty_hint": "Escolha uma imagem para começar.",
+        "move_hint": "Clique ou toque em uma peça ao lado do espaço vazio para deslizá-la.",
+        "win": "Parabéns! Você montou a imagem! 🎉",
+        "download": "Baixar imagem"
+      },
+      "pdf": {
+        "kicker": "Para brincar em casa",
+        "title": "Leve o quebra-cabeça para o computador",
+        "lead": "Quer jogar com a MESMA imagem fora do navegador? A gente prepara uma versão em PDF interativo que desliza no Adobe Acrobat Reader — perfeita para brincar em casa, no computador, quantas vezes quiser.",
+        "points": [
+          "PDF com a sua imagem, pronto para jogar",
+          "As peças deslizam de verdade no Adobe Acrobat Reader (gratuito)",
+          "Guarde, reabra e jogue offline quando quiser"
+        ],
+        "price": "R$ 10,00",
+        "price_note": "pagamento único, por imagem",
+        "cta": "Quero a versão em PDF",
+        "note": "Envie a imagem desejada e a gente prepara o seu quebra-cabeça em PDF."
+      },
+      "soon": {
+        "kicker": "Em breve",
+        "title": "Mais jogos e utilidades a caminho",
+        "lead": "Esta página vai crescer com novas brincadeiras e ferramentas criativas do Educa4Good.",
+        "items": [
+          { "title": "Ligar os pontos", "desc": "Gere folhas de ligar pontos a partir de uma figura.", "badge": "em breve" },
+          { "title": "Caça-palavras", "desc": "Monte caça-palavras com as suas próprias palavras.", "badge": "em breve" },
+          { "title": "Jogo da memória", "desc": "Crie cartas de memória com imagens e palavras.", "badge": "em breve" }
+        ]
+      }
+    },
     "activities": {
       "hero_title": "As atividades",
       "hero_lead": "Uma vitrine com páginas reais da coleção. Use os filtros para navegar por categoria — e lembre que isto é só uma amostra do acervo."

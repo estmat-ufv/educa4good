@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jogos e Utilidades — Educa4Good</title>
+  <meta name="description" content="Monte o quebra-cabeça de imagens direto no navegador e conheça as utilidades interativas do Educa4Good.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Educa4Good">
+  <meta property="og:title" content="Jogos e Utilidades — Educa4Good">
+  <meta property="og:description" content="Monte o quebra-cabeça de imagens direto no navegador e conheça as utilidades interativas do Educa4Good.">
+  <meta property="og:image" content="https://estmat-ufv.github.io/educa4good/assets/images/activities/ligue-sombras.webp">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:url" content="https://estmat-ufv.github.io/educa4good/pt/jogos.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Jogos e Utilidades — Educa4Good">
+  <meta name="twitter:description" content="Monte o quebra-cabeça de imagens direto no navegador e conheça as utilidades interativas do Educa4Good.">
+  <link rel="canonical" href="https://estmat-ufv.github.io/educa4good/pt/jogos.html">
+  <link rel="alternate" hreflang="pt" href="https://estmat-ufv.github.io/educa4good/pt/jogos.html">
+  <link rel="alternate" hreflang="en" href="https://estmat-ufv.github.io/educa4good/en/games.html">
+  <link rel="alternate" hreflang="es" href="https://estmat-ufv.github.io/educa4good/es/juegos.html">
+  <link rel="alternate" hreflang="x-default" href="https://estmat-ufv.github.io/educa4good/pt/index.html">
+  <link rel="icon" type="image/svg+xml" href="../assets/images/brand/mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="index.html" aria-label="Educa4Good — Atividades">
+      <img src="../assets/images/brand/mark.svg" alt="" width="44" height="44">
+      <span class="brand__name">Educa<b>4</b>Good</span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav" id="main-nav" aria-label="Main">
+      <ul>
+        <li><a href="atividades.html">Atividades</a></li>
+        <li><a href="jogos.html" aria-current="page">Jogos</a></li>
+        <li><a href="como-funciona.html">Como funciona</a></li>
+        <li><a href="professores.html">Para professores</a></li>
+        <li><a href="familias.html">Para famílias</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="sobre.html">Sobre</a></li>
+        <li><a class="btn btn--accent" href="contato.html">Quero minha coleção</a></li>
+      </ul>
+    </nav>
+    <div class="lang-switch" aria-label="Idioma">
+      <a href="../pt/jogos.html" data-lang="pt" hreflang="pt" aria-current="true">PT</a>
+      <a href="../en/games.html" data-lang="en" hreflang="en">EN</a>
+      <a href="../es/juegos.html" data-lang="es" hreflang="es">ES</a>
+    </div>
+  </div>
+</header>
+<main id="main">
+<section class="page-hero">
+  <div class="container"><h1>Jogos e Utilidades</h1><p>Um cantinho interativo do Educa4Good: brinque direto no navegador, sem instalar nada. Comece pelo quebra-cabeça de imagens — e volte sempre, porque novas brincadeiras chegam por aqui.</p></div>
+</section>
+<section class="section" id="puzzle-tool">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">Jogue online</span>
+      <h2>Quebra-cabeça de imagens</h2>
+      <p>Envie uma foto, escolha o tamanho e monte o quebra-cabeça deslizante direto na tela. Sua imagem fica só no seu aparelho — nada é enviado para a internet.</p>
+    </div>
+    <div class="qc reveal" id="qc">
+      <div class="qc__controls">
+        <div class="qc__field">
+          <label for="qc-file">1. Escolha uma imagem</label>
+          <input type="file" id="qc-file" accept="image/*">
+          <small class="muted">PNG, JPG ou qualquer formato de imagem</small>
+        </div>
+        <div class="qc__field">
+          <label for="qc-n">2. Tamanho: <b id="qc-n-label">3</b> peças por lado</label>
+          <input type="range" id="qc-n" min="1" max="5" step="1" value="3">
+        </div>
+        <button type="button" class="btn btn--primary" id="qc-shuffle">Embaralhar</button>
+      </div>
+      <div class="qc__stage">
+        <div class="qc__board-wrap">
+          <h3 class="qc__label">Monte a imagem</h3>
+          <div class="qc__board" id="qc-board" style="--qc-n:3">
+            <p class="qc__empty" id="qc-empty">Escolha uma imagem para começar.</p>
+          </div>
+          <p class="qc__hint" id="qc-hint">Clique ou toque em uma peça ao lado do espaço vazio para deslizá-la.</p>
+          <p class="qc__win" id="qc-win" hidden>Parabéns! Você montou a imagem! 🎉</p>
+        </div>
+        <aside class="qc__model">
+          <h3 class="qc__label">Modelo</h3>
+          <div class="qc__model-img" id="qc-model">Modelo</div>
+          <button type="button" class="btn btn--ghost qc__download" id="qc-download" hidden>Baixar imagem</button>
+        </aside>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section section--alt" id="puzzle-pdf">
+  <div class="container split">
+    <div class="reveal">
+      <span class="kicker" style="color:var(--color-accent-dark);font-family:var(--font-display);font-weight:800;text-transform:uppercase;font-size:var(--fs-small);letter-spacing:.08em;">Para brincar em casa</span>
+      <h2>Leve o quebra-cabeça para o computador</h2>
+      <p class="muted">Quer jogar com a MESMA imagem fora do navegador? A gente prepara uma versão em PDF interativo que desliza no Adobe Acrobat Reader — perfeita para brincar em casa, no computador, quantas vezes quiser.</p>
+      <ul class="pain-list"><li><svg viewBox="0 0 24 24" fill="none" stroke="#3e8e58" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg><span>PDF com a sua imagem, pronto para jogar</span></li><li><svg viewBox="0 0 24 24" fill="none" stroke="#3e8e58" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg><span>As peças deslizam de verdade no Adobe Acrobat Reader (gratuito)</span></li><li><svg viewBox="0 0 24 24" fill="none" stroke="#3e8e58" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg><span>Guarde, reabra e jogue offline quando quiser</span></li></ul>
+      <div class="qc-price">
+        <div class="qc-price__tag"><span class="qc-price__value">R$ 10,00</span><span class="qc-price__note">pagamento único, por imagem</span></div>
+        <a class="btn btn--accent btn--big" href="contato.html">Quero a versão em PDF</a>
+      </div>
+      <p class="muted"><em>Envie a imagem desejada e a gente prepara o seu quebra-cabeça em PDF.</em></p>
+    </div>
+    <div class="split__img reveal">
+      <div class="qc-adshot" id="qc-adshot"><span class="qc-adshot__badge">PDF &middot; Adobe Reader</span><span class="qc-adshot__ph">Modelo</span></div>
+    </div>
+  </div>
+</section>
+<section class="section" id="more-tools">
+  <div class="container">
+    <div class="section-head">
+      <span class="kicker">Em breve</span>
+      <h2>Mais jogos e utilidades a caminho</h2>
+      <p>Esta página vai crescer com novas brincadeiras e ferramentas criativas do Educa4Good.</p>
+    </div>
+    <div class="grid grid--3">
+      <div class="card reveal">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2b6ca3" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><circle cx="8.4" cy="8.4" r="1.4" fill="#2b6ca3" stroke="none"/><circle cx="15.6" cy="8.4" r="1.4" fill="#2b6ca3" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="#2b6ca3" stroke="none"/><circle cx="8.4" cy="15.6" r="1.4" fill="#2b6ca3" stroke="none"/><circle cx="15.6" cy="15.6" r="1.4" fill="#2b6ca3" stroke="none"/></svg></div>
+        <h3>Ligar os pontos <span class="badge">em breve</span></h3>
+        <p>Gere folhas de ligar pontos a partir de uma figura.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2b6ca3" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><circle cx="8.4" cy="8.4" r="1.4" fill="#2b6ca3" stroke="none"/><circle cx="15.6" cy="8.4" r="1.4" fill="#2b6ca3" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="#2b6ca3" stroke="none"/><circle cx="8.4" cy="15.6" r="1.4" fill="#2b6ca3" stroke="none"/><circle cx="15.6" cy="15.6" r="1.4" fill="#2b6ca3" stroke="none"/></svg></div>
+        <h3>Caça-palavras <span class="badge">em breve</span></h3>
+        <p>Monte caça-palavras com as suas próprias palavras.</p>
+      </div>
+      <div class="card reveal">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#2b6ca3" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><circle cx="8.4" cy="8.4" r="1.4" fill="#2b6ca3" stroke="none"/><circle cx="15.6" cy="8.4" r="1.4" fill="#2b6ca3" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="#2b6ca3" stroke="none"/><circle cx="8.4" cy="15.6" r="1.4" fill="#2b6ca3" stroke="none"/><circle cx="15.6" cy="15.6" r="1.4" fill="#2b6ca3" stroke="none"/></svg></div>
+        <h3>Jogo da memória <span class="badge">em breve</span></h3>
+        <p>Crie cartas de memória com imagens e palavras.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<script src="../assets/js/puzzle.js"></script>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="../assets/images/brand/logo-light.svg" alt="Educa4Good">
+        <p>Educação que inspira. Aprender pode ser bonito; ensinar pode ser mais simples.</p>
+      </div>
+      <div>
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="atividades.html">Atividades</a></li>
+          <li><a href="como-funciona.html">Como funciona</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="sobre.html">Sobre</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Categorias</h4>
+        <ul><li><a href="atividades.html">Alfabetização</a></li><li><a href="atividades.html">Leitura e escrita</a></li><li><a href="atividades.html">Matemática</a></li><li><a href="atividades.html">Coordenação motora</a></li><li><a href="atividades.html">Raciocínio lógico</a></li></ul>
+      </div>
+      <div>
+        <h4>Informações</h4>
+        <ul>
+          <li><a href="contato.html">Contato</a></li>
+          <li><a href="termos.html">Termos de uso</a></li>
+          <li><a href="termos.html#license">Licença dos materiais</a></li>
+          <li><a href="privacidade.html">Privacidade</a></li>
+          
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Educa4Good. Todos os direitos reservados.</span>
+      <span>Feito com cuidado — e com LaTeX.</span>
+    </div>
+  </div>
+</footer>
+<script src="../assets/js/site.js"></script>
+</body>
+</html>
