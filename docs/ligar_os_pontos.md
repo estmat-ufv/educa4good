@@ -14,9 +14,11 @@ Utilitário web estático publicado dentro do site Educa4Good em:
 
 ## Funcionamento
 
-O processamento acontece integralmente no navegador. A imagem é carregada com `FileReader`, desenhada em um canvas reduzido e convertida para escala de cinza. O script aplica contraste simples, calcula bordas com Sobel, remove ruído isolado, agrupa pixels em componentes conectados e transforma os maiores componentes em sequências de pontos.
+O processamento acontece integralmente no navegador. A imagem é carregada com `FileReader`, desenhada em um canvas reduzido, convertida para escala de cinza e separada do fundo com um limiar automático. Em seguida, o script fecha pequenas falhas nas linhas e percorre as bordas dos pixels de tinta para criar contornos vetoriais fechados.
 
-Quando há múltiplos contornos, o gerador usa os maiores primeiro, distribui pontos proporcionalmente ao comprimento de cada contorno e quebra automaticamente a linha entre um contorno e outro para evitar conexões atravessando a folha.
+Os pontos são distribuídos por distância ao longo desses caminhos SVG, sempre na ordem do próprio contorno. Quando há uma silhueta dominante, detalhes internos contidos nela são descartados; isso evita que a numeração salte entre rosto, corpo e outros traços internos.
+
+Quando há múltiplos contornos externos relevantes, o gerador usa os maiores primeiro, distribui pontos proporcionalmente ao comprimento de cada caminho e quebra automaticamente a linha entre um contorno e outro para evitar conexões atravessando a folha.
 
 As conexões omitidas são informadas como pares consecutivos, por exemplo:
 

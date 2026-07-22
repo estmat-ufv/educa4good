@@ -6,8 +6,7 @@
 
   var MAX_FILE_SIZE = 12 * 1024 * 1024;
   var PROCESS_MAX = 560;
-  var MIN_COMPONENT_PIXELS = 18;
-  var MAX_PIXELS_PER_CONTOUR = 4200;
+  var MIN_VECTOR_AREA_RATIO = 0.00035;
   var PAPER = {
     portrait: { w: 794, h: 1123, label: "portrait" },
     landscape: { w: 1123, h: 794, label: "landscape" }
@@ -240,252 +239,324 @@
     return out;
   }
 
-  function sobel(gray, w, h) {
-    var mag = new Float32Array(w * h);
-    for (var y = 1; y < h - 1; y++) {
-      for (var x = 1; x < w - 1; x++) {
-        var i = y * w + x;
-        var gx =
-          -gray[i - w - 1] - 2 * gray[i - 1] - gray[i + w - 1] +
-           gray[i - w + 1] + 2 * gray[i + 1] + gray[i + w + 1];
-        var gy =
-          -gray[i - w - 1] - 2 * gray[i - w] - gray[i - w + 1] +
-           gray[i + w - 1] + 2 * gray[i + w] + gray[i + w + 1];
-        mag[i] = Math.sqrt(gx * gx + gy * gy);
-      }
-    }
-    return mag;
-  }
-
-  function percentileThreshold(mag) {
-    var sample = [];
-    for (var i = 0; i < mag.length; i += 3) {
-      if (mag[i] > 0) sample.push(mag[i]);
-    }
-    if (sample.length < 20) return 36;
-    sample.sort(function (a, b) { return a - b; });
-    var p = sample[Math.floor(sample.length * 0.86)];
-    return clamp(p, 34, 190);
-  }
-
-  function makeBinary(mag, threshold) {
-    var binary = new Uint8Array(mag.length);
-    for (var i = 0; i < mag.length; i++) {
-      if (mag[i] >= threshold) binary[i] = 1;
-    }
-    return binary;
-  }
-
-  function cleanBinary(binary, w, h) {
-    var cleaned = new Uint8Array(binary.length);
-    var kept = 0;
-    for (var y = 1; y < h - 1; y++) {
-      for (var x = 1; x < w - 1; x++) {
-        var i = y * w + x;
-        if (!binary[i]) continue;
-        var n = 0;
-        for (var dy = -1; dy <= 1; dy++) {
-          for (var dx = -1; dx <= 1; dx++) {
-            if (dx || dy) n += binary[i + dy * w + dx];
-          }
-        }
-        if (n >= 2) {
-          cleaned[i] = 1;
-          kept++;
-        }
-      }
-    }
-    return kept ? cleaned : binary;
-  }
-
-  function findComponents(binary, w, h) {
-    var visited = new Uint8Array(binary.length);
-    var comps = [];
-    var dirs = [-w - 1, -w, -w + 1, -1, 1, w - 1, w, w + 1];
-
-    for (var i = 0; i < binary.length; i++) {
-      if (!binary[i] || visited[i]) continue;
-      var stack = [i];
-      var pixels = [];
-      visited[i] = 1;
-
-      while (stack.length) {
-        var p = stack.pop();
-        pixels.push(p);
-        var x = p % w;
-        var y = (p - x) / w;
-        for (var d = 0; d < dirs.length; d++) {
-          var np = p + dirs[d];
-          var nx = np % w;
-          var ny = (np - nx) / w;
-          if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
-          if (Math.abs(nx - x) > 1 || Math.abs(ny - y) > 1) continue;
-          if (binary[np] && !visited[np]) {
-            visited[np] = 1;
-            stack.push(np);
-          }
-        }
-      }
-
-      if (pixels.length >= MIN_COMPONENT_PIXELS) {
-        comps.push({ pixels: pixels, weight: pixels.length });
-      }
-    }
-
-    comps.sort(function (a, b) { return b.weight - a.weight; });
-    return comps;
-  }
-
-  function limitPixels(pixels) {
-    if (pixels.length <= MAX_PIXELS_PER_CONTOUR) return pixels.slice();
-    var step = Math.ceil(pixels.length / MAX_PIXELS_PER_CONTOUR);
-    var out = [];
-    for (var i = 0; i < pixels.length; i += step) out.push(pixels[i]);
-    return out;
-  }
-
-  function chooseStart(pixels, w) {
-    var best = pixels[0];
-    var bestScore = Infinity;
-    pixels.forEach(function (p) {
-      var x = p % w;
-      var y = (p - x) / w;
-      var score = x + y * 1.6;
-      if (score < bestScore) {
-        bestScore = score;
-        best = p;
-      }
-    });
-    return best;
-  }
-
-  function bestNeighbor(current, remaining, w, h, lastDx, lastDy) {
-    var x = current % w;
-    var y = (current - x) / w;
-    var best = null;
-    var bestScore = Infinity;
-
-    for (var dy = -1; dy <= 1; dy++) {
-      for (var dx = -1; dx <= 1; dx++) {
-        if (!dx && !dy) continue;
-        var nx = x + dx;
-        var ny = y + dy;
-        if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
-        var ni = ny * w + nx;
-        if (!remaining.has(ni)) continue;
-        var turn = lastDx || lastDy ? -(dx * lastDx + dy * lastDy) : 0;
-        var score = Math.sqrt(dx * dx + dy * dy) * 3 + turn;
-        if (score < bestScore) {
-          bestScore = score;
-          best = ni;
-        }
-      }
-    }
-    return best;
-  }
-
-  function nearestRemaining(current, remaining, w) {
-    if (!remaining.size) return null;
-    var x = current % w;
-    var y = (current - x) / w;
-    var best = null;
-    var bestD = Infinity;
-    remaining.forEach(function (p) {
-      var px = p % w;
-      var py = (p - px) / w;
-      var dx = px - x;
-      var dy = py - y;
-      var d = dx * dx + dy * dy;
-      if (d < bestD) {
-        bestD = d;
-        best = p;
-      }
-    });
-    return best;
-  }
-
-  function orderComponent(component, w, h) {
-    var pixels = limitPixels(component.pixels);
-    var remaining = new Set(pixels);
-    var current = chooseStart(pixels, w);
-    var ordered = [];
-    var lastDx = 0;
-    var lastDy = 0;
-
-    while (current != null && remaining.size) {
-      remaining.delete(current);
-      var x = current % w;
-      var y = (current - x) / w;
-      ordered.push({ x: x, y: y });
-
-      var next = bestNeighbor(current, remaining, w, h, lastDx, lastDy);
-      if (next == null) next = nearestRemaining(current, remaining, w);
-      if (next == null) break;
-
-      var nx = next % w;
-      var ny = (next - nx) / w;
-      lastDx = Math.sign(nx - x);
-      lastDy = Math.sign(ny - y);
-      current = next;
-    }
-
-    return ordered;
-  }
-
   function distance(a, b) {
     return Math.hypot(a.x - b.x, a.y - b.y);
   }
 
-  function splitOnJumps(path, w, h) {
-    if (path.length < 2) return [];
-    var jump = Math.max(10, Math.min(w, h) * 0.045);
-    var parts = [[path[0]]];
+  function otsuThreshold(gray) {
+    var histogram = new Uint32Array(256);
+    var sum = 0;
+    for (var i = 0; i < gray.length; i++) {
+      var value = clamp(Math.round(gray[i]), 0, 255);
+      histogram[value]++;
+      sum += value;
+    }
 
-    for (var i = 1; i < path.length; i++) {
-      if (distance(path[i - 1], path[i]) > jump) {
-        parts.push([path[i]]);
-      } else {
-        parts[parts.length - 1].push(path[i]);
+    var backgroundWeight = 0;
+    var backgroundSum = 0;
+    var bestVariance = -1;
+    var best = 127;
+    for (var threshold = 0; threshold < 255; threshold++) {
+      backgroundWeight += histogram[threshold];
+      if (!backgroundWeight) continue;
+      var foregroundWeight = gray.length - backgroundWeight;
+      if (!foregroundWeight) break;
+      backgroundSum += threshold * histogram[threshold];
+      var backgroundMean = backgroundSum / backgroundWeight;
+      var foregroundMean = (sum - backgroundSum) / foregroundWeight;
+      var variance = backgroundWeight * foregroundWeight * Math.pow(backgroundMean - foregroundMean, 2);
+      if (variance > bestVariance) {
+        bestVariance = variance;
+        best = threshold;
+      }
+    }
+    return best;
+  }
+
+  function borderAverage(gray, w, h) {
+    var sum = 0;
+    var count = 0;
+    var stepX = Math.max(1, Math.floor(w / 80));
+    var stepY = Math.max(1, Math.floor(h / 80));
+    for (var x = 0; x < w; x += stepX) {
+      sum += gray[x] + gray[(h - 1) * w + x];
+      count += 2;
+    }
+    for (var y = 1; y < h - 1; y += stepY) {
+      sum += gray[y * w] + gray[y * w + w - 1];
+      count += 2;
+    }
+    return count ? sum / count : 255;
+  }
+
+  function closeInkMask(mask, w, h) {
+    var dilated = new Uint8Array(mask.length);
+    var closed = new Uint8Array(mask.length);
+    var x;
+    var y;
+    var dx;
+    var dy;
+
+    for (y = 0; y < h; y++) {
+      for (x = 0; x < w; x++) {
+        var found = 0;
+        for (dy = -1; dy <= 1 && !found; dy++) {
+          for (dx = -1; dx <= 1; dx++) {
+            var nx = x + dx;
+            var ny = y + dy;
+            if (nx >= 0 && nx < w && ny >= 0 && ny < h && mask[ny * w + nx]) {
+              found = 1;
+              break;
+            }
+          }
+        }
+        dilated[y * w + x] = found;
       }
     }
 
-    return parts.filter(function (part) { return part.length >= 8; });
+    for (y = 1; y < h - 1; y++) {
+      for (x = 1; x < w - 1; x++) {
+        var keep = 1;
+        for (dy = -1; dy <= 1 && keep; dy++) {
+          for (dx = -1; dx <= 1; dx++) {
+            if (!dilated[(y + dy) * w + x + dx]) {
+              keep = 0;
+              break;
+            }
+          }
+        }
+        closed[y * w + x] = keep;
+      }
+    }
+    return closed;
   }
 
-  function pathLength(path) {
+  function makeInkMask(gray, w, h) {
+    var lightBackground = borderAverage(gray, w, h) >= 128;
+    var threshold = otsuThreshold(gray);
+    threshold = lightBackground ? clamp(threshold + 14, 42, 226) : clamp(threshold - 14, 29, 213);
+    var mask = new Uint8Array(gray.length);
+    var ink = 0;
+
+    for (var i = 0; i < gray.length; i++) {
+      var isInk = lightBackground ? gray[i] <= threshold : gray[i] >= threshold;
+      if (isInk) {
+        mask[i] = 1;
+        ink++;
+      }
+    }
+
+    var ratio = ink / mask.length;
+    if (ratio < 0.0006 || ratio > 0.48) {
+      throw new Error("Não encontrei uma silhueta limpa. Tente um desenho com fundo uniforme e linhas bem contrastadas.");
+    }
+    return closeInkMask(mask, w, h);
+  }
+
+  function vectorPointKey(point) {
+    return point.x + "," + point.y;
+  }
+
+  function traceBoundaryLoops(mask, w, h) {
+    var edges = [];
+    var starts = new Map();
+
+    function addEdge(ax, ay, bx, by, direction) {
+      var edge = {
+        a: { x: ax, y: ay },
+        b: { x: bx, y: by },
+        direction: direction,
+        used: false
+      };
+      var index = edges.length;
+      edges.push(edge);
+      var key = vectorPointKey(edge.a);
+      if (!starts.has(key)) starts.set(key, []);
+      starts.get(key).push(index);
+    }
+
+    function filled(x, y) {
+      return x >= 0 && x < w && y >= 0 && y < h && mask[y * w + x];
+    }
+
+    for (var y = 0; y < h; y++) {
+      for (var x = 0; x < w; x++) {
+        if (!filled(x, y)) continue;
+        if (!filled(x, y - 1)) addEdge(x, y, x + 1, y, 0);
+        if (!filled(x + 1, y)) addEdge(x + 1, y, x + 1, y + 1, 1);
+        if (!filled(x, y + 1)) addEdge(x + 1, y + 1, x, y + 1, 2);
+        if (!filled(x - 1, y)) addEdge(x, y + 1, x, y, 3);
+      }
+    }
+
+    function nextEdge(edge) {
+      var candidates = (starts.get(vectorPointKey(edge.b)) || []).filter(function (index) {
+        return !edges[index].used;
+      });
+      if (!candidates.length) return -1;
+      var preference = [1, 0, 3, 2];
+      for (var p = 0; p < preference.length; p++) {
+        for (var c = 0; c < candidates.length; c++) {
+          var candidate = edges[candidates[c]];
+          if ((candidate.direction - edge.direction + 4) % 4 === preference[p]) return candidates[c];
+        }
+      }
+      return candidates[0];
+    }
+
+    var loops = [];
+    edges.forEach(function (first, startIndex) {
+      if (first.used) return;
+      var path = [first.a];
+      var index = startIndex;
+      var guard = 0;
+      while (index >= 0 && guard <= edges.length) {
+        var edge = edges[index];
+        if (edge.used) break;
+        edge.used = true;
+        path.push(edge.b);
+        if (edge.b.x === path[0].x && edge.b.y === path[0].y) break;
+        index = nextEdge(edge);
+        guard++;
+      }
+      if (path.length >= 9 && path[path.length - 1].x === path[0].x && path[path.length - 1].y === path[0].y) {
+        path.pop();
+        loops.push(path);
+      }
+    });
+    return loops;
+  }
+
+  function closedPathLength(path) {
     var total = 0;
-    for (var i = 1; i < path.length; i++) total += distance(path[i - 1], path[i]);
+    for (var i = 0; i < path.length; i++) total += distance(path[i], path[(i + 1) % path.length]);
     return total;
   }
 
-  function resamplePath(path, count) {
+  function polygonArea(path) {
+    var area = 0;
+    for (var i = 0; i < path.length; i++) {
+      var a = path[i];
+      var b = path[(i + 1) % path.length];
+      area += a.x * b.y - b.x * a.y;
+    }
+    return area / 2;
+  }
+
+  function contourBounds(path) {
+    var minX = Infinity;
+    var minY = Infinity;
+    var maxX = -Infinity;
+    var maxY = -Infinity;
+    path.forEach(function (point) {
+      minX = Math.min(minX, point.x);
+      minY = Math.min(minY, point.y);
+      maxX = Math.max(maxX, point.x);
+      maxY = Math.max(maxY, point.y);
+    });
+    return { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
+  }
+
+  function smoothClosedPath(path, passes) {
+    var current = path.slice();
+    for (var pass = 0; pass < passes; pass++) {
+      current = current.map(function (point, index) {
+        var prev = current[(index - 1 + current.length) % current.length];
+        var next = current[(index + 1) % current.length];
+        return {
+          x: (prev.x + point.x * 2 + next.x) / 4,
+          y: (prev.y + point.y * 2 + next.y) / 4
+        };
+      });
+    }
+    return current;
+  }
+
+  function pointInPolygon(point, polygon) {
+    var inside = false;
+    for (var i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+      var a = polygon[i];
+      var b = polygon[j];
+      var crosses = ((a.y > point.y) !== (b.y > point.y)) &&
+        point.x < (b.x - a.x) * (point.y - a.y) / ((b.y - a.y) || 0.00001) + a.x;
+      if (crosses) inside = !inside;
+    }
+    return inside;
+  }
+
+  function resampleClosedPath(path, count) {
     if (!path.length || count <= 0) return [];
     if (path.length === 1 || count === 1) return [{ x: path[0].x, y: path[0].y }];
 
     var lengths = [0];
     var total = 0;
-    for (var i = 1; i < path.length; i++) {
-      total += distance(path[i - 1], path[i]);
+    for (var i = 0; i < path.length; i++) {
+      total += distance(path[i], path[(i + 1) % path.length]);
       lengths.push(total);
     }
     if (total <= 0) return [{ x: path[0].x, y: path[0].y }];
 
     var out = [];
-    var seg = 1;
+    var segment = 0;
     for (var k = 0; k < count; k++) {
-      var target = count === 1 ? 0 : (total * k) / (count - 1);
-      while (seg < lengths.length - 1 && lengths[seg] < target) seg++;
-      var prevLen = lengths[seg - 1];
-      var nextLen = lengths[seg];
-      var t = nextLen === prevLen ? 0 : (target - prevLen) / (nextLen - prevLen);
-      var a = path[seg - 1];
-      var b = path[seg];
+      var target = total * k / count;
+      while (segment < path.length - 1 && lengths[segment + 1] < target) segment++;
+      var startLength = lengths[segment];
+      var endLength = lengths[segment + 1];
+      var t = endLength === startLength ? 0 : (target - startLength) / (endLength - startLength);
+      var a = path[segment];
+      var b = path[(segment + 1) % path.length];
       out.push({
         x: a.x + (b.x - a.x) * t,
         y: a.y + (b.y - a.y) * t
       });
     }
     return out;
+  }
+
+  function extractVectorContours(pointCount) {
+    var prep = prepareCanvas(state.image);
+    var data = prep.ctx.getImageData(0, 0, prep.w, prep.h);
+    var gray = grayscale(data);
+    var mask = makeInkMask(gray, prep.w, prep.h);
+    var imageArea = prep.w * prep.h;
+    var contours = traceBoundaryLoops(mask, prep.w, prep.h).map(function (path) {
+      var area = polygonArea(path);
+      var smoothed = smoothClosedPath(path, 2);
+      return {
+        path: smoothed,
+        area: area,
+        length: closedPathLength(smoothed),
+        bounds: contourBounds(smoothed)
+      };
+    }).filter(function (contour) {
+      return contour.area > imageArea * MIN_VECTOR_AREA_RATIO &&
+        contour.length > Math.min(prep.w, prep.h) * 0.12;
+    }).sort(function (a, b) {
+      return b.area - a.area;
+    });
+
+    if (!contours.length) {
+      throw new Error("Não encontrei contornos nítidos nessa imagem. Tente um desenho com fundo mais simples e alto contraste.");
+    }
+
+    var primary = contours[0];
+    var maxContours = Math.max(1, Math.min(4, Math.floor(pointCount / 8)));
+    var selected = [primary];
+    for (var i = 1; i < contours.length && selected.length < maxContours; i++) {
+      var candidate = contours[i];
+      var center = {
+        x: candidate.bounds.x + candidate.bounds.w / 2,
+        y: candidate.bounds.y + candidate.bounds.h / 2
+      };
+      var isInternalDetail = pointInPolygon(center, primary.path);
+      var isSignificant = candidate.area >= primary.area * 0.07 &&
+        candidate.length >= primary.length * 0.18;
+      if (!isInternalDetail && isSignificant) selected.push(candidate);
+    }
+
+    state.processSize = { w: prep.w, h: prep.h };
+    return selected;
   }
 
   function allocateCounts(contours, total) {
@@ -519,61 +590,23 @@
     return { contours: chosen, counts: counts };
   }
 
-  function extractContours(pointCount) {
-    var prep = prepareCanvas(state.image);
-    var data = prep.ctx.getImageData(0, 0, prep.w, prep.h);
-    var gray = grayscale(data);
-    var mag = sobel(gray, prep.w, prep.h);
-    var baseThreshold = percentileThreshold(mag);
-    var bestContours = [];
-    var bestWeight = 0;
-
-    [1, 0.72, 0.52].some(function (factor) {
-      var binary = cleanBinary(makeBinary(mag, baseThreshold * factor), prep.w, prep.h);
-      var comps = findComponents(binary, prep.w, prep.h)
-        .filter(function (c) { return c.weight >= Math.max(MIN_COMPONENT_PIXELS, prep.w * prep.h * 0.00025); })
-        .slice(0, 18);
-      var contours = [];
-
-      comps.forEach(function (component) {
-        var ordered = orderComponent(component, prep.w, prep.h);
-        splitOnJumps(ordered, prep.w, prep.h).forEach(function (part) {
-          var len = pathLength(part);
-          if (len > Math.min(prep.w, prep.h) * 0.08) {
-            contours.push({ path: part, length: len, weight: component.weight });
-          }
-        });
-      });
-
-      contours.sort(function (a, b) { return b.length - a.length; });
-      var weight = contours.reduce(function (acc, c) { return acc + c.length; }, 0);
-      if (weight > bestWeight) {
-        bestWeight = weight;
-        bestContours = contours;
-      }
-      return bestContours.length && weight > pointCount * 12;
-    });
-
-    if (!bestContours.length) {
-      throw new Error("Não encontrei contornos nítidos nessa imagem. Tente um desenho com fundo mais simples e alto contraste.");
-    }
-
-    state.processSize = { w: prep.w, h: prep.h };
-    return bestContours;
-  }
-
   function generatePointsFromImage(config) {
-    var contours = extractContours(config.pointCount);
+    var contours = extractVectorContours(config.pointCount);
     var allocated = allocateCounts(contours, config.pointCount);
     var points = [];
     var autoBreaks = new Set();
+    var ranges = [];
+    var vectorPaths = [];
 
     // Quando há múltiplos contornos, usamos os maiores primeiro, distribuímos
     // pontos proporcionalmente ao comprimento e quebramos a linha entre eles.
     allocated.contours.forEach(function (contour, index) {
-      var sampled = resamplePath(contour.path, allocated.counts[index]);
+      var sampled = resampleClosedPath(contour.path, allocated.counts[index]);
       if (points.length && sampled.length) autoBreaks.add(points.length - 1);
+      var start = points.length;
       sampled.forEach(function (p) { points.push(p); });
+      ranges.push({ start: start, end: points.length - 1 });
+      vectorPaths.push(resampleClosedPath(contour.path, Math.min(260, Math.max(48, Math.round(contour.length / 2)))));
     });
 
     if (points.length < 2) {
@@ -584,6 +617,8 @@
     return {
       points: points,
       autoBreaks: autoBreaks,
+      ranges: ranges,
+      vectorPaths: vectorPaths,
       contourCount: allocated.contours.length
     };
   }
@@ -637,8 +672,11 @@
 
   function labelPosition(points, index, config, layout) {
     var p = points[index];
-    var prev = points[Math.max(0, index - 1)];
-    var next = points[Math.min(points.length - 1, index + 1)];
+    var range = (state.generated.ranges || []).find(function (item) {
+      return index >= item.start && index <= item.end;
+    }) || { start: 0, end: points.length - 1 };
+    var prev = points[index === range.start ? range.end : index - 1];
+    var next = points[index === range.end ? range.start : index + 1];
     var dx = next.x - prev.x;
     var dy = next.y - prev.y;
     var len = Math.hypot(dx, dy) || 1;
@@ -659,11 +697,72 @@
     };
   }
 
+  function labelPositions(points, config, layout) {
+    var positions = points.map(function (_, index) {
+      return labelPosition(points, index, config, layout);
+    });
+    var minDistance = config.numberSize * 1.42;
+
+    for (var pass = 0; pass < 4; pass++) {
+      for (var i = 0; i < positions.length; i++) {
+        for (var j = i + 1; j < positions.length; j++) {
+          var dx = positions[j].x - positions[i].x;
+          var dy = positions[j].y - positions[i].y;
+          var length = Math.hypot(dx, dy);
+          if (length >= minDistance) continue;
+          if (length < 0.01) {
+            dx = j % 2 ? 1 : -1;
+            dy = i % 2 ? 1 : -1;
+            length = Math.hypot(dx, dy);
+          }
+          var shift = (minDistance - length) / 2 + 0.5;
+          var ux = dx / length;
+          var uy = dy / length;
+          positions[i].x = clamp(positions[i].x - ux * shift, 18, layout.paper.w - 18);
+          positions[i].y = clamp(positions[i].y - uy * shift, layout.bounds.top - 10, layout.paper.h - 22);
+          positions[j].x = clamp(positions[j].x + ux * shift, 18, layout.paper.w - 18);
+          positions[j].y = clamp(positions[j].y + uy * shift, layout.bounds.top - 10, layout.paper.h - 22);
+        }
+      }
+    }
+    return positions;
+  }
+
+  function mapVectorPath(path, layout) {
+    return path.map(function (point) {
+      return {
+        x: layout.bounds.x + (point.x / state.processSize.w) * layout.bounds.w,
+        y: layout.bounds.y + (point.y / state.processSize.h) * layout.bounds.h
+      };
+    });
+  }
+
+  function svgPathData(path, closed) {
+    if (!path.length) return "";
+    var commands = ["M " + path[0].x.toFixed(2) + " " + path[0].y.toFixed(2)];
+    for (var i = 1; i < path.length; i++) {
+      commands.push("L " + path[i].x.toFixed(2) + " " + path[i].y.toFixed(2));
+    }
+    if (closed) commands.push("Z");
+    return commands.join(" ");
+  }
+
+  function guidePathData(points, breaks, hiddenStarts) {
+    if (!points.length) return "";
+    var commands = ["M " + points[0].x.toFixed(2) + " " + points[0].y.toFixed(2)];
+    for (var i = 0; i < points.length - 1; i++) {
+      var command = breaks.has(i) || hiddenStarts.has(i) ? "M " : "L ";
+      commands.push(command + points[i + 1].x.toFixed(2) + " " + points[i + 1].y.toFixed(2));
+    }
+    return commands.join(" ");
+  }
+
   function buildSvg(config) {
     var generated = state.generated;
     var layout = mapPoints(generated.points, config);
     var paper = layout.paper;
     var points = layout.points;
+    var labels = labelPositions(points, config, layout);
     var meta = metadata(config);
     var title = escapeHtml(config.title || "Ligar os pontos");
     var font = "Nunito, Segoe UI, sans-serif";
@@ -680,19 +779,20 @@
       svg.push('<image class="dots-svg__inspiration" href="' + state.dataUrl + '" x="' + layout.bounds.x.toFixed(2) + '" y="' + layout.bounds.y.toFixed(2) + '" width="' + layout.bounds.w.toFixed(2) + '" height="' + layout.bounds.h.toFixed(2) + '" preserveAspectRatio="xMidYMid meet" opacity="0.13"/>');
     }
 
+    svg.push('<g class="dots-svg__source" fill="none" stroke="none" aria-hidden="true">');
+    (generated.vectorPaths || []).forEach(function (path) {
+      svg.push('<path data-source-contour="true" d="' + svgPathData(mapVectorPath(path, layout), true) + '"/>');
+    });
+    svg.push("</g>");
+
     if (config.lineWidth > 0) {
-      svg.push('<g fill="none" stroke="' + escapeHtml(config.lineColor) + '" stroke-width="' + config.lineWidth + '" stroke-linecap="round" stroke-dasharray="7 8" opacity="0.95">');
-      for (var i = 0; i < points.length - 1; i++) {
-        if (generated.autoBreaks.has(i) || config.hiddenStarts.has(i)) continue;
-        svg.push('<line x1="' + points[i].x.toFixed(2) + '" y1="' + points[i].y.toFixed(2) + '" x2="' + points[i + 1].x.toFixed(2) + '" y2="' + points[i + 1].y.toFixed(2) + '"/>');
-      }
-      svg.push("</g>");
+      svg.push('<path class="dots-svg__guide" d="' + guidePathData(points, generated.autoBreaks, config.hiddenStarts) + '" fill="none" stroke="' + escapeHtml(config.lineColor) + '" stroke-width="' + config.lineWidth + '" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 8" opacity="0.95"/>');
     }
 
     svg.push("<g>");
     points.forEach(function (p, i) {
       var label = String(config.startNumber + i);
-      var lp = labelPosition(points, i, config, layout);
+      var lp = labels[i];
       svg.push('<circle class="dots-svg__dot" cx="' + p.x.toFixed(2) + '" cy="' + p.y.toFixed(2) + '" r="' + config.pointSize + '" fill="#223344"/>');
       svg.push('<text class="dots-svg__label" x="' + lp.x.toFixed(2) + '" y="' + lp.y.toFixed(2) + '" text-anchor="middle" dominant-baseline="middle" font-family="' + escapeHtml(font) + '" font-size="' + config.numberSize + '" font-weight="800" fill="#223344">' + escapeHtml(label) + "</text>");
     });
@@ -752,7 +852,7 @@
     }
 
     dom.generate.disabled = true;
-    setStatus("Processando contornos no navegador...", "");
+    setStatus("Vetorizando o contorno no navegador...", "");
     window.setTimeout(function () {
       try {
         state.generated = generatePointsFromImage(config);
@@ -802,6 +902,7 @@
 
     var layout = mapPoints(state.generated.points, config);
     var points = layout.points;
+    var labels = labelPositions(points, config, layout);
     var meta = metadata(config);
     var font = "Nunito, Segoe UI, sans-serif";
 
@@ -836,7 +937,7 @@
 
     points.forEach(function (p, i) {
       var label = String(config.startNumber + i);
-      var lp = labelPosition(points, i, config, layout);
+      var lp = labels[i];
       ctx.fillStyle = "#223344";
       ctx.beginPath();
       ctx.arc(p.x, p.y, config.pointSize, 0, Math.PI * 2);
