@@ -1207,12 +1207,12 @@ def build_memory_game_pt(L):
           <div class="mg__field">
             <label for="mg-card-size">Tamanho das cartas</label>
             <select id="mg-card-size">
-              <option value="compact">Compacto: 10 cartas por página</option>
-              <option value="medium" selected>Médio: 8 cartas por página</option>
-              <option value="large">Grande: 6 cartas por página</option>
-              <option value="xlarge">Extra grande: 4 cartas por página</option>
+              <option value="compact">Pequeno: até 12 cartas por página</option>
+              <option value="medium" selected>Médio: até 6 cartas por página</option>
+              <option value="large">Grande: até 4 cartas por página</option>
+              <option value="xlarge">Extra grande: até 2 cartas por página</option>
             </select>
-            <p class="mg__note">Quando as cartas não couberem em uma folha A4, o jogo é dividido automaticamente em mais páginas.</p>
+            <p class="mg__note">As cartas ficam quadradas e não são espremidas. Nos tamanhos maiores, o jogo é dividido automaticamente em mais folhas A4.</p>
           </div>
 
           <fieldset class="mg__fieldset">
