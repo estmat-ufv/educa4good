@@ -723,6 +723,7 @@ def build_tools(L):
         <p>{it['desc']}</p>{action}
       </div>
 """
+    tools_grid = "grid--4" if len(S["items"]) >= 4 else "grid--3"
     soon = f"""<section class="section" id="more-tools">
   <div class="container">
     <div class="section-head">
@@ -730,7 +731,7 @@ def build_tools(L):
       <h2>{S['title']}</h2>
       <p>{S['lead']}</p>
     </div>
-    <div class="grid grid--3">
+    <div class="grid {tools_grid}">
 {cards}    </div>
   </div>
 </section>
@@ -1313,6 +1314,184 @@ def build_memory_game_pt(L):
     return head_html + header(L, "tools") + body + footer(L)
 
 
+def build_spot_difference_pt(L):
+    title = "Encontre as Diferenças — Educa4Good"
+    desc = "Transforme uma imagem em uma atividade de encontre as diferenças para jogar online ou imprimir em A4."
+    url_base = SITE.get("site_url", "").rstrip("/")
+    canonical = f"{url_base}/pt/encontre-as-diferencas.html" if url_base else ""
+    links = f'  <link rel="canonical" href="{canonical}">\n' if canonical else ""
+    og_url = f'  <meta property="og:url" content="{canonical}">\n' if canonical else ""
+    og_img = (f"{url_base}/assets/images/activities/ache-o-igual.webp"
+              if url_base else "../assets/images/activities/ache-o-igual.webp")
+    head_html = f"""<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content="{desc}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Educa4Good">
+  <meta property="og:title" content="{title}">
+  <meta property="og:description" content="{desc}">
+  <meta property="og:image" content="{og_img}">
+  <meta property="og:locale" content="pt_BR">
+{og_url}  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{title}">
+  <meta name="twitter:description" content="{desc}">
+{links}  <link rel="icon" type="image/svg+xml" href="../assets/images/brand/mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <link rel="stylesheet" href="../assets/css/spot-the-difference.css?v=20260722-diff1">
+</head>
+<body>
+"""
+    body = """<section class="page-hero diff-hero">
+  <div class="container">
+    <h1>Encontre as Diferenças</h1>
+    <p>Envie uma imagem, gere uma segunda versão com diferenças e crie um desafio de observação para jogar online ou imprimir. Tudo acontece no seu navegador.</p>
+  </div>
+</section>
+<section class="section diff" id="encontre-diferencas">
+  <div class="container">
+    <div class="section-head diff__intro reveal">
+      <span class="kicker">Gerador local</span>
+      <h2>Da imagem para o desafio de observação</h2>
+      <p>Use uma imagem própria ou comece por uma demonstração. O Educa4Good cria diferenças distribuídas, registra as áreas corretas e prepara a folha A4 com gabarito separado.</p>
+    </div>
+
+    <div class="diff__workspace">
+      <div class="diff__controls">
+        <section class="diff__panel reveal" aria-labelledby="diff-image-title">
+          <h2 id="diff-image-title">1. Escolha uma imagem</h2>
+          <label class="diff__dropzone" id="diff-dropzone" for="diff-file">
+            <span class="diff__drop-icon" aria-hidden="true">+</span>
+            <strong>Arraste uma imagem aqui</strong>
+            <span>ou clique para selecionar no computador</span>
+          </label>
+          <input class="diff__file" type="file" id="diff-file" accept="image/png,image/jpeg,image/webp,image/*" aria-describedby="diff-file-help">
+          <p class="diff__note" id="diff-file-help">PNG, JPG, WebP e formatos aceitos pelo navegador, até 12 MB. A imagem fica apenas no seu aparelho.</p>
+          <div class="diff__demo" aria-label="Imagens demonstrativas">
+            <button type="button" class="btn btn--ghost" data-diff-demo="park">Usar paisagem</button>
+            <button type="button" class="btn btn--ghost" data-diff-demo="classroom">Usar sala de aula</button>
+          </div>
+          <p class="diff__message" id="diff-message" role="status" aria-live="polite"></p>
+          <figure class="diff__original" id="diff-original" hidden>
+            <img id="diff-original-img" alt="Imagem original escolhida">
+            <figcaption>Imagem original</figcaption>
+          </figure>
+        </section>
+
+        <form class="diff__panel diff__settings reveal" id="diff-settings" aria-labelledby="diff-settings-title">
+          <h2 id="diff-settings-title">2. Configure a atividade</h2>
+
+          <div class="diff__field">
+            <label for="diff-title">Título da folha</label>
+            <input type="text" id="diff-title" value="Encontre as diferenças" maxlength="80">
+          </div>
+
+          <div class="diff__field">
+            <label for="diff-count">Quantidade de diferenças</label>
+            <select id="diff-count">
+              <option value="3">3 diferenças — Fácil</option>
+              <option value="5" selected>5 diferenças — Médio</option>
+              <option value="7">7 diferenças — Difícil</option>
+              <option value="10">10 diferenças — Desafio</option>
+            </select>
+          </div>
+
+          <fieldset class="diff__fieldset">
+            <legend>Identificação opcional</legend>
+            <div class="diff__grid-3">
+              <div class="diff__field">
+                <label for="diff-child">Nome</label>
+                <input type="text" id="diff-child" maxlength="40" placeholder="Nome da criança">
+              </div>
+              <div class="diff__field">
+                <label for="diff-date">Data</label>
+                <input type="text" id="diff-date" maxlength="20" placeholder="__/__/____">
+              </div>
+              <div class="diff__field">
+                <label for="diff-class">Turma</label>
+                <input type="text" id="diff-class" maxlength="24" placeholder="Turma">
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="diff__actions">
+            <button type="button" class="btn btn--primary" id="diff-generate"><span aria-hidden="true">↻</span> Criar atividade</button>
+            <button type="button" class="btn btn--ghost" id="diff-regenerate" disabled><span aria-hidden="true">✦</span> Gerar novas diferenças</button>
+            <button type="button" class="btn btn--ghost" id="diff-solution" disabled><span aria-hidden="true">◎</span> Mostrar solução</button>
+            <button type="button" class="btn btn--ghost" id="diff-reset" disabled><span aria-hidden="true">↺</span> Reiniciar jogo</button>
+            <button type="button" class="btn btn--ghost" id="diff-print" disabled><span aria-hidden="true">⎙</span> Imprimir atividade</button>
+            <button type="button" class="btn btn--ghost" id="diff-print-answer" disabled><span aria-hidden="true">#</span> Imprimir gabarito</button>
+          </div>
+        </form>
+      </div>
+
+      <section class="diff__preview-panel reveal" aria-labelledby="diff-preview-title">
+        <div class="diff__preview-head">
+          <span class="kicker">Jogue online</span>
+          <h2 id="diff-preview-title">Imagem A | Imagem B</h2>
+        </div>
+        <p class="diff__status" id="diff-status" role="status" aria-live="polite">Carregando uma demonstração para começar...</p>
+        <div class="diff__score" id="diff-score" aria-live="polite">
+          <span>Diferenças encontradas: <strong id="diff-found">0</strong> de <strong id="diff-total">5</strong></span>
+        </div>
+
+        <div class="diff__playground" id="diff-playground">
+          <figure class="diff__scene">
+            <figcaption>Imagem A</figcaption>
+            <canvas id="diff-canvas-original" width="900" height="620" role="img" aria-label="Imagem original do desafio"></canvas>
+          </figure>
+          <figure class="diff__scene">
+            <figcaption>Imagem B</figcaption>
+            <canvas id="diff-canvas-modified" width="900" height="620" role="img" aria-label="Imagem modificada do desafio. Clique nas diferenças encontradas."></canvas>
+          </figure>
+        </div>
+
+        <div class="diff__print-area" id="diff-print-area">
+          <article class="diff__page diff__page--activity" aria-label="Folha da atividade Encontre as Diferenças">
+            <header class="diff__sheet-header">
+              <div class="diff__brand"><img src="../assets/images/brand/mark.svg" alt=""><span>Educa4Good</span></div>
+              <span class="diff__sheet-kind">Encontre as diferenças</span>
+            </header>
+            <div class="diff__meta" id="diff-print-meta"></div>
+            <h2 class="diff__page-title" id="diff-print-title">Encontre as diferenças</h2>
+            <p class="diff__instruction">Observe atentamente as duas imagens e encontre as <strong id="diff-print-count">5</strong> diferenças.</p>
+            <div class="diff__print-pair">
+              <figure><img id="diff-print-original" alt="Imagem A da atividade"><figcaption>Imagem A</figcaption></figure>
+              <figure><img id="diff-print-modified" alt="Imagem B da atividade"><figcaption>Imagem B</figcaption></figure>
+            </div>
+            <footer class="diff__sheet-footer"><span>Educa4Good · Atividade para observação visual</span></footer>
+          </article>
+
+          <article class="diff__page diff__page--answer" aria-label="Gabarito da atividade Encontre as Diferenças">
+            <header class="diff__sheet-header">
+              <div class="diff__brand"><img src="../assets/images/brand/mark.svg" alt=""><span>Educa4Good</span></div>
+              <span class="diff__sheet-kind">Gabarito</span>
+            </header>
+            <div class="diff__meta" id="diff-answer-meta"></div>
+            <h2 class="diff__page-title" id="diff-answer-title">Gabarito — Encontre as diferenças</h2>
+            <p class="diff__instruction">As áreas numeradas indicam onde estão as diferenças na imagem modificada.</p>
+            <figure class="diff__answer-figure">
+              <img id="diff-answer-img" alt="Gabarito com diferenças numeradas">
+              <figcaption>Gabarito para o educador</figcaption>
+            </figure>
+            <footer class="diff__sheet-footer"><span>Educa4Good · Gabarito separado</span></footer>
+          </article>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+<script src="../assets/js/spot-the-difference.js?v=20260722-diff1"></script>
+"""
+    return head_html + header(L, "tools") + body + footer(L)
+
+
 # ---------------------------------------------------------------- raiz e extras
 def build_root_index():
     default = SITE["default_lang"]
@@ -1378,7 +1557,7 @@ def build_sitemap():
         for key in PAGE_KEYS:
             loc = f"{base}/{code}/{L['slugs'][key]}.html" if base else f"{code}/{L['slugs'][key]}.html"
             urls += f"  <url><loc>{loc}</loc></url>\n"
-    for extra_path in ["pt/ligar-os-pontos.html", "pt/caca-palavras.html", "pt/jogo-da-memoria.html"]:
+    for extra_path in ["pt/ligar-os-pontos.html", "pt/caca-palavras.html", "pt/jogo-da-memoria.html", "pt/encontre-as-diferencas.html"]:
         extra = f"{base}/{extra_path}" if base else extra_path
         urls += f"  <url><loc>{extra}</loc></url>\n"
     return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n'
@@ -1420,6 +1599,10 @@ def main():
 
     with open(os.path.join(ROOT, "pt", "jogo-da-memoria.html"), "w", encoding="utf-8") as f:
         f.write(build_memory_game_pt(LANGS["pt"]))
+    count += 1
+
+    with open(os.path.join(ROOT, "pt", "encontre-as-diferencas.html"), "w", encoding="utf-8") as f:
+        f.write(build_spot_difference_pt(LANGS["pt"]))
     count += 1
 
     with open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8") as f:
