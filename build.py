@@ -1492,6 +1492,275 @@ def build_spot_difference_pt(L):
     return head_html + header(L, "tools") + body + footer(L)
 
 
+def build_complete_drawing_pt(L):
+    title = "Complete o Desenho — Educa4Good"
+    desc = ("Envie uma imagem, esconda metade da figura e gere uma atividade A4 para a "
+            "criança completar o desenho trabalhando simetria e coordenação motora.")
+    url_base = SITE.get("site_url", "").rstrip("/")
+    canonical = f"{url_base}/pt/complete-o-desenho.html" if url_base else ""
+    links = f'  <link rel="canonical" href="{canonical}">\n' if canonical else ""
+    og_url = f'  <meta property="og:url" content="{canonical}">\n' if canonical else ""
+    og_img = (f"{url_base}/assets/images/activities/ligue-sombras.webp"
+              if url_base else "../assets/images/activities/ligue-sombras.webp")
+    head_html = f"""<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content="{desc}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Educa4Good">
+  <meta property="og:title" content="{title}">
+  <meta property="og:description" content="{desc}">
+  <meta property="og:image" content="{og_img}">
+  <meta property="og:locale" content="pt_BR">
+{og_url}  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{title}">
+  <meta name="twitter:description" content="{desc}">
+{links}  <link rel="icon" type="image/svg+xml" href="../assets/images/brand/mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <link rel="stylesheet" href="../assets/css/complete-drawing.css">
+</head>
+<body>
+"""
+    body = """<section class="page-hero cd-hero">
+  <div class="container">
+    <h1>Complete o desenho</h1>
+    <p>Escolha uma imagem, esconda metade da figura e imprima uma folha A4 para a criança completar o desenho. A imagem é processada no seu navegador e não vai para servidor nenhum.</p>
+  </div>
+</section>
+<section class="section cd" id="complete-o-desenho">
+  <div class="container">
+    <div class="section-head cd__intro reveal">
+      <span class="kicker">Gerador local</span>
+      <h2>De uma imagem para uma atividade de simetria</h2>
+      <p>A metade que ficar visível serve de modelo; a outra metade sai em branco, com eixo e grade opcionais, para a criança desenhar.</p>
+    </div>
+
+    <div class="cd__workspace">
+      <div class="cd__controls">
+        <section class="cd__panel reveal" aria-labelledby="cd-image-title">
+          <h2 id="cd-image-title">1. Escolha a imagem</h2>
+          <div class="cd__field">
+            <label for="cd-file">Imagem da atividade</label>
+            <input type="file" id="cd-file" accept="image/png,image/jpeg,image/webp,image/*" aria-describedby="cd-file-help">
+            <p class="cd__note" id="cd-file-help">PNG, JPG, JPEG ou WebP, de até 12 MB. Desenhos com fundo claro e traços definidos funcionam melhor.</p>
+          </div>
+          <div class="cd__actions">
+            <button type="button" class="btn btn--ghost" id="cd-example"><span aria-hidden="true">✦</span> Usar imagem de exemplo</button>
+            <button type="button" class="btn btn--ghost" id="cd-reset"><span aria-hidden="true">↺</span> Reiniciar</button>
+          </div>
+          <p class="cd__privacy"><span aria-hidden="true">🔒</span> <span>Sua imagem é processada diretamente no navegador e não é enviada para nossos servidores. Nada fica armazenado.</span></p>
+          <p class="cd__message" id="cd-message" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="cd__panel reveal" aria-labelledby="cd-frame-title">
+          <h2 id="cd-frame-title">2. Ajuste o enquadramento</h2>
+          <div class="cd__field">
+            <label for="cd-zoom">Zoom: <b id="cd-zoom-output">1x</b></label>
+            <input type="range" id="cd-zoom" min="1" max="3" step="0.05" value="1">
+          </div>
+          <p class="cd__hint" id="cd-frame-hint">Arraste a figura na pré-visualização para mover o enquadramento.</p>
+          <div class="cd__actions">
+            <button type="button" class="btn btn--ghost" id="cd-center">Centralizar</button>
+            <button type="button" class="btn btn--ghost" id="cd-reset-frame">Redefinir enquadramento</button>
+          </div>
+        </section>
+
+        <section class="cd__panel reveal" aria-labelledby="cd-activity-title">
+          <h2 id="cd-activity-title">3. Monte a atividade</h2>
+
+          <div class="cd__field">
+            <label for="cd-mode">Tipo de atividade</label>
+            <select id="cd-mode">
+              <option value="simetria" selected>Completar por simetria — a criança desenha o reflexo</option>
+              <option value="continuar">Continuar o desenho — a criança reproduz a parte que sumiu</option>
+            </select>
+            <p class="cd__note">Para atividades de simetria, prefira imagens vistas de frente e com formato aproximadamente simétrico. O modo “continuar” funciona com qualquer figura.</p>
+          </div>
+
+          <div class="cd__grid-2">
+            <div class="cd__field">
+              <label for="cd-side">Parte que será escondida</label>
+              <select id="cd-side">
+                <option value="direita" selected>Metade direita</option>
+                <option value="esquerda">Metade esquerda</option>
+                <option value="baixo">Metade inferior</option>
+                <option value="cima">Metade superior</option>
+                <option value="diagonal">Metade na diagonal</option>
+              </select>
+            </div>
+            <div class="cd__field">
+              <label for="cd-level">Dificuldade</label>
+              <select id="cd-level">
+                <option value="facil">Fácil: grade grande e pistas</option>
+                <option value="medio" selected>Médio: grade intermediária</option>
+                <option value="dificil">Difícil: sem grade</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="cd__grid-2">
+            <div class="cd__field">
+              <label for="cd-style">Estilo da figura</label>
+              <select id="cd-style">
+                <option value="original">Original</option>
+                <option value="cinza">Escala de cinza</option>
+                <option value="contorno" selected>Contorno</option>
+                <option value="contorno-suave">Contorno suave</option>
+              </select>
+            </div>
+            <div class="cd__field">
+              <label for="cd-grid">Grade de apoio</label>
+              <select id="cd-grid">
+                <option value="nenhuma">Sem grade</option>
+                <option value="grande">Grade grande</option>
+                <option value="media" selected>Grade média</option>
+                <option value="pequena">Grade pequena</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="cd__grid-2">
+            <div class="cd__field">
+              <label for="cd-axis">Eixo de simetria</label>
+              <select id="cd-axis">
+                <option value="nenhuma">Sem linha</option>
+                <option value="continua">Linha contínua</option>
+                <option value="tracejada" selected>Linha tracejada</option>
+              </select>
+            </div>
+            <div class="cd__field">
+              <label for="cd-orientation">Folha A4</label>
+              <select id="cd-orientation">
+                <option value="auto" selected>Automática</option>
+                <option value="portrait">Retrato</option>
+                <option value="landscape">Paisagem</option>
+              </select>
+              <p class="cd__note" id="cd-orientation-hint"></p>
+            </div>
+          </div>
+
+          <div class="cd__check">
+            <input type="checkbox" id="cd-dots">
+            <label for="cd-dots">Mostrar pontos de referência<span>Marcas discretas no eixo e nos cruzamentos da grade para as crianças menores.</span></label>
+          </div>
+          <div class="cd__check">
+            <input type="checkbox" id="cd-hint">
+            <label for="cd-hint">Complete com ajuda (traçado guiado)<span>A parte escondida aparece bem clarinha, para a criança passar o lápis por cima.</span></label>
+          </div>
+
+          <div class="cd__actions">
+            <button type="button" class="btn btn--ghost" id="cd-swap"><span aria-hidden="true">⇄</span> Trocar lado</button>
+          </div>
+        </section>
+
+        <form class="cd__panel reveal" id="cd-sheet-form" aria-labelledby="cd-sheet-title">
+          <h2 id="cd-sheet-title">4. Ajuste a folha</h2>
+
+          <div class="cd__field">
+            <label for="cd-title">Título da atividade</label>
+            <select id="cd-title">
+              <option value="Complete o desenho" selected>Complete o desenho</option>
+              <option value="Complete a outra metade">Complete a outra metade</option>
+              <option value="Desenhe a parte que está faltando">Desenhe a parte que está faltando</option>
+              <option value="Complete a figura">Complete a figura</option>
+              <option value="Complete usando a simetria">Complete usando a simetria</option>
+              <option value="custom">Título personalizado…</option>
+            </select>
+          </div>
+
+          <div class="cd__field" id="cd-title-custom-field" hidden>
+            <label for="cd-title-custom">Título personalizado</label>
+            <input type="text" id="cd-title-custom" maxlength="60" placeholder="Escreva o título da folha">
+          </div>
+
+          <div class="cd__field">
+            <label for="cd-instruction">Instrução impressa</label>
+            <textarea id="cd-instruction" rows="3" maxlength="220"></textarea>
+            <div class="cd__actions">
+              <button type="button" class="btn btn--ghost" id="cd-instruction-reset">Voltar à instrução automática</button>
+            </div>
+          </div>
+
+          <fieldset class="cd__fieldset">
+            <legend>Identificação opcional</legend>
+            <div class="cd__grid-2">
+              <div class="cd__field">
+                <label for="cd-child">Nome</label>
+                <input type="text" id="cd-child" maxlength="40" placeholder="Nome da criança">
+              </div>
+              <div class="cd__field">
+                <label for="cd-date">Data</label>
+                <input type="text" id="cd-date" maxlength="24" placeholder="__/__/____">
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="cd__actions">
+            <button type="button" class="btn btn--primary" id="cd-print"><span aria-hidden="true">⎙</span> Imprimir atividade</button>
+            <button type="button" class="btn btn--ghost" id="cd-print-solution"><span aria-hidden="true">✓</span> Imprimir gabarito</button>
+          </div>
+        </form>
+      </div>
+
+      <section class="cd__preview-panel reveal" aria-labelledby="cd-preview-title">
+        <div class="cd__preview-head">
+          <span class="kicker">Pré-visualização</span>
+          <h2 id="cd-preview-title">Folha A4</h2>
+        </div>
+        <p class="cd__status" id="cd-status" role="status" aria-live="polite">Envie uma imagem ou use o exemplo para começar.</p>
+
+        <div class="cd__views" role="group" aria-label="O que mostrar na pré-visualização">
+          <button type="button" data-cd-view="activity" class="is-active" aria-pressed="true">Atividade</button>
+          <button type="button" data-cd-view="original" aria-pressed="false">Original</button>
+          <button type="button" data-cd-view="solution" aria-pressed="false">Solução</button>
+          <button type="button" id="cd-draw-toggle" aria-pressed="false">Desenhar na tela</button>
+        </div>
+
+        <div class="cd__print-area" id="cd-print-area">
+          <div class="cd__stage" id="cd-stage" data-view="activity">
+            <div class="cd__page cd__page--activity">
+              <canvas id="cd-activity" class="cd__canvas" aria-label="Pré-visualização da atividade"></canvas>
+              <canvas id="cd-overlay" class="cd__overlay" aria-label="Área para desenhar na tela"></canvas>
+            </div>
+            <div class="cd__page cd__page--original">
+              <canvas id="cd-original" aria-label="Imagem original enviada"></canvas>
+            </div>
+            <div class="cd__page cd__page--solution">
+              <canvas id="cd-solution" aria-label="Gabarito com a figura completa"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="cd__draw-tools" id="cd-draw-tools" hidden>
+          <div class="cd__field">
+            <label for="cd-tool">Ferramenta</label>
+            <select id="cd-tool">
+              <option value="lapis" selected>Lápis</option>
+              <option value="borracha">Borracha</option>
+            </select>
+          </div>
+          <div class="cd__field">
+            <label for="cd-pen-size">Espessura</label>
+            <input type="range" id="cd-pen-size" min="1" max="12" step="1" value="4">
+          </div>
+          <button type="button" class="btn btn--ghost" id="cd-undo">Desfazer</button>
+          <button type="button" class="btn btn--ghost" id="cd-clear">Limpar desenho</button>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+<script src="../assets/js/complete-drawing.js"></script>
+"""
+    return head_html + header(L, "tools") + body + footer(L)
+
+
 # ---------------------------------------------------------------- raiz e extras
 def build_root_index():
     default = SITE["default_lang"]
@@ -1557,7 +1826,7 @@ def build_sitemap():
         for key in PAGE_KEYS:
             loc = f"{base}/{code}/{L['slugs'][key]}.html" if base else f"{code}/{L['slugs'][key]}.html"
             urls += f"  <url><loc>{loc}</loc></url>\n"
-    for extra_path in ["pt/ligar-os-pontos.html", "pt/caca-palavras.html", "pt/jogo-da-memoria.html", "pt/encontre-as-diferencas.html"]:
+    for extra_path in ["pt/ligar-os-pontos.html", "pt/caca-palavras.html", "pt/jogo-da-memoria.html", "pt/encontre-as-diferencas.html", "pt/complete-o-desenho.html"]:
         extra = f"{base}/{extra_path}" if base else extra_path
         urls += f"  <url><loc>{extra}</loc></url>\n"
     return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n'
@@ -1603,6 +1872,10 @@ def main():
 
     with open(os.path.join(ROOT, "pt", "encontre-as-diferencas.html"), "w", encoding="utf-8") as f:
         f.write(build_spot_difference_pt(LANGS["pt"]))
+    count += 1
+
+    with open(os.path.join(ROOT, "pt", "complete-o-desenho.html"), "w", encoding="utf-8") as f:
+        f.write(build_complete_drawing_pt(LANGS["pt"]))
     count += 1
 
     with open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8") as f:

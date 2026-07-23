@@ -286,6 +286,7 @@
         "items": [
           { "title": "Connect the dots", "desc": "Generate connect-the-dots sheets from a picture.", "badge": "soon" },
           { "title": "Word search", "desc": "Build word searches with your own words.", "badge": "soon" },
+          { "title": "Complete the drawing", "desc": "Upload a picture, hide half of it and print an activity for the child to complete the drawing.", "badge": "soon" },
           { "title": "Memory game", "desc": "Create memory cards with images and words.", "badge": "soon" }
         ]
       }

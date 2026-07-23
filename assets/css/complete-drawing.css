@@ -1,0 +1,450 @@
+/* Educa4Good - Complete o Desenho.
+   Estilos isolados do gerador client-side e da folha A4 imprimivel. */
+
+.cd-hero {
+  background:
+    linear-gradient(135deg, rgba(234, 241, 248, 0.96), rgba(255, 241, 224, 0.88)),
+    var(--color-primary-soft);
+}
+
+.cd {
+  background: linear-gradient(180deg, #ffffff 0%, #f7fafd 100%);
+}
+
+.cd__intro {
+  margin-bottom: var(--space-3);
+}
+
+.cd__workspace {
+  display: grid;
+  grid-template-columns: minmax(320px, 430px) minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.cd__controls {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.cd__panel,
+.cd__preview-panel {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow-s);
+  padding: var(--space-3);
+}
+
+.cd__panel h2,
+.cd__preview-panel h2 {
+  font-size: 1.2rem;
+}
+
+.cd__field {
+  display: grid;
+  gap: 0.4rem;
+  margin-bottom: var(--space-2);
+}
+
+.cd__field:last-child {
+  margin-bottom: 0;
+}
+
+.cd__field label,
+.cd__fieldset legend {
+  font-family: var(--font-display);
+  font-size: 0.94rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+}
+
+.cd__field input[type="text"],
+.cd__field input[type="file"],
+.cd__field select,
+.cd__field textarea {
+  width: 100%;
+  font: inherit;
+  color: var(--color-text);
+  background: #fff;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-s);
+  padding: 0.65rem 0.75rem;
+}
+
+.cd__field input[type="file"] {
+  font-size: 0.92rem;
+}
+
+.cd__field textarea {
+  min-height: 82px;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.cd__field input[type="range"] {
+  width: 100%;
+  accent-color: var(--color-primary);
+}
+
+.cd__grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.cd__fieldset {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  padding: var(--space-2);
+  margin: 0 0 var(--space-2);
+}
+
+.cd__fieldset legend {
+  padding-inline: 0.25rem;
+}
+
+.cd__check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  background: var(--color-primary-soft);
+  border-radius: var(--radius-s);
+  padding: 0.7rem 0.8rem;
+  margin-bottom: 0.6rem;
+}
+
+.cd__check input {
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.15rem;
+  accent-color: var(--color-primary);
+  flex: none;
+}
+
+.cd__check label {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: var(--color-primary-dark);
+}
+
+.cd__check span {
+  display: block;
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: var(--color-text-soft);
+  font-size: var(--fs-small);
+  line-height: 1.35;
+}
+
+.cd__note,
+.cd__hint {
+  color: var(--color-text-soft);
+  font-size: var(--fs-small);
+  margin: 0.45rem 0 0;
+}
+
+.cd__privacy {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  background: var(--color-primary-soft);
+  border-radius: var(--radius-s);
+  color: var(--color-primary-dark);
+  font-size: var(--fs-small);
+  line-height: 1.4;
+  padding: 0.7rem 0.85rem;
+  margin: var(--space-2) 0 0;
+}
+
+.cd__message,
+.cd__status {
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-soft);
+  font-size: 0.94rem;
+}
+
+.cd__message.is-error,
+.cd__status.is-error {
+  color: #a33b4f;
+  font-weight: 700;
+}
+
+.cd__message.is-ok,
+.cd__status.is-ok {
+  color: var(--color-green);
+  font-weight: 700;
+}
+
+.cd__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  padding-top: 0.3rem;
+}
+
+.cd__actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 46px;
+  padding: 0.7rem 1.1rem;
+}
+
+/* ---------- painel de pre-visualizacao ---------- */
+.cd__preview-panel {
+  position: sticky;
+  top: 92px;
+}
+
+.cd__preview-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+
+.cd__preview-head .kicker {
+  color: var(--color-accent-dark);
+  font-family: var(--font-display);
+  font-size: var(--fs-small);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cd__preview-head h2 {
+  margin: 0;
+}
+
+.cd__views {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: var(--space-2);
+}
+
+.cd__views button {
+  font: inherit;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.92rem;
+  color: var(--color-primary-dark);
+  background: #fff;
+  border: 1.5px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  min-height: 42px;
+  cursor: pointer;
+}
+
+.cd__views button:hover {
+  border-color: var(--color-primary);
+}
+
+.cd__views button.is-active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.cd__print-area {
+  margin-top: var(--space-2);
+}
+
+.cd__stage {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.cd__page {
+  position: relative;
+  width: 100%;
+  max-width: 860px;
+  margin-inline: auto;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow-m);
+  overflow: hidden;
+}
+
+.cd__page canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cd__overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+.cd__stage.is-dragging .cd__overlay {
+  cursor: grabbing;
+}
+
+.cd__stage.is-drawing .cd__overlay {
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.cd__stage[data-view="activity"] .cd__page--original,
+.cd__stage[data-view="activity"] .cd__page--solution,
+.cd__stage[data-view="original"] .cd__page--activity,
+.cd__stage[data-view="original"] .cd__page--solution,
+.cd__stage[data-view="solution"] .cd__page--activity,
+.cd__stage[data-view="solution"] .cd__page--original {
+  display: none;
+}
+
+.cd__draw-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.7rem;
+  margin-top: var(--space-2);
+  padding: 0.8rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+}
+
+.cd__draw-tools .cd__field {
+  margin: 0;
+  min-width: 130px;
+}
+
+.cd__draw-tools[hidden] {
+  display: none;
+}
+
+@media (max-width: 1120px) {
+  .cd__workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .cd__preview-panel {
+    position: static;
+  }
+}
+
+@media (max-width: 720px) {
+  .cd__grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .cd__panel,
+  .cd__preview-panel {
+    padding: var(--space-2);
+  }
+
+  .cd__actions .btn,
+  .cd__views button {
+    width: 100%;
+  }
+}
+
+/* ---------- impressao ---------- */
+@page {
+  size: A4 portrait;
+  margin: 10mm;
+}
+
+@media print {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    background: #fff;
+    color: #111;
+  }
+
+  .site-header,
+  .site-footer,
+  .cd-hero,
+  .cd__intro,
+  .cd__controls,
+  .cd__preview-head,
+  .cd__views,
+  .cd__status,
+  .cd__draw-tools,
+  .cd__overlay {
+    display: none !important;
+  }
+
+  .section.cd {
+    padding: 0 !important;
+    background: #fff !important;
+  }
+
+  .cd .container {
+    max-width: none;
+    padding: 0;
+  }
+
+  .cd__workspace {
+    display: block;
+  }
+
+  .cd__preview-panel {
+    display: block;
+    position: static;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .cd__print-area {
+    margin: 0;
+  }
+
+  .cd__stage {
+    display: block;
+    gap: 0;
+  }
+
+  /* A vista escolhida na tela nao muda o que sai na impressao. */
+  .cd__stage .cd__page {
+    display: none;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: visible;
+    break-inside: avoid;
+  }
+
+  .cd__print-area .cd__page--activity {
+    display: block !important;
+  }
+
+  .cd__print-area.is-solution .cd__page--activity {
+    display: none !important;
+  }
+
+  .cd__print-area.is-solution .cd__page--solution {
+    display: block !important;
+  }
+
+  .cd__page canvas {
+    width: 100%;
+    height: auto;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

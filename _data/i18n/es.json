@@ -286,6 +286,7 @@
         "items": [
           { "title": "Unir los puntos", "desc": "Genera hojas de unir puntos a partir de una figura.", "badge": "pronto" },
           { "title": "Sopa de letras", "desc": "Crea sopas de letras con tus propias palabras.", "badge": "pronto" },
+          { "title": "Completa el dibujo", "desc": "Sube una imagen, esconde la mitad e imprime una actividad para que el niño complete el dibujo.", "badge": "pronto" },
           { "title": "Juego de memoria", "desc": "Crea cartas de memoria con imágenes y palabras.", "badge": "pronto" }
         ]
       }

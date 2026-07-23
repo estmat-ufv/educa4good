@@ -286,6 +286,7 @@
         "items": [
           { "title": "Ligar os Pontos", "desc": "Transforme uma imagem em uma atividade numerada para a criança revelar o desenho ligando os pontos.", "badge": "novo", "href": "ligar-os-pontos.html", "cta": "Abrir gerador" },
           { "title": "Caça-palavras", "desc": "Monte caça-palavras com até 10 palavras próprias e imprima uma folha A4 com gabarito opcional.", "badge": "novo", "href": "caca-palavras.html", "cta": "Criar caça-palavras" },
+          { "title": "Complete o Desenho", "desc": "Envie uma imagem, escolha a parte que deseja esconder e crie uma atividade para a criança completar o desenho trabalhando percepção, simetria e coordenação motora.", "badge": "novo", "href": "complete-o-desenho.html", "cta": "Criar atividade" },
           { "title": "Jogo da memória", "desc": "Crie cartas de memória com até 5 imagens ou até 5 palavras e imprima uma folha A4 para recortar.", "badge": "novo", "href": "jogo-da-memoria.html", "cta": "Criar jogo" },
           { "title": "Encontre as Diferenças", "desc": "Transforme qualquer imagem em um desafio de observação para jogar online ou imprimir em A4.", "badge": "novo", "href": "encontre-as-diferencas.html", "cta": "Criar atividade" }
         ]
