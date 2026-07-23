@@ -13,10 +13,12 @@
     hard: { colors: 8, detail: "medium" },
     challenge: { colors: 10, detail: "high" }
   };
+  // numberArea nunca pode ser maior que minArea: regiao que sobrevive a fusao
+  // precisa receber numero, senao a crianca ve um contorno sem saber o que pintar.
   var DETAIL = {
-    low: { w: 78, minArea: 18, numberArea: 24, maxRegions: 90, blur: true },
-    medium: { w: 112, minArea: 10, numberArea: 15, maxRegions: 150, blur: true },
-    high: { w: 150, minArea: 6, numberArea: 9, maxRegions: 230, blur: false }
+    low: { w: 78, minArea: 18, numberArea: 18, maxRegions: 90, blur: true },
+    medium: { w: 112, minArea: 10, numberArea: 10, maxRegions: 150, blur: true },
+    high: { w: 150, minArea: 6, numberArea: 6, maxRegions: 230, blur: false }
   };
   var PALETTE_PRESETS = {
     basic: ["#e53935", "#fdd835", "#1e88e5", "#43a047", "#fb8c00", "#8e24aa", "#ec407a", "#8d6e63", "#00acc1", "#7cb342"],
@@ -524,12 +526,13 @@
       component.cells.forEach(function (idx) { regionMap[idx] = id; });
       return component;
     });
+    // Toda regiao desenhada recebe numero. Se sobrar algum caco abaixo do
+    // limiar (a fusao nao consegue absorver quem nao tem vizinho de outra cor),
+    // ele ainda assim ganha um numero -- regiao sem numero e impintavel.
     regions.forEach(function (region) {
-      if (region.area >= detailConfig.numberArea) {
-        region.label = labelPosition(region, region.id, regionMap, w, h);
-      } else {
-        region.label = null;
-      }
+      region.label = region.area >= 3
+        ? labelPosition(region, region.id, regionMap, w, h)
+        : null;
     });
     return { regions: regions, regionMap: regionMap };
   }
@@ -686,7 +689,17 @@
         boxInsideCanvas(box) &&
         !boxCollides(box, placed);
       var position = inPlace ? { x: anchor.x, y: anchor.y, box: box } : calloutCandidate(anchor, boxW, boxH, placed, fontSize);
-      if (!position) return;
+      if (!position) {
+        // Ultimo recurso: encolhe o numero e escreve no proprio ponto da regiao.
+        // Melhor um numero apertado do que uma regiao sem numero nenhum.
+        fontSize = clamp(fontSize * 0.7, 10, 18);
+        ctx.font = "900 " + fontSize + "px Nunito, Arial, sans-serif";
+        boxW = ctx.measureText(text).width + 6;
+        boxH = fontSize * 1.2;
+        var fallbackX = clamp(anchor.x, boxW / 2 + 6, OUT_W - boxW / 2 - 6);
+        var fallbackY = clamp(anchor.y, boxH / 2 + 6, OUT_H - boxH / 2 - 6);
+        position = { x: fallbackX, y: fallbackY, box: labelBox(fallbackX, fallbackY, boxW, boxH) };
+      }
       placed.push(position.box);
 
       if (!inPlace) {
@@ -780,8 +793,10 @@
     labels = mergeSmallRegions(labels, small.width, small.height, detailConfig.minArea, 3);
     var components = findComponents(labels, small.width, small.height);
     if (components.length > detailConfig.maxRegions) {
-      labels = mergeSmallRegions(labels, small.width, small.height, detailConfig.minArea * 2, 2);
+      // A suavizacao precisa vir ANTES da fusao: ela reabre regioes pequenas,
+      // e a fusao tem de ser sempre o ultimo passo para nao sobrar caco sem numero.
       labels = smoothMajority(labels, small.width, small.height);
+      labels = mergeSmallRegions(labels, small.width, small.height, detailConfig.minArea * 2, 3);
     }
     var regionData = buildRegions(labels, small.width, small.height, detailConfig);
     var palette = makePalette(quantized.centers, config.palettePreset);

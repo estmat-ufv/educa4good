@@ -1522,7 +1522,7 @@ def build_color_by_number_pt(L):
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/site.css">
-  <link rel="stylesheet" href="../assets/css/color-by-number.css?v=20260723-cbn1">
+  <link rel="stylesheet" href="../assets/css/color-by-number.css?v=20260723-cbn2">
 </head>
 <body>
 """
@@ -1725,7 +1725,7 @@ def build_color_by_number_pt(L):
     </div>
   </div>
 </section>
-<script src="../assets/js/color-by-number.js?v=20260723-cbn1"></script>
+<script src="../assets/js/color-by-number.js?v=20260723-cbn2"></script>
 """
     return head_html + header(L, "tools") + body + footer(L)
 
