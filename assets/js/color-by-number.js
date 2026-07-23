@@ -210,6 +210,47 @@
     return n ? [r / n, g / n, b / n] : [255, 255, 255];
   }
 
+  // A reducao para ~112 px faz o traco fino sumir: uma linha de 6 px numa
+  // imagem de 1000 px vira 0,7 px e a media a dissolve em cinza claro, jogando
+  // o desenho inteiro no grupo do fundo. Aqui cada celula pequena olha o pixel
+  // mais escuro do bloco original e, se ele for bem mais escuro que a media,
+  // assume essa cor. Assim contorno de desenho para colorir sobrevive, e area
+  // de cor lisa (onde min ~ media) fica intacta.
+  function keepThinStrokes(frameCanvas, data, smallW, smallH) {
+    var fctx = frameCanvas.getContext("2d");
+    var full = fctx.getImageData(0, 0, frameCanvas.width, frameCanvas.height).data;
+    var fw = frameCanvas.width;
+    var fh = frameCanvas.height;
+    var blockW = fw / smallW;
+    var blockH = fh / smallH;
+
+    for (var sy = 0; sy < smallH; sy++) {
+      var y0 = Math.floor(sy * blockH);
+      var y1 = Math.min(fh, Math.max(y0 + 1, Math.ceil((sy + 1) * blockH)));
+      for (var sx = 0; sx < smallW; sx++) {
+        var x0 = Math.floor(sx * blockW);
+        var x1 = Math.min(fw, Math.max(x0 + 1, Math.ceil((sx + 1) * blockW)));
+        var darkest = 1e9, dr = 0, dg = 0, db = 0;
+        for (var y = y0; y < y1; y++) {
+          var row = y * fw;
+          for (var x = x0; x < x1; x++) {
+            var p = (row + x) * 4;
+            var lum = 0.299 * full[p] + 0.587 * full[p + 1] + 0.114 * full[p + 2];
+            if (lum < darkest) {
+              darkest = lum;
+              dr = full[p]; dg = full[p + 1]; db = full[p + 2];
+            }
+          }
+        }
+        var s = (sy * smallW + sx) * 4;
+        var avg = 0.299 * data[s] + 0.587 * data[s + 1] + 0.114 * data[s + 2];
+        if (darkest < avg - 34) {
+          data[s] = dr; data[s + 1] = dg; data[s + 2] = db;
+        }
+      }
+    }
+  }
+
   function prepareSmallCanvas(frameCanvas, detailConfig, simplifyBg) {
     var smallW = detailConfig.w;
     var smallH = Math.round(smallW * OUT_H / OUT_W);
@@ -223,6 +264,7 @@
 
     var img = ctx.getImageData(0, 0, smallW, smallH);
     var data = img.data;
+    keepThinStrokes(frameCanvas, data, smallW, smallH);
     var bg = borderAverage(data, smallW, smallH);
     for (var i = 0; i < data.length; i += 4) {
       var r = data[i], g = data[i + 1], b = data[i + 2];
@@ -235,6 +277,175 @@
     }
     ctx.putImageData(img, 0, 0);
     return small;
+  }
+
+  // ------------------------------------------------------------------
+  // Desenho para colorir (traco escuro sobre fundo claro)
+  // ------------------------------------------------------------------
+  // Uma folha de colorir nao tem cor de onde tirar paleta: o k-means devolve
+  // branco/cinza/preto e a atividade vira "pinte o contorno de preto". Nesses
+  // casos o traco passa a ser separador e as AREAS FECHADAS e que recebem as
+  // cores, que vem do preset escolhido.
+  function detectLineArt(small) {
+    var d = small.getContext("2d").getImageData(0, 0, small.width, small.height).data;
+    var total = small.width * small.height;
+    var claros = 0, cromaticos = 0;
+    for (var p = 0; p < d.length; p += 4) {
+      var r = d[p], g = d[p + 1], b = d[p + 2];
+      if (0.299 * r + 0.587 * g + 0.114 * b > 232) claros++;
+      if (Math.max(r, g, b) - Math.min(r, g, b) > 34) cromaticos++;
+    }
+    return claros / total > 0.55 && cromaticos / total < 0.08;
+  }
+
+  // Limiar de Otsu: separa traco de fundo sem depender de valor fixo.
+  function otsuThreshold(lum) {
+    var hist = new Float64Array(256);
+    var i;
+    for (i = 0; i < lum.length; i++) hist[Math.max(0, Math.min(255, lum[i] | 0))]++;
+    var total = lum.length;
+    var sum = 0;
+    for (i = 0; i < 256; i++) sum += i * hist[i];
+    var sumB = 0, wB = 0, best = 0, bestVar = -1;
+    for (i = 0; i < 256; i++) {
+      wB += hist[i];
+      if (!wB) continue;
+      var wF = total - wB;
+      if (!wF) break;
+      sumB += i * hist[i];
+      var mB = sumB / wB;
+      var mF = (sum - sumB) / wF;
+      var between = wB * wF * (mB - mF) * (mB - mF);
+      if (between > bestVar) { bestVar = between; best = i; }
+    }
+    return best;
+  }
+
+  // Colore o mapa de regioes de forma que vizinhas nunca recebam o mesmo
+  // numero (guloso sobre o grafo de adjacencia).
+  function colorRegionGraph(regionOf, ink, w, h, count, colors) {
+    var vizinhos = [];
+    var k;
+    for (k = 0; k < count; k++) vizinhos.push({});
+    function ligar(a, b) {
+      if (a < 0 || b < 0 || a === b) return;
+      vizinhos[a][b] = 1;
+      vizinhos[b][a] = 1;
+    }
+    // Num desenho de contorno as areas NUNCA se tocam: existe sempre traco
+    // entre elas. A vizinhanca precisa ser lida atraves do traco, senao o
+    // grafo fica sem arestas e todas as areas recebem o mesmo numero.
+    var raio = 2;
+    for (var y = 0; y < h; y++) {
+      for (var x = 0; x < w; x++) {
+        var i = y * w + x;
+        if (!ink[i]) continue;
+        var perto = [];
+        for (var dy = -raio; dy <= raio; dy++) {
+          var ny = y + dy;
+          if (ny < 0 || ny >= h) continue;
+          for (var dx = -raio; dx <= raio; dx++) {
+            var nx = x + dx;
+            if (nx < 0 || nx >= w) continue;
+            var id = regionOf[ny * w + nx];
+            if (id >= 0 && perto.indexOf(id) < 0) perto.push(id);
+          }
+        }
+        for (var a = 0; a < perto.length; a++) {
+          for (var b = a + 1; b < perto.length; b++) ligar(perto[a], perto[b]);
+        }
+      }
+    }
+
+    // Areas maiores primeiro: as cores mais usadas caem nas partes grandes.
+    var ordem = [];
+    for (k = 0; k < count; k++) ordem.push(k);
+    ordem.sort(function (a, b) {
+      return Object.keys(vizinhos[b]).length - Object.keys(vizinhos[a]).length;
+    });
+
+    var cor = new Int16Array(count);
+    for (k = 0; k < count; k++) cor[k] = -1;
+    var uso = new Int32Array(colors);
+    ordem.forEach(function (regiao) {
+      var usadas = {};
+      Object.keys(vizinhos[regiao]).forEach(function (n) {
+        var c = cor[parseInt(n, 10)];
+        if (c >= 0) usadas[c] = 1;
+      });
+      // Entre as cores livres, escolhe a menos usada ate agora: distribui a
+      // paleta inteira em vez de repetir sempre os primeiros numeros.
+      var melhor = -1;
+      for (var c = 0; c < colors; c++) {
+        if (usadas[c]) continue;
+        if (melhor < 0 || uso[c] < uso[melhor]) melhor = c;
+      }
+      if (melhor < 0) melhor = 0;
+      cor[regiao] = melhor;
+      uso[melhor]++;
+    });
+    return cor;
+  }
+
+  // Monta labels/paleta a partir do traco. O ultimo indice da paleta e o
+  // contorno (id 0), que nao e pintavel.
+  function buildLineArt(small, colors, detailConfig, presetName) {
+    var w = small.width, h = small.height;
+    var d = small.getContext("2d").getImageData(0, 0, w, h).data;
+    var n = w * h;
+    var lum = new Float32Array(n);
+    var i, p;
+    for (i = 0, p = 0; i < n; i++, p += 4) {
+      lum[i] = 0.299 * d[p] + 0.587 * d[p + 1] + 0.114 * d[p + 2];
+    }
+    var thr = Math.min(otsuThreshold(lum), 215);
+    var ink = new Uint8Array(n);
+    for (i = 0; i < n; i++) ink[i] = lum[i] < thr ? 1 : 0;
+
+    // Areas fechadas entre os tracos.
+    var regionOf = new Int32Array(n);
+    for (i = 0; i < n; i++) regionOf[i] = -1;
+    var stack = new Int32Array(n);
+    var areas = [];
+    for (var start = 0; start < n; start++) {
+      if (ink[start] || regionOf[start] >= 0) continue;
+      var id = areas.length;
+      var top = 0, size = 0;
+      stack[top++] = start;
+      regionOf[start] = id;
+      while (top > 0) {
+        var idx = stack[--top];
+        size++;
+        var x = idx % w, y = (idx / w) | 0;
+        if (x > 0 && !ink[idx - 1] && regionOf[idx - 1] < 0) { regionOf[idx - 1] = id; stack[top++] = idx - 1; }
+        if (x < w - 1 && !ink[idx + 1] && regionOf[idx + 1] < 0) { regionOf[idx + 1] = id; stack[top++] = idx + 1; }
+        if (y > 0 && !ink[idx - w] && regionOf[idx - w] < 0) { regionOf[idx - w] = id; stack[top++] = idx - w; }
+        if (y < h - 1 && !ink[idx + w] && regionOf[idx + w] < 0) { regionOf[idx + w] = id; stack[top++] = idx + w; }
+      }
+      areas.push(size);
+    }
+
+    // Area miuda demais para pintar vira traco.
+    var minArea = Math.max(4, detailConfig.minArea);
+    for (i = 0; i < n; i++) {
+      if (regionOf[i] >= 0 && areas[regionOf[i]] < minArea) { ink[i] = 1; regionOf[i] = -1; }
+    }
+
+    var cor = colorRegionGraph(regionOf, ink, w, h, areas.length, colors);
+    var inkIndex = colors;
+    var labels = new Uint16Array(n);
+    for (i = 0; i < n; i++) {
+      labels[i] = regionOf[i] >= 0 ? cor[regionOf[i]] : inkIndex;
+    }
+
+    var preset = PALETTE_PRESETS[presetName] || PALETTE_PRESETS.basic;
+    var palette = [];
+    for (i = 0; i < colors; i++) {
+      var hex = preset[i % preset.length];
+      palette.push({ id: i + 1, color: hex, original: hex, name: nearestColorName(hex) });
+    }
+    palette.push({ id: 0, color: "#26394b", original: "#26394b", name: "contorno", ink: true });
+    return { labels: labels, palette: palette, inkIndex: inkIndex };
   }
 
   function collectPixels(canvas) {
@@ -516,7 +727,7 @@
     };
   }
 
-  function buildRegions(labels, w, h, detailConfig) {
+  function buildRegions(labels, w, h, detailConfig, inkIndex) {
     var components = findComponents(labels, w, h);
     var regionMap = new Int32Array(labels.length);
     for (var i = 0; i < regionMap.length; i++) regionMap[i] = -1;
@@ -530,7 +741,8 @@
     // limiar (a fusao nao consegue absorver quem nao tem vizinho de outra cor),
     // ele ainda assim ganha um numero -- regiao sem numero e impintavel.
     regions.forEach(function (region) {
-      region.label = region.area >= 3
+      var contorno = inkIndex >= 0 && region.colorIndex === inkIndex;
+      region.label = (!contorno && region.area >= 3)
         ? labelPosition(region, region.id, regionMap, w, h)
         : null;
     });
@@ -541,6 +753,7 @@
     if (presetName === "auto") return palette;
     var preset = PALETTE_PRESETS[presetName] || PALETTE_PRESETS.basic;
     return palette.map(function (item, index) {
+      if (item.ink) return item;   // a cor do contorno nao entra no preset
       var color = preset[index % preset.length];
       return Object.assign({}, item, {
         color: color,
@@ -787,26 +1000,42 @@
 
     state.frameCanvas = makeFrameCanvas(config);
     var small = prepareSmallCanvas(state.frameCanvas, detailConfig, config.simplifyBg);
-    var quantized = quantize(small, config.colors);
-    var labels = quantized.labels;
-    labels = smoothMajority(labels, small.width, small.height);
-    labels = mergeSmallRegions(labels, small.width, small.height, detailConfig.minArea, 3);
-    var components = findComponents(labels, small.width, small.height);
-    if (components.length > detailConfig.maxRegions) {
-      // A suavizacao precisa vir ANTES da fusao: ela reabre regioes pequenas,
-      // e a fusao tem de ser sempre o ultimo passo para nao sobrar caco sem numero.
+    var labels, palette;
+    var inkIndex = -1;
+    var lineArt = detectLineArt(small);
+
+    if (lineArt) {
+      // Folha de colorir: o traco separa, as areas fechadas recebem as cores.
+      var art = buildLineArt(small, config.colors, detailConfig,
+        config.palettePreset === "auto" ? "basic" : config.palettePreset);
+      labels = art.labels;
+      palette = art.palette;
+      inkIndex = art.inkIndex;
+    } else {
+      var quantized = quantize(small, config.colors);
+      labels = quantized.labels;
       labels = smoothMajority(labels, small.width, small.height);
-      labels = mergeSmallRegions(labels, small.width, small.height, detailConfig.minArea * 2, 3);
+      labels = mergeSmallRegions(labels, small.width, small.height, detailConfig.minArea, 3);
+      var components = findComponents(labels, small.width, small.height);
+      if (components.length > detailConfig.maxRegions) {
+        // A suavizacao precisa vir ANTES da fusao: ela reabre regioes pequenas,
+        // e a fusao tem de ser sempre o ultimo passo para nao sobrar caco sem numero.
+        labels = smoothMajority(labels, small.width, small.height);
+        labels = mergeSmallRegions(labels, small.width, small.height, detailConfig.minArea * 2, 3);
+      }
+      palette = makePalette(quantized.centers, config.palettePreset);
     }
-    var regionData = buildRegions(labels, small.width, small.height, detailConfig);
-    var palette = makePalette(quantized.centers, config.palettePreset);
+
+    var regionData = buildRegions(labels, small.width, small.height, detailConfig, inkIndex);
     state.result = {
       w: small.width,
       h: small.height,
       labels: labels,
       regions: regionData.regions,
       regionMap: regionData.regionMap,
-      palette: palette
+      palette: palette,
+      inkIndex: inkIndex,
+      lineArt: lineArt
     };
     state.painted = {};
     state.selectedColor = 0;
@@ -846,6 +1075,7 @@
     }
     dom.selectedLabel.textContent = "Número selecionado: " + (state.result.palette[state.selectedColor] ? state.result.palette[state.selectedColor].id : 1);
     dom.palette.innerHTML = state.result.palette.map(function (item, index) {
+      if (item.ink) return "";   // contorno nao e cor para a crianca pintar
       return '<div class="cbn-swatch' + (index === state.selectedColor ? " is-active" : "") + '">' +
         '<button type="button" class="cbn-swatch__pick" data-cbn-color="' + index + '" style="background:' + item.color + '">' + item.id + "</button>" +
         '<span class="cbn-swatch__text"><strong>' + item.id + " = " + item.name + '</strong><span>' + item.color.toUpperCase() + "</span></span>" +
@@ -880,6 +1110,7 @@
   function legendHtml() {
     if (!state.result) return "";
     return state.result.palette.map(function (item) {
+      if (item.ink) return "";
       return '<span class="cbn-print-key"><i style="background:' + item.color + '">' + item.id + "</i><strong>" + item.name + "</strong></span>";
     }).join("");
   }
