@@ -1492,6 +1492,244 @@ def build_spot_difference_pt(L):
     return head_html + header(L, "tools") + body + footer(L)
 
 
+def build_color_by_number_pt(L):
+    title = "Colorir por Números — Educa4Good"
+    desc = "Transforme uma imagem em uma atividade infantil de colorir por números, com contornos, legenda editável e impressão A4."
+    url_base = SITE.get("site_url", "").rstrip("/")
+    canonical = f"{url_base}/pt/colorir-por-numeros.html" if url_base else ""
+    links = f'  <link rel="canonical" href="{canonical}">\n' if canonical else ""
+    og_url = f'  <meta property="og:url" content="{canonical}">\n' if canonical else ""
+    og_img = (f"{url_base}/assets/images/activities/colorir-codigo.webp"
+              if url_base else "../assets/images/activities/colorir-codigo.webp")
+    head_html = f"""<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content="{desc}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Educa4Good">
+  <meta property="og:title" content="{title}">
+  <meta property="og:description" content="{desc}">
+  <meta property="og:image" content="{og_img}">
+  <meta property="og:locale" content="pt_BR">
+{og_url}  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{title}">
+  <meta name="twitter:description" content="{desc}">
+{links}  <link rel="icon" type="image/svg+xml" href="../assets/images/brand/mark.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <link rel="stylesheet" href="../assets/css/color-by-number.css?v=20260723-cbn1">
+</head>
+<body>
+"""
+    body = """<section class="page-hero cbn-hero">
+  <div class="container">
+    <h1>Colorir por Números</h1>
+    <p>Envie uma imagem e transforme-a em uma folha de colorir com contornos, números e legenda de cores. A atividade é criada no seu navegador, sem enviar a imagem para servidores.</p>
+  </div>
+</section>
+<section class="section cbn" id="colorir-por-numeros">
+  <div class="container">
+    <div class="section-head cbn__intro reveal">
+      <span class="kicker">Gerador local</span>
+      <h2>Da imagem para a atividade pronta para imprimir</h2>
+      <p>Reduza as cores, simplifique detalhes, edite a paleta e gere uma folha A4 legível para crianças pintarem com lápis de cor.</p>
+    </div>
+
+    <div class="cbn__workspace">
+      <div class="cbn__controls">
+        <section class="cbn__panel reveal" aria-labelledby="cbn-image-title">
+          <h2 id="cbn-image-title">1. Escolha uma imagem</h2>
+          <label class="cbn__dropzone" id="cbn-dropzone" for="cbn-file">
+            <span class="cbn__drop-icon" aria-hidden="true">+</span>
+            <strong>Arraste uma imagem aqui</strong>
+            <span>ou clique para selecionar no computador</span>
+          </label>
+          <input class="cbn__file" type="file" id="cbn-file" accept="image/png,image/jpeg,image/webp,image/*" aria-describedby="cbn-file-help">
+          <p class="cbn__note" id="cbn-file-help">PNG, JPG, WebP e formatos aceitos pelo navegador, até 12 MB. Sua imagem é processada diretamente no navegador e não é enviada para nossos servidores.</p>
+          <div class="cbn__demo" aria-label="Imagens demonstrativas">
+            <button type="button" class="btn btn--ghost" data-cbn-demo="garden">Usar jardim</button>
+            <button type="button" class="btn btn--ghost" data-cbn-demo="rocket">Usar foguete</button>
+          </div>
+          <p class="cbn__message" id="cbn-message" role="status" aria-live="polite"></p>
+          <figure class="cbn__original" id="cbn-original" hidden>
+            <img id="cbn-original-img" alt="Imagem original escolhida">
+            <figcaption>Imagem original</figcaption>
+          </figure>
+        </section>
+
+        <form class="cbn__panel cbn__settings reveal" id="cbn-settings" aria-labelledby="cbn-settings-title">
+          <h2 id="cbn-settings-title">2. Configure a atividade</h2>
+
+          <div class="cbn__field">
+            <label for="cbn-title">Título da folha</label>
+            <input type="text" id="cbn-title" value="Colorir por números" maxlength="80">
+          </div>
+
+          <div class="cbn__grid-2">
+            <div class="cbn__field">
+              <label for="cbn-preset">Dificuldade</label>
+              <select id="cbn-preset">
+                <option value="easy">Fácil: 4 cores</option>
+                <option value="medium" selected>Médio: 6 cores</option>
+                <option value="hard">Difícil: 8 cores</option>
+                <option value="challenge">Desafio: 10 cores</option>
+              </select>
+            </div>
+            <div class="cbn__field">
+              <label for="cbn-colors">Quantidade de cores</label>
+              <select id="cbn-colors">
+                <option value="4">4 cores</option>
+                <option value="6" selected>6 cores</option>
+                <option value="8">8 cores</option>
+                <option value="10">10 cores</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="cbn__grid-2">
+            <div class="cbn__field">
+              <label for="cbn-detail">Detalhamento</label>
+              <select id="cbn-detail">
+                <option value="low">Baixo: regiões grandes</option>
+                <option value="medium" selected>Médio: equilíbrio</option>
+                <option value="high">Alto: mais detalhes</option>
+              </select>
+            </div>
+            <div class="cbn__field">
+              <label for="cbn-palette-preset">Paleta</label>
+              <select id="cbn-palette-preset">
+                <option value="auto" selected>Automática</option>
+                <option value="basic">Cores básicas</option>
+                <option value="soft">Tons suaves</option>
+                <option value="vibrant">Cores vibrantes</option>
+                <option value="gray">Preto, branco e cinzas</option>
+              </select>
+            </div>
+          </div>
+
+          <fieldset class="cbn__fieldset">
+            <legend>Ajuste e enquadramento</legend>
+            <div class="cbn__grid-3">
+              <div class="cbn__field">
+                <label for="cbn-zoom">Zoom <output id="cbn-zoom-output">100%</output></label>
+                <input type="range" id="cbn-zoom" min="100" max="220" step="5" value="100">
+              </div>
+              <div class="cbn__field">
+                <label for="cbn-pan-x">Horizontal <output id="cbn-pan-x-output">0</output></label>
+                <input type="range" id="cbn-pan-x" min="-100" max="100" step="2" value="0">
+              </div>
+              <div class="cbn__field">
+                <label for="cbn-pan-y">Vertical <output id="cbn-pan-y-output">0</output></label>
+                <input type="range" id="cbn-pan-y" min="-100" max="100" step="2" value="0">
+              </div>
+            </div>
+            <div class="cbn__field cbn__check">
+              <input type="checkbox" id="cbn-simplify-bg">
+              <label for="cbn-simplify-bg">Simplificar fundo claro ou dominante</label>
+            </div>
+            <button type="button" class="btn btn--ghost" id="cbn-reset-frame">Redefinir enquadramento</button>
+          </fieldset>
+
+          <fieldset class="cbn__fieldset">
+            <legend>Identificação opcional</legend>
+            <div class="cbn__grid-3">
+              <div class="cbn__field">
+                <label for="cbn-child">Nome</label>
+                <input type="text" id="cbn-child" maxlength="40" placeholder="Nome da criança">
+              </div>
+              <div class="cbn__field">
+                <label for="cbn-date">Data</label>
+                <input type="text" id="cbn-date" maxlength="20" placeholder="__/__/____">
+              </div>
+              <div class="cbn__field">
+                <label for="cbn-class">Turma</label>
+                <input type="text" id="cbn-class" maxlength="24" placeholder="Turma">
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="cbn__actions">
+            <button type="button" class="btn btn--primary" id="cbn-generate"><span aria-hidden="true">↻</span> Gerar atividade</button>
+            <button type="button" class="btn btn--ghost" id="cbn-regenerate" disabled><span aria-hidden="true">✦</span> Gerar novamente</button>
+            <button type="button" class="btn btn--ghost" id="cbn-solution" disabled><span aria-hidden="true">◎</span> Ver solução</button>
+            <button type="button" class="btn btn--ghost" id="cbn-reset-paint" disabled><span aria-hidden="true">↺</span> Limpar pintura</button>
+            <button type="button" class="btn btn--ghost" id="cbn-print" disabled><span aria-hidden="true">⎙</span> Imprimir atividade</button>
+            <button type="button" class="btn btn--ghost" id="cbn-print-answer" disabled><span aria-hidden="true">#</span> Imprimir gabarito</button>
+          </div>
+        </form>
+      </div>
+
+      <section class="cbn__preview-panel reveal" aria-labelledby="cbn-preview-title">
+        <div class="cbn__preview-head">
+          <span class="kicker">Pré-visualização</span>
+          <h2 id="cbn-preview-title">Atividade gerada</h2>
+        </div>
+        <p class="cbn__status" id="cbn-status" role="status" aria-live="polite">Carregando uma demonstração para começar...</p>
+        <div class="cbn__progress" id="cbn-progress" aria-live="polite">
+          <span><strong id="cbn-painted-count">0</strong> de <strong id="cbn-region-count">0</strong> regiões coloridas</span>
+        </div>
+
+        <div class="cbn__tabs" role="tablist" aria-label="Modo de visualização">
+          <button type="button" class="is-active" data-cbn-view="activity">Atividade</button>
+          <button type="button" data-cbn-view="original">Original</button>
+          <button type="button" data-cbn-view="simplified">Simplificada</button>
+          <button type="button" data-cbn-view="colored">Resultado colorido</button>
+        </div>
+
+        <div class="cbn__stage">
+          <canvas id="cbn-canvas" width="900" height="660" role="img" aria-label="Pré-visualização da atividade de colorir por números"></canvas>
+        </div>
+
+        <div class="cbn__legend-panel">
+          <div class="cbn__legend-head">
+            <h3>Legenda e edição de cores</h3>
+            <span id="cbn-selected-label">Número selecionado: 1</span>
+          </div>
+          <div class="cbn__palette" id="cbn-palette" aria-label="Legenda editável de cores"></div>
+          <p class="cbn__note">Clique em uma cor para escolher o número. Use o seletor para trocar a cor sem recalcular as regiões.</p>
+        </div>
+
+        <div class="cbn__print-area" id="cbn-print-area">
+          <article class="cbn__page cbn__page--activity" aria-label="Folha Colorir por Números">
+            <header class="cbn__sheet-header">
+              <div class="cbn__brand"><img src="../assets/images/brand/mark.svg" alt=""><span>Educa4Good</span></div>
+              <span class="cbn__sheet-kind">Colorir por números</span>
+            </header>
+            <div class="cbn__meta" id="cbn-print-meta"></div>
+            <h2 class="cbn__page-title" id="cbn-print-title">Colorir por números</h2>
+            <p class="cbn__instruction">Pinte cada região usando a cor correspondente ao número indicado.</p>
+            <img class="cbn__print-img" id="cbn-print-activity-img" alt="Atividade de colorir por números com contornos e números">
+            <div class="cbn__print-legend" id="cbn-print-legend"></div>
+            <footer class="cbn__sheet-footer"><span>Educa4Good · Atividade para colorir</span></footer>
+          </article>
+
+          <article class="cbn__page cbn__page--answer" aria-label="Gabarito Colorir por Números">
+            <header class="cbn__sheet-header">
+              <div class="cbn__brand"><img src="../assets/images/brand/mark.svg" alt=""><span>Educa4Good</span></div>
+              <span class="cbn__sheet-kind">Gabarito</span>
+            </header>
+            <div class="cbn__meta" id="cbn-answer-meta"></div>
+            <h2 class="cbn__page-title" id="cbn-answer-title">Gabarito — Colorir por números</h2>
+            <p class="cbn__instruction">Resultado colorido com a mesma legenda da atividade.</p>
+            <img class="cbn__print-img" id="cbn-answer-img" alt="Resultado colorido da atividade">
+            <div class="cbn__print-legend" id="cbn-answer-legend"></div>
+            <footer class="cbn__sheet-footer"><span>Educa4Good · Gabarito separado</span></footer>
+          </article>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+<script src="../assets/js/color-by-number.js?v=20260723-cbn1"></script>
+"""
+    return head_html + header(L, "tools") + body + footer(L)
+
+
 def build_complete_drawing_pt(L):
     title = "Complete o Desenho — Educa4Good"
     desc = ("Envie uma imagem, esconda metade da figura e gere uma atividade A4 para a "
@@ -1826,7 +2064,7 @@ def build_sitemap():
         for key in PAGE_KEYS:
             loc = f"{base}/{code}/{L['slugs'][key]}.html" if base else f"{code}/{L['slugs'][key]}.html"
             urls += f"  <url><loc>{loc}</loc></url>\n"
-    for extra_path in ["pt/ligar-os-pontos.html", "pt/caca-palavras.html", "pt/jogo-da-memoria.html", "pt/encontre-as-diferencas.html", "pt/complete-o-desenho.html"]:
+    for extra_path in ["pt/ligar-os-pontos.html", "pt/caca-palavras.html", "pt/jogo-da-memoria.html", "pt/encontre-as-diferencas.html", "pt/colorir-por-numeros.html", "pt/complete-o-desenho.html"]:
         extra = f"{base}/{extra_path}" if base else extra_path
         urls += f"  <url><loc>{extra}</loc></url>\n"
     return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{urls}</urlset>\n'
@@ -1872,6 +2110,10 @@ def main():
 
     with open(os.path.join(ROOT, "pt", "encontre-as-diferencas.html"), "w", encoding="utf-8") as f:
         f.write(build_spot_difference_pt(LANGS["pt"]))
+    count += 1
+
+    with open(os.path.join(ROOT, "pt", "colorir-por-numeros.html"), "w", encoding="utf-8") as f:
+        f.write(build_color_by_number_pt(LANGS["pt"]))
     count += 1
 
     with open(os.path.join(ROOT, "pt", "complete-o-desenho.html"), "w", encoding="utf-8") as f:

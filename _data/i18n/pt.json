@@ -24,7 +24,7 @@
       "desc": "Biblioteca de atividades de alfabetização, matemática e lógica com alta qualidade tipográfica. Escolha, imprima e ensine — menos tempo procurando, mais tempo ensinando."
     },
     "activities": { "title": "Atividades — Educa4Good", "desc": "Explore exemplos reais das atividades do Educa4Good: alfabetização, matemática, lógica, coordenação motora e muito mais." },
-    "tools": { "title": "Jogos e Utilidades — Educa4Good", "desc": "Monte quebra-cabeças de imagens, gere folhas de ligar os pontos, crie caça-palavras, jogos da memória e desafios de encontre as diferenças no Educa4Good." },
+    "tools": { "title": "Jogos e Utilidades — Educa4Good", "desc": "Monte quebra-cabeças de imagens, gere folhas de ligar os pontos, crie caça-palavras, jogos da memória, encontre as diferenças e colorir por números no Educa4Good." },
     "how": { "title": "Como funciona — Educa4Good", "desc": "Escolha, imprima e aprenda: veja como usar a biblioteca de atividades do Educa4Good em três passos simples." },
     "teachers": { "title": "Para professores — Educa4Good", "desc": "Atividades organizadas e prontas para imprimir que devolvem tempo de planejamento para quem ensina." },
     "families": { "title": "Para famílias — Educa4Good", "desc": "Atividades impressas para aprender em casa, longe das telas, com momentos de descoberta em família." },
@@ -248,7 +248,7 @@
   "pages": {
     "tools": {
       "hero_title": "Jogos e Utilidades",
-      "hero_lead": "Um cantinho interativo do Educa4Good: brinque direto no navegador, sem instalar nada. Comece pelo quebra-cabeça de imagens, gere folhas de ligar os pontos, crie caça-palavras, monte um jogo da memória ou prepare um desafio de encontre as diferenças para imprimir.",
+      "hero_lead": "Um cantinho interativo do Educa4Good: brinque direto no navegador, sem instalar nada. Comece pelo quebra-cabeça de imagens, gere folhas de ligar os pontos, crie caça-palavras, monte um jogo da memória, prepare diferenças ou transforme uma imagem em colorir por números.",
       "puzzle": {
         "kicker": "Jogue online",
         "title": "Quebra-cabeça de imagens",
@@ -288,7 +288,8 @@
           { "title": "Caça-palavras", "desc": "Monte caça-palavras com até 10 palavras próprias e imprima uma folha A4 com gabarito opcional.", "badge": "novo", "href": "caca-palavras.html", "cta": "Criar caça-palavras" },
           { "title": "Complete o Desenho", "desc": "Envie uma imagem, escolha a parte que deseja esconder e crie uma atividade para a criança completar o desenho trabalhando percepção, simetria e coordenação motora.", "badge": "novo", "href": "complete-o-desenho.html", "cta": "Criar atividade" },
           { "title": "Jogo da memória", "desc": "Crie cartas de memória com até 5 imagens ou até 5 palavras e imprima uma folha A4 para recortar.", "badge": "novo", "href": "jogo-da-memoria.html", "cta": "Criar jogo" },
-          { "title": "Encontre as Diferenças", "desc": "Transforme qualquer imagem em um desafio de observação para jogar online ou imprimir em A4.", "badge": "novo", "href": "encontre-as-diferencas.html", "cta": "Criar atividade" }
+          { "title": "Encontre as Diferenças", "desc": "Transforme qualquer imagem em um desafio de observação para jogar online ou imprimir em A4.", "badge": "novo", "href": "encontre-as-diferencas.html", "cta": "Criar atividade" },
+          { "title": "Colorir por Números", "desc": "Envie uma imagem e transforme-a em uma atividade de colorir por números, com regiões, legenda de cores e impressão A4.", "badge": "novo", "href": "colorir-por-numeros.html", "cta": "Criar atividade" }
         ]
       }
     },
