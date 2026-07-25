@@ -1,0 +1,4 @@
+# A cópia local do OpenCV.js tem 11,4 MB e fica FORA do controle de versão.
+# O carregador usa a CDN pinada quando este arquivo não existe.
+# Para trabalhar offline, veja ../README.md.
+opencv-*.js

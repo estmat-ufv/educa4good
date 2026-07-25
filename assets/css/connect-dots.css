@@ -1,0 +1,802 @@
+/* ============================================================
+   Educa4Good — Ligar os Pontos (gerador reconstruído)
+   Usa os tokens de site.css. Escopo em .cd para não afetar
+   nenhuma outra página do site.
+   ============================================================ */
+
+.dots-hero {
+  background:
+    linear-gradient(135deg, rgba(234, 241, 248, 0.96), rgba(255, 248, 221, 0.88)),
+    var(--color-primary-soft);
+}
+
+.cd {
+  background: linear-gradient(180deg, #ffffff 0%, #f7fafd 100%);
+}
+
+.cd__intro {
+  margin-bottom: var(--space-3);
+}
+
+/* ---------- Barra de etapas ---------- */
+.cd-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  counter-reset: cd-step;
+}
+
+.cd-steps li {
+  counter-increment: cd-step;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.8rem 0.35rem 0.45rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: #fff;
+  font-size: var(--fs-small);
+  color: var(--color-text-soft);
+}
+
+.cd-steps li::before {
+  content: counter(cd-step);
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+.cd-steps li.is-current {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  font-weight: 700;
+}
+
+.cd-steps li.is-current::before {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.cd-steps li.is-done::before {
+  content: "✓";
+  background: var(--color-green);
+  color: #fff;
+}
+
+/* ---------- Mensagem global ---------- */
+.cd-message {
+  min-height: 1.5em;
+  margin: 0 0 var(--space-2);
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--radius-s);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  font-size: var(--fs-small);
+  color: var(--color-text-soft);
+}
+
+.cd-message.is-ok {
+  border-color: #b6dcc4;
+  background: #f0f9f3;
+  color: #26603c;
+}
+
+.cd-message.is-error {
+  border-color: #eec0c9;
+  background: #fdf1f4;
+  color: #8d2b43;
+}
+
+.cd-message.is-busy::after {
+  content: " …";
+}
+
+/* ---------- Layout ---------- */
+.cd-workspace {
+  display: grid;
+  grid-template-columns: minmax(330px, 440px) minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.cd-panels {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.cd-panel {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow-s);
+  padding: var(--space-2) var(--space-3) var(--space-3);
+}
+
+.cd-panel > h2,
+.cd-panel > summary {
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  margin: 0 0 0.7rem;
+}
+
+.cd-panel > summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cd-panel > summary::before {
+  content: "▸";
+  color: var(--color-primary);
+  transition: transform 0.15s ease;
+}
+
+.cd-panel[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.cd-panel > summary::-webkit-details-marker {
+  display: none;
+}
+
+.cd-note {
+  font-size: 0.82rem;
+  color: var(--color-text-soft);
+  margin: 0.4rem 0 0;
+}
+
+/* ---------- Envio ---------- */
+.cd-dropzone {
+  display: grid;
+  place-items: center;
+  gap: 0.3rem;
+  min-height: 132px;
+  padding: var(--space-3);
+  border: 2px dashed #b7cadb;
+  border-radius: var(--radius-s);
+  background: linear-gradient(135deg, rgba(234, 241, 248, 0.92), rgba(255, 255, 255, 0.96));
+  color: var(--color-primary-dark);
+  text-align: center;
+  cursor: pointer;
+}
+
+.cd-dropzone.is-over,
+.cd-dropzone:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.cd-dropzone__icon {
+  font-size: 1.8rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.cd-file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cd-file-info {
+  font-size: 0.8rem;
+  color: var(--color-text-soft);
+  margin: 0.5rem 0 0;
+  word-break: break-word;
+}
+
+/* ---------- Modos ---------- */
+.cd-modes {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.cd-mode {
+  display: grid;
+  gap: 0.15rem;
+  text-align: left;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+  color: var(--color-text);
+}
+
+.cd-mode:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.cd-mode.is-active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.cd-mode strong {
+  font-family: var(--font-display);
+  color: var(--color-primary-dark);
+}
+
+.cd-mode span {
+  font-size: 0.8rem;
+  color: var(--color-text-soft);
+}
+
+/* ---------- Campos ---------- */
+.cd-field {
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 0.7rem;
+}
+
+.cd-field > label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-soft);
+}
+
+.cd-field output {
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
+.cd-field input[type="text"],
+.cd-field input[type="number"],
+.cd-field select,
+.cd-field textarea {
+  width: 100%;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  font: inherit;
+  font-size: 0.9rem;
+  background: #fff;
+  color: var(--color-text);
+}
+
+.cd-field input[type="range"] {
+  width: 100%;
+}
+
+.cd-field input[type="color"] {
+  width: 100%;
+  height: 2.1rem;
+  padding: 2px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  background: #fff;
+}
+
+.cd-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.cd-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.cd-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.45rem;
+}
+
+.cd-check input {
+  margin-top: 0.22rem;
+  flex: 0 0 auto;
+}
+
+.cd-fieldset {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  padding: 0.7rem 0.85rem;
+  margin: 0 0 0.8rem;
+}
+
+.cd-fieldset legend {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  padding-inline: 0.3rem;
+}
+
+.cd-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+}
+
+/* ---------- Contornos candidatos ---------- */
+.cd-stage {
+  position: relative;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  background:
+    repeating-conic-gradient(#f2f6fa 0% 25%, #ffffff 0% 50%) 50% / 16px 16px;
+  overflow: hidden;
+  margin: 0.6rem 0;
+}
+
+.cd-contours {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 46vh;
+}
+
+.cd-contours [data-candidate] {
+  cursor: pointer;
+}
+
+.cd-contours [data-candidate]:hover {
+  stroke-opacity: 0.75;
+}
+
+.cd-candidates {
+  display: grid;
+  gap: 0.5rem;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+.cd-candidate {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  padding: 0.55rem 0.7rem;
+  background: #fff;
+}
+
+.cd-candidate.is-selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.cd-candidate.is-likely {
+  box-shadow: inset 3px 0 0 var(--color-accent-dark);
+}
+
+.cd-candidate.is-rejected {
+  background: #fdf1f4;
+  border-color: #eec0c9;
+}
+
+.cd-candidate__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.cd-candidate__chip {
+  display: grid;
+  place-items: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 0.76rem;
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+
+.cd-candidate__title {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--color-primary-dark);
+}
+
+.cd-candidate__metrics {
+  margin: 0.3rem 0 0;
+  font-size: 0.76rem;
+  color: var(--color-text-soft);
+}
+
+.cd-candidate__flags {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.cd-flag {
+  font-size: 0.71rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-soft);
+}
+
+.cd-flag--error {
+  background: #fdf1f4;
+  border-color: #eec0c9;
+  color: #8d2b43;
+}
+
+.cd-flag--warning {
+  background: #fff8dd;
+  border-color: #f0dda0;
+  color: #7a5a12;
+}
+
+/* ---------- Lista de caminhos ---------- */
+.cd-path-list {
+  display: grid;
+  gap: 0.45rem;
+  max-height: 38vh;
+  overflow-y: auto;
+}
+
+.cd-path {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  padding: 0.5rem 0.65rem;
+  background: #fff;
+}
+
+.cd-path.is-selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.cd-path__head {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+}
+
+.cd-path__title {
+  font-weight: 700;
+  font-size: 0.86rem;
+  color: var(--color-primary-dark);
+  overflow-wrap: anywhere;
+}
+
+.cd-path__meta {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  color: var(--color-text-soft);
+}
+
+.cd-path__tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.4rem;
+}
+
+.cd-icon-btn {
+  min-width: 2rem;
+  min-height: 2rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.92rem;
+  line-height: 1;
+  color: var(--color-primary-dark);
+}
+
+.cd-icon-btn:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+/* ---------- Editor ---------- */
+.cd-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 0.55rem;
+}
+
+.cd-tool {
+  padding: 0.32rem 0.65rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--color-text);
+}
+
+.cd-tool.is-active {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+}
+
+.cd-editor-canvas {
+  display: block;
+  width: 100%;
+  height: 340px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  background: #fff;
+  touch-action: none;
+}
+
+.cd-editor-status {
+  margin: 0.45rem 0 0;
+  font-size: 0.78rem;
+  color: var(--color-text-soft);
+  min-height: 1.2em;
+}
+
+/* ---------- Prévia ---------- */
+.cd-preview {
+  position: sticky;
+  top: 1rem;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow-s);
+  padding: var(--space-3);
+}
+
+.cd-preview__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.cd-preview__head h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.cd-preview__tools {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.cd-sheet-view {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  background: #f2f6fa;
+  padding: 0.6rem;
+  display: grid;
+  place-items: center;
+  min-height: 320px;
+}
+
+.cd-sheet-svg {
+  width: 100%;
+  max-width: 560px;
+  height: auto;
+  background: #fff;
+  box-shadow: var(--shadow-m);
+  touch-action: none;
+}
+
+.cd-sheet-svg .cd-dot,
+.cd-sheet-svg .cd-label {
+  cursor: grab;
+}
+
+.cd-sheet-svg .cd-dot:hover {
+  stroke: var(--color-accent-dark);
+  stroke-width: 0.6;
+}
+
+.cd-sheet-svg .cd-label:hover {
+  fill: var(--color-accent-dark);
+}
+
+.cd-placeholder {
+  display: grid;
+  place-items: center;
+  min-height: 300px;
+  color: var(--color-text-soft);
+  font-size: var(--fs-small);
+  text-align: center;
+  padding: var(--space-3);
+}
+
+.cd-breaks {
+  margin: 0.55rem 0 0;
+  font-size: 0.8rem;
+  color: var(--color-text-soft);
+}
+
+/* ---------- Validação ---------- */
+.cd-validation {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+}
+
+.cd-alert {
+  border-radius: var(--radius-s);
+  padding: 0.6rem 0.8rem;
+  font-size: 0.84rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.cd-alert ul {
+  margin: 0.35rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.cd-alert li {
+  margin-bottom: 0.2rem;
+}
+
+.cd-alert--ok {
+  border-color: #b6dcc4;
+  background: #f0f9f3;
+  color: #26603c;
+}
+
+.cd-alert--error {
+  border-color: #eec0c9;
+  background: #fdf1f4;
+  color: #8d2b43;
+}
+
+.cd-alert--warning {
+  border-color: #f0dda0;
+  background: #fff8dd;
+  color: #6f5210;
+}
+
+.cd-alert__confirm {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+.cd-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+
+.cd-actions select {
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-s);
+  font: inherit;
+  font-size: 0.85rem;
+  background: #fff;
+}
+
+.cd-actions .btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+body.cd-is-busy .cd-preview {
+  opacity: 0.7;
+}
+
+/* ---------- Área de impressão ---------- */
+.cd-print-area {
+  display: none;
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 1040px) {
+  .cd-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cd-preview {
+    position: static;
+  }
+}
+
+@media (max-width: 620px) {
+  .cd-grid-2,
+  .cd-grid-3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cd-editor-canvas {
+    height: 260px;
+  }
+
+  /* Em telas pequenas a edição fina é desencorajada, mas visualizar e
+     configurar continua funcionando. */
+  .cd-small-screen-note {
+    display: block;
+  }
+}
+
+.cd-small-screen-note {
+  display: none;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #7a5a12;
+  background: #fff8dd;
+  border: 1px solid #f0dda0;
+  border-radius: var(--radius-s);
+  padding: 0.5rem 0.65rem;
+}
+
+/* ============================================================
+   Impressão: uma folha A4 por página, sem nada da interface.
+   ============================================================ */
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #000;
+  }
+
+  /* Fora tudo que não é a folha. */
+  body > .site-header,
+  body > .site-footer,
+  main#main > section,
+  main#main > script {
+    display: none !important;
+  }
+
+  .cd-print-area {
+    display: block !important;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  .cd-print-area svg {
+    display: block;
+    margin: 0 auto;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /* As cores escolhidas pelo usuário são preservadas: quem cuida da
+     legibilidade em preto e branco é o validador, que avisa quando a cor
+     escolhida é clara demais para imprimir. */
+}

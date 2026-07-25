@@ -1,0 +1,6 @@
+{
+  "name": "educa4good-connect-dots",
+  "private": true,
+  "type": "module",
+  "description": "Marca esta pasta como ES Modules para o runner de testes do Node. O navegador ignora este arquivo; ele existe apenas para que 'node --test' resolva os .js como ESM."
+}

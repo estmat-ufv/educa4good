@@ -3,43 +3,39 @@
 Utilitário web estático publicado dentro do site Educa4Good em:
 
 `Pagina/pt/ligar-os-pontos.html`
+(https://estmat-ufv.github.io/educa4good/pt/ligar-os-pontos.html)
+
+A implementação foi **reconstruída** em julho de 2026. Este arquivo virou um
+índice; o conteúdo está nos três documentos abaixo.
+
+| Documento | Para quem |
+| --- | --- |
+| [Manual de uso](ligar_os_pontos_manual.md) | quem vai gerar as folhas |
+| [Arquitetura](ligar_os_pontos_arquitetura.md) | quem vai mexer no código |
+| [Auditoria da versão anterior](ligar_os_pontos_auditoria.md) | histórico: o que existia e por que mudou |
+
+## Em uma linha
+
+Três modos independentes — **SVG exato**, **detecção assistida com OpenCV.js** e
+**traçado manual com Paper.js** — com validação obrigatória antes de exportar.
+Nenhuma imagem sai do navegador, e nenhum contorno duvidoso vira atividade sem
+confirmação do usuário.
 
 ## Arquivos
 
-- `Pagina/assets/js/connect-the-dots.js`: upload local, processamento da imagem em canvas, seleção dos pontos, validação das conexões omitidas, renderização em SVG, impressão e exportação PNG.
-- `Pagina/assets/css/connect-the-dots.css`: layout responsivo do gerador e regras `@media print` para A4 retrato/paisagem.
-- `Pagina/build.py`: gera a página portuguesa extra, adiciona o card em `pt/jogos.html` e inclui a URL no sitemap.
-- `Pagina/_data/i18n/pt.json`: texto do card "Ligar os Pontos" na página de jogos.
-- `Pagina/pt/ligar-os-pontos.html`, `Pagina/pt/jogos.html` e `Pagina/sitemap.xml`: saídas geradas por `python build.py`.
+- `Pagina/assets/js/connect-dots/` — a aplicação, em ES Modules.
+- `Pagina/assets/css/connect-dots.css` — layout e regras `@media print` para A4.
+- `Pagina/assets/vendor/` — Paper.js 0.12.18 versionado; veja o `README.md` de lá.
+- `Pagina/build.py` — `build_connect_dots_pt()` gera a página; o card em
+  `pt/jogos.html` e a URL no sitemap continuam como antes.
+- `Pagina/_data/i18n/pt.json` — texto do card "Ligar os Pontos" na página de jogos.
+- `tests/connect-dots/` e `tests/connect-dots-fixtures/` — testes e fixtures.
+- `examples/connect-dots/` — auditoria visual com folhas geradas.
 
-## Funcionamento
+**Nunca edite `Pagina/pt/ligar-os-pontos.html` à mão:** ele é gerado. Altere
+`build.py` e rode `python build.py`.
 
-O processamento acontece integralmente no navegador. A imagem é carregada com `FileReader`, desenhada em um canvas reduzido, convertida para escala de cinza e separada do fundo com um limiar automático. Em seguida, o script fecha pequenas falhas nas linhas e percorre as bordas dos pixels de tinta para criar contornos vetoriais fechados.
-
-Os pontos são distribuídos por distância ao longo desses caminhos SVG, sempre na ordem do próprio contorno. Quando há uma silhueta dominante, detalhes internos contidos nela são descartados; isso evita que a numeração salte entre rosto, corpo e outros traços internos.
-
-Quando há múltiplos contornos externos relevantes, o gerador usa os maiores primeiro, distribui pontos proporcionalmente ao comprimento de cada caminho e quebra automaticamente a linha entre um contorno e outro para evitar conexões atravessando a folha.
-
-As conexões omitidas são informadas como pares consecutivos, por exemplo:
-
-`5-6, 12-13`
-
-Essas linhas deixam de aparecer, mas os pontos e números continuam na atividade.
-
-## Limitações
-
-A conversão não promete fidelidade perfeita para toda fotografia. Os melhores resultados vêm de desenhos, ícones, silhuetas e figuras com contornos nítidos, fundo simples e alto contraste. Fotos muito detalhadas, sombras fortes, fundos texturizados ou imagens com muitos elementos pequenos podem gerar pontos ruidosos ou uma sequência menos natural.
-
-## Como Usar
-
-1. Abra `pt/ligar-os-pontos.html` no site.
-2. Envie uma imagem em PNG, JPG, WebP ou outro formato aceito pelo navegador.
-3. Ajuste quantidade de pontos, numeração inicial, tamanhos, cor/espessura dos traços, orientação A4, título e identificação.
-4. Opcionalmente, informe pares de conexões a esconder.
-5. Clique em **Gerar/Atualizar atividade**.
-6. Use **Imprimir atividade** para gerar a folha A4 ou **Baixar PNG** para salvar a prévia.
-
-## Como Testar Localmente
+## Como testar localmente
 
 ```powershell
 cd C:\Users\Fernando\Documents\GitHub\Educa4Good\Pagina
@@ -47,14 +43,25 @@ python build.py
 python -m http.server 8931
 ```
 
-Depois acesse:
+Depois acesse `http://localhost:8931/pt/ligar-os-pontos.html` e confira também
+o link em `http://localhost:8931/pt/jogos.html`.
 
-`http://localhost:8931/pt/ligar-os-pontos.html`
+Testes automatizados:
 
-Teste também o link em:
+```powershell
+cd C:\Users\Fernando\Documents\GitHub\Educa4Good
+node --test "tests/connect-dots/*.test.mjs"
+python -m http.server 8932
+```
 
-`http://localhost:8931/pt/jogos.html`
+Com o servidor da raiz no ar, abra
+`http://localhost:8932/tests/connect-dots/browser-tests.html` para os testes que
+exigem DOM, canvas, OpenCV.js e Paper.js.
 
 ## Idiomas
 
-A primeira versão foi integrada em português porque a interface tem textos de orientação, validações e documentação pedagógica. As páginas em inglês e espanhol permanecem com o card "em breve"; uma tradução completa pode ser adicionada depois sem alterar o motor JavaScript.
+A interface está em português, porque tem textos de orientação, mensagens de
+validação e vocabulário pedagógico. As páginas em inglês e espanhol continuam
+com o card "em breve"; uma tradução pode ser acrescentada depois sem mexer no
+motor JavaScript — as mensagens estão concentradas nos módulos de interface,
+validação e classificação.
