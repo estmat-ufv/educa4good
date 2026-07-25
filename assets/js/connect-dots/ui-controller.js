@@ -189,6 +189,12 @@ export function createUiController(store) {
     store.setAsset("sanitizedSvg", root);
     store.setAsset("originalFile", file);
     store.setAsset("originalText", text);
+    // Guardada antes de qualquer edição: é ela que aparece como "figura
+    // original ao fundo", mesmo depois de o traçado passar pelo editor.
+    store.setAsset("originalGeometry", {
+      paths: imported.paths.map((p) => p.svgPathData),
+      bounds: pathsBounds(imported.paths, false)
+    });
 
     store.update((draft) => {
       draft.source = {

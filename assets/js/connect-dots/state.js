@@ -74,7 +74,13 @@ export function createStore() {
     sanitizedSvg: null,
     originalFile: null,
     originalText: "",
-    analysisCanvas: null
+    analysisCanvas: null,
+    /** Miniatura da imagem original, embutida na folha. */
+    previewDataUrl: null,
+    /** Prévia da binarização devolvida pelo Worker. */
+    binaryDataUrl: null,
+    /** Geometria do SVG como veio do arquivo, antes de qualquer edição. */
+    originalGeometry: null
   };
   const listeners = new Set();
   const past = [];

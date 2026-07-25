@@ -183,8 +183,22 @@ export function buildWorksheetPlan(state, extra = {}) {
     matrix,
     scale,
     sourceBounds,
-    sourcePreview: extra.sourcePreview || null
+    sourcePreview: normalizeSourcePreview(extra.sourcePreview, state)
   };
+}
+
+/**
+ * O `extent` é obrigatório para alinhar uma imagem de fundo. Se quem montou a
+ * pré-visualização esqueceu, deduzimos do tamanho da origem em vez de deixar o
+ * fundo sumir em silêncio.
+ */
+function normalizeSourcePreview(preview, state) {
+  if (!preview) return null;
+  if (preview.kind !== "image") return preview;
+  if (preview.extent && preview.extent.w > 0 && preview.extent.h > 0) return preview;
+  const { width, height } = state.source || {};
+  if (!(width > 0) || !(height > 0)) return preview;
+  return { ...preview, extent: { x: 0, y: 0, w: width, h: height } };
 }
 
 /** Texto da linha de identificação. */
@@ -255,8 +269,24 @@ export function renderWorksheetSvg(plan, options = {}) {
   }
 
   // ------------------------------------------------- imagem original (fundo)
+  // Precisa cair EXATAMENTE sobre os pontos: usa a mesma matriz de encaixe,
+  // nunca um enquadramento próprio.
+  //
+  // Como o traçado costuma ocupar só um pedaço da imagem, ampliá-lo até
+  // preencher a folha joga o resto da imagem para fora da área de desenho.
+  // O recorte impede que esse excesso passe por cima do título, dos campos de
+  // identificação e do rodapé.
   if (settings.showOriginalImage && plan.sourcePreview) {
-    out.push(renderSourcePreview(plan, sheet.drawing, settings.originalOpacity, "background"));
+    const clip = sheet.drawing;
+    out.push(
+      `<defs><clipPath id="cd-draw-clip">` +
+        `<rect x="${round(clip.x)}" y="${round(clip.y)}" ` +
+        `width="${round(clip.w)}" height="${round(clip.h)}"/>` +
+        `</clipPath></defs>`
+    );
+    out.push(
+      `<g clip-path="url(#cd-draw-clip)">${renderAlignedSource(plan, settings.originalOpacity)}</g>`
+    );
   }
 
   // ------------------------------------------------------------ linhas-guia
@@ -316,7 +346,7 @@ export function renderWorksheetSvg(plan, options = {}) {
         `<rect x="${round(sheet.inspiration.x)}" y="${round(sheet.inspiration.y)}" ` +
         `width="${round(sheet.inspiration.w)}" height="${round(sheet.inspiration.h)}" ` +
         `fill="none" stroke="#dde7f0" stroke-width="0.25" rx="1.5"/>` +
-        renderSourcePreview(plan, inset(sheet.inspiration, 1.4), 1, "inspiration") +
+        renderSourceThumbnail(plan.sourcePreview, inset(sheet.inspiration, 1.4)) +
         `</g>`
     );
   }
@@ -350,18 +380,65 @@ function inset(rect, amount) {
 }
 
 /**
- * A pré-visualização da origem é embutida no próprio SVG: imagem raster como
- * data URL, ou a geometria vetorial como caminhos. Nada aponta para fora.
+ * Figura original SOB os pontos, no lugar exato.
+ *
+ * A regra que faz isso funcionar: usar a MESMA matriz que posicionou os
+ * caminhos (`plan.matrix`), nunca um enquadramento próprio. A versão anterior
+ * encaixava a imagem na área de desenho inteira enquanto os pontos eram
+ * encaixados na caixa reduzida que reserva espaço para os números — e a partir
+ * de duas caixas diferentes o fundo saía deslocado e em outra escala. Para a
+ * criança isso é pior do que não ter fundo nenhum: ela desenha longe da borda
+ * real da figura.
+ *
+ * A pré-visualização é sempre embutida no próprio SVG. Nada aponta para fora.
  */
-function renderSourcePreview(plan, box, opacity, role) {
+function renderAlignedSource(plan, opacity) {
   const preview = plan.sourcePreview;
+  const m = plan.matrix;
+  if (!preview || !m) return "";
+
+  if (preview.kind === "image" && preview.href) {
+    const extent = preview.extent;
+    if (!extent || !(extent.w > 0) || !(extent.h > 0)) return "";
+    // A matriz de encaixe é uma escala uniforme com translação (b = c = 0),
+    // então o retângulo transformado é exato e preserva a proporção.
+    const x = m.a * extent.x + m.e;
+    const y = m.d * extent.y + m.f;
+    const w = m.a * extent.w;
+    const h = m.d * extent.h;
+    return (
+      `<image data-layer="source-background" href="${escapeXml(preview.href)}" ` +
+      `x="${round(x, 3)}" y="${round(y, 3)}" width="${round(w, 3)}" height="${round(h, 3)}" ` +
+      `preserveAspectRatio="none" opacity="${round(opacity, 3)}"/>`
+    );
+  }
+
+  if (preview.kind === "geometry" && preview.paths && preview.paths.length) {
+    const strokeWidth = round(Math.max(0.05, 0.35 / Math.max(m.a, 1e-6)), 4);
+    const body = preview.paths.map((d) => `<path d="${escapeXml(d)}"/>`).join("");
+    return (
+      `<g data-layer="source-background" opacity="${round(opacity, 3)}" ` +
+      `transform="matrix(${round(m.a, 6)} ${round(m.b, 6)} ${round(m.c, 6)} ` +
+      `${round(m.d, 6)} ${round(m.e, 4)} ${round(m.f, 4)})" ` +
+      `fill="none" stroke="#7f95a8" stroke-width="${strokeWidth}" ` +
+      `stroke-linejoin="round">${body}</g>`
+    );
+  }
+  return "";
+}
+
+/**
+ * Miniatura de inspiração no canto da folha. Aqui o enquadramento próprio é
+ * o correto: é uma referência independente, não uma sobreposição.
+ */
+function renderSourceThumbnail(preview, box) {
   if (!preview) return "";
 
   if (preview.kind === "image" && preview.href) {
     return (
-      `<image data-layer="source-${role}" href="${escapeXml(preview.href)}" ` +
+      `<image data-layer="source-inspiration" href="${escapeXml(preview.href)}" ` +
       `x="${round(box.x)}" y="${round(box.y)}" width="${round(box.w)}" height="${round(box.h)}" ` +
-      `preserveAspectRatio="xMidYMid meet" opacity="${round(opacity, 3)}"/>`
+      `preserveAspectRatio="xMidYMid meet"/>`
     );
   }
 
@@ -372,11 +449,9 @@ function renderSourcePreview(plan, box, opacity, role) {
     const dx = box.x + (box.w - bounds.w * scale) / 2 - bounds.x * scale;
     const dy = box.y + (box.h - bounds.h * scale) / 2 - bounds.y * scale;
     const strokeWidth = round(Math.max(0.12, 0.35 / Math.max(scale, 1e-6)), 3);
-    const body = preview.paths
-      .map((d) => `<path d="${escapeXml(d)}"/>`)
-      .join("");
+    const body = preview.paths.map((d) => `<path d="${escapeXml(d)}"/>`).join("");
     return (
-      `<g data-layer="source-${role}" opacity="${round(opacity, 3)}" ` +
+      `<g data-layer="source-inspiration" ` +
       `transform="translate(${round(dx, 3)} ${round(dy, 3)}) scale(${round(scale, 5)})" ` +
       `fill="none" stroke="#7f95a8" stroke-width="${strokeWidth}">${body}</g>`
     );
@@ -384,16 +459,31 @@ function renderSourcePreview(plan, box, opacity, role) {
   return "";
 }
 
-/** Pré-visualização da origem a partir do estado e dos recursos carregados. */
-export function buildSourcePreview(state, assets) {
+/**
+ * Pré-visualização da origem a partir do estado e dos recursos carregados.
+ *
+ * O `extent` é o que permite alinhar a imagem raster: é o retângulo que ela
+ * ocupa no MESMO sistema de coordenadas dos caminhos (pixels da imagem
+ * original, já que `candidatesToPaths` desfaz a redução da análise).
+ */
+export function buildSourcePreview(state, assets = {}) {
   if (state.source.type === "raster" && assets.previewDataUrl) {
-    return { kind: "image", href: assets.previewDataUrl };
+    return {
+      kind: "image",
+      href: assets.previewDataUrl,
+      extent: { x: 0, y: 0, w: state.source.width, h: state.source.height }
+    };
   }
-  if (state.source.type === "svg" && state.paths.length) {
-    const bounds = pathsBounds(state.paths, false);
+  if (state.source.type === "svg") {
+    // A geometria importada no carregamento é guardada à parte: depois de
+    // passar pelo editor, `state.paths` já não é o desenho original, e mostrar
+    // o traçado editado como "figura original" não ajudaria ninguém.
+    const original = assets.originalGeometry;
+    if (original && original.paths.length) return { kind: "geometry", ...original };
+    if (!state.paths.length) return null;
     return {
       kind: "geometry",
-      bounds,
+      bounds: pathsBounds(state.paths, false),
       paths: state.paths.map((p) => p.svgPathData)
     };
   }

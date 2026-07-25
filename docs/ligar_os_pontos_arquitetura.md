@@ -335,6 +335,29 @@ traçado encostar na área útil, os rótulos das extremidades não têm para on
 e acabam por dentro da figura. "Ocupar a maior área possível" vale para pontos
 **mais** números.
 
+### Regra do fundo alinhado
+
+A figura original desenhada sob os pontos usa **a mesma matriz** que posicionou
+os caminhos (`plan.matrix`), nunca um enquadramento próprio. Existem duas
+caixas na folha e elas não coincidem: a área de desenho (`plan.area`) e a caixa
+de encaixe reduzida pela faixa dos números (`plan.fitBox`). Encaixar o fundo na
+primeira enquanto os pontos vão para a segunda produz fundo deslocado e em
+outra escala — medido num caso de teste: metade da escala e 25 mm de
+deslocamento, o suficiente para a criança desenhar fora da borda da figura.
+
+Para imagem raster, o alinhamento depende do `extent`: o retângulo que a imagem
+ocupa no mesmo sistema de coordenadas dos caminhos (pixels da imagem original,
+já que `candidatesToPaths` desfaz a redução da análise). Quando o `extent` não
+vem, `buildWorksheetPlan` o deduz de `state.source` em vez de deixar o fundo
+desaparecer em silêncio.
+
+O fundo é recortado na área de desenho (`clipPath`), porque ampliar um traçado
+que ocupa só parte da imagem joga o resto para fora — sem o recorte, esse
+excesso passaria por cima do título e dos campos de identificação.
+
+A miniatura de inspiração no canto é o caso oposto: ali o enquadramento próprio
+é o correto, porque ela é uma referência independente, não uma sobreposição.
+
 Qualquer número pode ser arrastado na prévia; a posição manual passa a ter
 prioridade absoluta e não é reavaliada.
 
@@ -445,3 +468,46 @@ arquivo estático. Nada disso é publicado — `tests/` fica fora de `Pagina/`.
 As fixtures raster são geradas por
 `node tests/connect-dots-fixtures/make-raster-fixtures.mjs`, com um codificador
 PNG próprio sobre `node:zlib`. Todas as figuras são sintéticas e próprias.
+
+## 17. Publicação
+
+O site **não** é publicado a partir deste repositório. São dois repositórios:
+
+| Remote | Repositório | Papel |
+| --- | --- | --- |
+| `origin` | `fsbmat-ufv/Educa4Good` | monorepo de desenvolvimento (LaTeX, R, site) |
+| `estmat` | `estmat-ufv/educa4good` | **site publicado**: o conteúdo de `Pagina/` vira a raiz |
+
+O GitHub Pages serve o branch `main` de `estmat-ufv/educa4good` diretamente.
+**Não há build no servidor:** `python build.py` roda na máquina e o HTML gerado
+é commitado. O `Pagina/.github/workflows/deploy-pages.yml` fica dentro de
+`Pagina/` e não é executado por este repositório.
+
+### Cuidado obrigatório antes de publicar
+
+O repositório publicado pode estar **à frente** do `Pagina/` local. Na
+publicação desta reconstrução ele tinha três geradores a mais — colorir por
+números, encontre as diferenças e jogo da memória — que teriam sido **apagados
+do ar** por uma cópia integral da pasta. Sempre compare antes:
+
+```bash
+git fetch estmat
+git ls-tree -r --name-only estmat/main | sort > /tmp/publicado.txt
+cd Pagina && find . -type f | sed 's|^\./||' | sort > /tmp/local.txt
+comm -23 /tmp/publicado.txt /tmp/local.txt   # existe no ar e não aqui: NÃO apague
+```
+
+### Procedimento
+
+Existe um worktree dedicado em `../Educa4Good-estmat-publish`
+(`git worktree list`). Nele:
+
+1. `git fetch estmat` e confirme que o worktree está em `estmat/main`;
+2. copie **apenas** o que mudou (`assets/js/connect-dots/`,
+   `assets/css/connect-dots.css`, `assets/vendor/`) e remova o que saiu;
+3. em `build.py`, substitua **somente** a função afetada — o `build.py`
+   publicado tem builders que não existem aqui;
+4. `python build.py` e confira `git status`: nenhuma outra página pode aparecer
+   como modificada;
+5. teste servindo o worktree (`.claude/launch.json`, configuração `publicado`);
+6. `git push estmat HEAD:main`.
