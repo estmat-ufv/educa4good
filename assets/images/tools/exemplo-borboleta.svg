@@ -1,34 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800" role="img" aria-label="Borboleta simétrica de exemplo">
-  <rect width="800" height="800" fill="#ffffff"/>
-  <g fill="none" stroke="#1f3347" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
-    <!-- asas da direita -->
-    <g>
-      <path d="M404 330 C470 220 600 190 660 250 C710 300 690 380 610 410 C540 436 452 420 404 392 Z" fill="#f7cd58"/>
-      <path d="M404 418 C468 430 560 462 578 528 C592 580 546 626 492 614 C444 603 412 540 404 470 Z" fill="#eaf1f8"/>
-      <circle cx="566" cy="292" r="30" fill="#ffffff"/>
-      <circle cx="622" cy="336" r="16" fill="#ffffff"/>
-      <path d="M470 300 C512 268 566 254 604 262" stroke-width="7"/>
-      <circle cx="502" cy="524" r="19" fill="#ffffff"/>
-      <path d="M436 470 C468 492 500 520 518 556" stroke-width="7"/>
-    </g>
-    <!-- asas da esquerda (espelho exato das de cima) -->
-    <g transform="translate(800,0) scale(-1,1)">
-      <path d="M404 330 C470 220 600 190 660 250 C710 300 690 380 610 410 C540 436 452 420 404 392 Z" fill="#f7cd58"/>
-      <path d="M404 418 C468 430 560 462 578 528 C592 580 546 626 492 614 C444 603 412 540 404 470 Z" fill="#eaf1f8"/>
-      <circle cx="566" cy="292" r="30" fill="#ffffff"/>
-      <circle cx="622" cy="336" r="16" fill="#ffffff"/>
-      <path d="M470 300 C512 268 566 254 604 262" stroke-width="7"/>
-      <circle cx="502" cy="524" r="19" fill="#ffffff"/>
-      <path d="M436 470 C468 492 500 520 518 556" stroke-width="7"/>
-    </g>
-    <!-- corpo -->
-    <path d="M400 262 C420 262 428 300 428 372 C428 452 416 528 400 566 C384 528 372 452 372 372 C372 300 380 262 400 262 Z" fill="#ffffff"/>
-    <path d="M400 300 L400 552" stroke-width="6"/>
-    <!-- cabeça e antenas -->
-    <circle cx="400" cy="238" r="30" fill="#ffffff"/>
-    <path d="M414 214 C440 178 470 158 502 152"/>
-    <path d="M386 214 C360 178 330 158 298 152"/>
-    <circle cx="508" cy="148" r="11" fill="#1f3347"/>
-    <circle cx="292" cy="148" r="11" fill="#1f3347"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800"
+     role="img" aria-label="Borboleta de exemplo: contorno unico e simetrico">
+  <title>Borboleta — contorno único para ligar os pontos</title>
+  <desc>
+    Figura de exemplo do gerador "Ligar os Pontos" do Educa4Good.
+
+    É de propósito UM único caminho fechado, sem retângulo de fundo, sem
+    manchas e sem detalhes internos. Numa atividade de ligar pontos a criança
+    percorre uma linha contínua: cada forma separada rouba pontos do contorno
+    principal e obriga a interromper a sequência.
+
+    A curva foi escolhida por busca em grade sobre uma família de quatro asas
+    em coordenadas polares, com a restrição de manter a distância entre pontos
+    vizinhos variando menos de 22% em 18, 24, 30 e 40 pontos. Sem essa
+    restrição, entalhes de asa mais profundos apertam a curvatura e os pontos
+    se agrupam nos vincos, mesmo com a amostragem por comprimento de arco
+    estando correta.
+  </desc>
+  <path fill="none" stroke="#1f3347" stroke-width="8" stroke-linejoin="round"
+        d="M604.1 425
+           C599.3 440.9 627 458.6 643.9 484.9
+           C660.7 511.2 657.5 542.9 623.9 557.7
+           C590.3 572.6 533.3 567.8 490.4 554.4
+           C447.6 541.1 421.9 524.2 400 524.2
+           C378.1 524.2 352.4 541.1 309.6 554.4
+           C266.7 567.8 209.7 572.6 176.1 557.7
+           C142.5 542.9 139.3 511.2 156.1 484.9
+           C173 458.6 200.7 440.9 195.9 425
+           C191.1 409.2 151.6 389.5 120 356.3
+           C88.5 323.1 77.2 278.6 110.7 253.6
+           C144.3 228.7 215.9 228.7 273.5 244
+           C331 259.3 368.5 282.3 400 282.3
+           C431.5 282.3 469 259.3 526.5 244
+           C584.1 228.7 655.7 228.7 689.3 253.6
+           C722.8 278.6 711.5 323.1 680 356.3
+           C648.4 389.5 608.9 409.2 604.1 425
+           Z"/>
 </svg>

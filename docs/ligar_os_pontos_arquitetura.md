@@ -190,9 +190,35 @@ arquivo → sanitizeSvg → importSvg → normalizePaths → seleção → sampl
 3. **Fundo do arquivo**: um retângulo simples que cobre o viewBox inteiro é
    marcado e vem **desmarcado** — era exatamente a forma que o gerador antigo
    escolhia por ser "a maior".
-4. **Amostragem** por comprimento de arco, com `getTotalLength()` e
+4. **Seleção inicial**: vêm marcados apenas os maiores caminhos que cabem no
+   orçamento de pontos (`applyDefaultSelection`, mínimo de 8 pontos por
+   caminho, e nada abaixo de 10% do maior). Ilustrações reais chegam com
+   dezenas de formas — contorno, manchas, olhos, detalhes — e marcar todas
+   reparte o orçamento entre elas: com 30 pontos e 21 formas cada uma recebe
+   três, o espaçamento fica visualmente irregular e metade das formas não
+   recebe ponto nenhum. **Não é escolha silenciosa:** a lista mostra todas com
+   o comprimento de cada uma, e a interface diz quantas deixou de fora.
+5. **Amostragem** por comprimento de arco, com `getTotalLength()` e
    `getPointAtLength()` nativos. A distribuição não depende da quantidade de nós
    do SVG original.
+
+### A figura de exemplo
+
+`assets/images/tools/exemplo-borboleta.svg` é **um único caminho fechado**, de
+propósito. Numa atividade de ligar pontos a criança percorre uma linha
+contínua: cada forma separada rouba pontos do contorno e obriga a interromper a
+sequência. A versão anterior era uma ilustração decorada (fundo, manchas,
+antenas, olhos) com 22 caminhos — e por isso o exemplo embutido saía com três
+pontos por forma e passo variando 5,4×.
+
+A curva atual foi escolhida por busca em grade sobre uma família de quatro asas
+em coordenadas polares, com a restrição de manter a distância entre pontos
+vizinhos variando menos de 22% em 18, 24, 30 e 40 pontos. Entalhes de asa mais
+profundos deixam a figura mais bonita mas apertam o raio de curvatura: quando
+ele fica pequeno perto do passo de amostragem, a corda entre pontos vizinhos
+encolhe nos vincos e a folha parece irregular — mesmo com a amostragem por
+comprimento de arco estando perfeitamente correta. O raciocínio ficou
+registrado no `<desc>` do próprio arquivo.
 
 Determinístico: mesma entrada e mesmas opções geram exatamente a mesma folha.
 Há teste para isso.

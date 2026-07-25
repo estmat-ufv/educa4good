@@ -179,7 +179,9 @@ export function createUiController(store) {
     if (!root || report.errors.length) {
       throw new Error(report.errors[0] || "SVG inválido.");
     }
-    const imported = importSvg(root);
+    const imported = importSvg(root, {
+      pointBudget: store.getState().settings.pointCount
+    });
     if (!imported.paths.length) {
       throw new Error(
         "Nenhuma forma utilizável foi encontrada neste SVG. Use o traçado manual."
@@ -191,9 +193,12 @@ export function createUiController(store) {
     store.setAsset("originalText", text);
     // Guardada antes de qualquer edição: é ela que aparece como "figura
     // original ao fundo", mesmo depois de o traçado passar pelo editor.
+    // O retângulo de fundo do arquivo fica de fora: desenhado como traço, ele
+    // vira uma moldura em volta da figura e confunde quem olha a folha.
+    const geometry = imported.paths.filter((p) => !p.nearFrame);
     store.setAsset("originalGeometry", {
-      paths: imported.paths.map((p) => p.svgPathData),
-      bounds: pathsBounds(imported.paths, false)
+      paths: geometry.map((p) => p.svgPathData),
+      bounds: pathsBounds(geometry, false)
     });
 
     store.update((draft) => {
@@ -214,6 +219,11 @@ export function createUiController(store) {
       `${imported.paths.length} caminho(s) encontrado(s).`,
       imported.backgrounds
         ? `${imported.backgrounds} forma(s) que cobrem a folha inteira foram tratadas como fundo e vieram desmarcadas.`
+        : "",
+      imported.deselected
+        ? `Vieram marcados só os maiores: com ${store.getState().settings.pointCount} pontos, ` +
+          `repartir entre todos daria poucos pontos por forma. ` +
+          `Marque os outros ${imported.deselected} na lista se quiser.`
         : "",
       removed.length ? `Removido por segurança: ${removed.join(", ")}.` : "",
       imported.hiddenCount ? `${imported.hiddenCount} elemento(s) invisível(is) ignorado(s).` : "",

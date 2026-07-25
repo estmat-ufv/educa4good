@@ -7,6 +7,7 @@
 
 import { IDENTITY, multiply, parseTransform } from "./util/geometry.js";
 import { normalizePaths } from "./path-normalizer.js";
+import { DEFAULT_SETTINGS } from "./constants.js";
 
 const UNIT_TO_PX = {
   "": 1, px: 1, pt: 96 / 72, pc: 16, mm: 96 / 25.4, cm: 96 / 2.54, in: 96,
@@ -204,9 +205,13 @@ export function readViewBox(root) {
  * Importa a geometria de um SVG sanitizado.
  *
  * @param {SVGSVGElement} root
- * @returns {{paths: import("./path-normalizer.js").ActivityPath[], viewBox: object, hiddenCount: number}}
+ * @param {{pointBudget?: number}} [options] total de pontos previsto, usado
+ *   para decidir quantos caminhos vêm marcados por padrão
+ * @returns {{paths: import("./path-normalizer.js").ActivityPath[], viewBox: object,
+ *   hiddenCount: number, backgrounds: number, deselected: number}}
  */
-export function importSvg(root) {
+export function importSvg(root, options = {}) {
+  const pointBudget = options.pointBudget || DEFAULT_SETTINGS.pointCount;
   const { shapes, hiddenCount } = collectShapes(root);
   const viewBox =
     readViewBox(root) || {
@@ -227,9 +232,52 @@ export function importSvg(root) {
     }))
   );
 
-  const paths = markBackgrounds(imported, viewBox);
-  const backgrounds = paths.filter((p) => p.nearFrame).length;
-  return { paths, viewBox, hiddenCount, backgrounds };
+  const marked = markBackgrounds(imported, viewBox);
+  const paths = applyDefaultSelection(marked, pointBudget);
+  return {
+    paths,
+    viewBox,
+    hiddenCount,
+    backgrounds: paths.filter((p) => p.nearFrame).length,
+    deselected: paths.filter((p) => !p.selected && !p.nearFrame).length
+  };
+}
+
+/** Pontos mínimos para uma forma ainda ser reconhecível na folha. */
+const MIN_POINTS_PER_PATH = 8;
+
+/**
+ * Seleção inicial de caminhos.
+ *
+ * Ilustrações reais chegam com dezenas de formas: contorno, manchas, olhos,
+ * detalhes. Marcar todas por padrão reparte o orçamento de pontos entre elas e
+ * o resultado é uma folha com três pontos por forma — espaçamento visualmente
+ * irregular, detalhes decorativos consumindo pontos que faltam ao contorno, e
+ * formas sobrando sem ponto nenhum.
+ *
+ * Então vêm marcados apenas os maiores caminhos que cabem no orçamento. Isto
+ * NÃO é uma escolha silenciosa: a lista mostra todos, com o tamanho de cada um,
+ * e a interface diz quantos deixou de fora. É um padrão, não uma decisão.
+ */
+export function applyDefaultSelection(paths, pointBudget = DEFAULT_SETTINGS.pointCount) {
+  const candidates = paths.filter((p) => p.selected !== false && !p.nearFrame);
+  if (candidates.length <= 1) return paths;
+
+  const maxPaths = Math.max(1, Math.floor(pointBudget / MIN_POINTS_PER_PATH));
+  if (candidates.length <= maxPaths) return paths;
+
+  const longest = Math.max(...candidates.map((p) => p.metrics.length));
+  const keep = new Set(
+    candidates
+      .filter((p) => p.metrics.length >= longest * 0.1)
+      .sort((a, b) => b.metrics.length - a.metrics.length)
+      .slice(0, maxPaths)
+      .map((p) => p.id)
+  );
+
+  return paths.map((path) =>
+    path.nearFrame || keep.has(path.id) ? path : { ...path, selected: false }
+  );
 }
 
 /**
