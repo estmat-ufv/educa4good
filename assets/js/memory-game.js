@@ -1,6 +1,6 @@
 /* Educa4Good - Jogo da memoria (client-side, sem dependencias).
    As imagens e palavras escolhidas ficam no navegador e nao sao enviadas. */
-(function () {
+(function (scope) {
   "use strict";
 
   var MAX_ITEMS = 5;
@@ -82,8 +82,48 @@
       klass: dom.klass.value.trim(),
       cardSize: dom.cardSize.value,
       shuffle: dom.shuffle.checked,
-      showPairNumbers: dom.pairNumbers.checked
+      showPairNumbers: dom.pairNumbers.checked,
+      // Padrao visual do projeto, compartilhado por todos os geradores.
+      theme: dom.theme ? dom.theme.value : "classico",
+      colorMode: dom.colorMode ? dom.colorMode.value : "cor",
+      cutMargin: dom.cutMargin ? dom.cutMargin.checked : false,
+      cutInset: dom.cutInset ? Number(dom.cutInset.value) : 6,
+      showSchool: dom.showSchool ? dom.showSchool.checked : true,
+      schoolName: dom.schoolName ? dom.schoolName.value.trim() : "",
+      teacherName: dom.teacher ? dom.teacher.value.trim() : "",
+      year: dom.year ? dom.year.value.trim() : ""
     };
+  }
+
+  /* Cabecalho no padrao \BandaEscola + \CamposIdentificacao. O titulo fica
+     no <h2> proprio da pagina, que numera as folhas do jogo. */
+  function headerHtml(config) {
+    if (!scope.Educa4GoodSheet) return metaHtml(config);
+    return scope.Educa4GoodSheet.headerHtml({
+      showSchool: config.showSchool,
+      schoolName: config.schoolName,
+      showFields: true,
+      className: config.klass,
+      teacherName: config.teacherName,
+      year: config.year
+    });
+  }
+
+  /* As folhas sao montadas por concatenacao, entao a paleta entra como
+     atributo `style` e as classes do tema como atributos do <article>. */
+  function sheetOpenTag(config) {
+    if (!scope.Educa4GoodSheet) return '<article class="mg__page"';
+    var resolved = scope.Educa4GoodSheet.resolve(config.theme, config.colorMode);
+    var vars = scope.Educa4GoodSheet.cssVariablesText(resolved, {
+      "--e4g-cut-inset": config.cutInset + "mm"
+    });
+    var attrs = scope.Educa4GoodSheet.sheetAttrs(resolved, config.cutMargin)
+      .replace('class="e4g-sheet', 'class="mg__page e4g-sheet');
+    return "<article " + attrs + ' style="' + vars + '"';
+  }
+
+  function metaOpen() {
+    return '<div class="mg__meta e4g-host">';
   }
 
   function cardLayout(config) {
@@ -197,12 +237,12 @@
 
   function pageHtml(cards, config, layout, pageNumber, totalPages) {
     var pageLabel = totalPages > 1 ? "Folha " + pageNumber + " de " + totalPages : "Folha do jogo";
-    return '<article class="mg__page" aria-label="' + pageLabel + '">' +
+    return sheetOpenTag(config) + ' aria-label="' + pageLabel + '">' +
       '<header class="mg__sheet-header">' +
       '<div class="mg__brand"><img src="../assets/images/brand/mark.svg" alt=""><span>Educa4Good</span></div>' +
       '<span class="mg__sheet-kind">Jogo da memória</span>' +
       "</header>" +
-      '<div class="mg__meta">' + metaHtml(config) + "</div>" +
+      metaOpen() + headerHtml(config) + "</div>" +
       '<h2 class="mg__page-title">' + escapeHtml(config.title || "Jogo da memória") + "</h2>" +
       '<p class="mg__instruction">Recorte as cartas, embaralhe com a face virada para baixo e encontre os pares.</p>' +
       '<div class="mg__cards" style="--mg-card-columns:' + layout.columns + ';--mg-card-rows:' + layout.rows + ';--mg-card-width:' + layout.width + ';--mg-card-height:' + layout.height + '">' +
@@ -225,12 +265,12 @@
 
   function placeholderHtml(config) {
     var layout = cardLayout(config);
-    return '<article class="mg__page" aria-label="Prévia do jogo da memória">' +
+    return sheetOpenTag(config) + ' aria-label="Prévia do jogo da memória">' +
       '<header class="mg__sheet-header">' +
       '<div class="mg__brand"><img src="../assets/images/brand/mark.svg" alt=""><span>Educa4Good</span></div>' +
       '<span class="mg__sheet-kind">Jogo da memória</span>' +
       "</header>" +
-      '<div class="mg__meta">' + metaHtml(config) + "</div>" +
+      metaOpen() + headerHtml(config) + "</div>" +
       '<h2 class="mg__page-title">' + escapeHtml(config.title || "Jogo da memória") + "</h2>" +
       '<p class="mg__instruction">Recorte as cartas, embaralhe com a face virada para baixo e encontre os pares.</p>' +
       '<div class="mg__cards" style="--mg-card-columns:' + layout.columns + ';--mg-card-rows:' + layout.rows + ';--mg-card-width:' + layout.width + ';--mg-card-height:' + layout.height + '">' +
@@ -387,7 +427,11 @@
     dom.newOrder.addEventListener("click", generateCards);
     dom.print.addEventListener("click", printCards);
 
-    [dom.title, dom.cardSize, dom.child, dom.date, dom.klass, dom.shuffle, dom.pairNumbers].forEach(function (element) {
+    [dom.title, dom.cardSize, dom.child, dom.date, dom.klass, dom.shuffle, dom.pairNumbers,
+     dom.theme, dom.colorMode, dom.cutMargin, dom.cutInset,
+     dom.showSchool, dom.schoolName, dom.teacher, dom.year
+    ].forEach(function (element) {
+      if (!element) return;
       element.addEventListener("input", renderCards);
       element.addEventListener("change", renderCards);
     });
@@ -407,6 +451,14 @@
     dom.message = byId("mg-message");
     dom.status = byId("mg-status");
     dom.title = byId("mg-title");
+    dom.theme = byId("mg-theme");
+    dom.colorMode = byId("mg-color-mode");
+    dom.cutMargin = byId("mg-cut-margin");
+    dom.cutInset = byId("mg-cut-inset");
+    dom.showSchool = byId("mg-show-school");
+    dom.schoolName = byId("mg-school-name");
+    dom.teacher = byId("mg-teacher");
+    dom.year = byId("mg-year");
     dom.cardSize = byId("mg-card-size");
     dom.child = byId("mg-child");
     dom.date = byId("mg-date");
@@ -429,4 +481,4 @@
   } else {
     init();
   }
-})();
+})(typeof self !== "undefined" ? self : this);

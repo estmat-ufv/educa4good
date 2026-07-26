@@ -1187,7 +1187,8 @@ def build_word_search_pt(L):
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/site.css">
-  <link rel="stylesheet" href="../assets/css/word-search.css">
+  <link rel="stylesheet" href="../assets/css/educa4good-sheet.css?v=20260726a">
+  <link rel="stylesheet" href="../assets/css/word-search.css?v=20260726a">
 </head>
 <body>
 """
@@ -1278,6 +1279,58 @@ APRENDER</textarea>
             </div>
           </fieldset>
 
+          <fieldset class="ws__fieldset">
+            <legend>Layout e impressão</legend>
+            <div class="ws__grid-2">
+              <div class="ws__field">
+                <label for="ws-theme">Layout</label>
+                <select id="ws-theme">
+                  <option value="classico">Clássico</option>
+                  <option value="editorial">Editorial</option>
+                  <option value="infantil">Infantil</option>
+                  <option value="caderno">Caderno escolar</option>
+                </select>
+              </div>
+              <div class="ws__field">
+                <label for="ws-color-mode">Impressão</label>
+                <select id="ws-color-mode">
+                  <option value="cor">Colorida</option>
+                  <option value="pb">Preto e branco</option>
+                </select>
+              </div>
+            </div>
+            <div class="ws__field ws__check">
+              <input type="checkbox" id="ws-cut-margin">
+              <label for="ws-cut-margin">Margem tracejada para recortar e colar no caderno</label>
+            </div>
+            <div class="ws__field">
+              <label for="ws-cut-inset">Distância da borda (mm)</label>
+              <input type="range" id="ws-cut-inset" min="3" max="15" step="1" value="6">
+            </div>
+          </fieldset>
+
+          <fieldset class="ws__fieldset">
+            <legend>Cabeçalho</legend>
+            <div class="ws__field ws__check">
+              <input type="checkbox" id="ws-show-school" checked>
+              <label for="ws-show-school">Banda com o nome da escola</label>
+            </div>
+            <div class="ws__field">
+              <label for="ws-school-name">Escola</label>
+              <input type="text" id="ws-school-name" maxlength="60" placeholder="Deixe vazio para preencher à mão">
+            </div>
+            <div class="ws__grid-2">
+              <div class="ws__field">
+                <label for="ws-teacher">Professor(a)</label>
+                <input type="text" id="ws-teacher" maxlength="40" placeholder="—">
+              </div>
+              <div class="ws__field">
+                <label for="ws-year">Ano</label>
+                <input type="text" id="ws-year" maxlength="12" placeholder="—">
+              </div>
+            </div>
+          </fieldset>
+
           <div class="ws__field ws__check">
             <input type="checkbox" id="ws-answer" checked>
             <label for="ws-answer">Incluir gabarito em uma segunda página</label>
@@ -1337,7 +1390,8 @@ APRENDER</textarea>
     </div>
   </div>
 </section>
-<script src="../assets/js/word-search.js"></script>
+<script src="../assets/js/educa4good-sheet.js?v=20260726a"></script>
+<script src="../assets/js/word-search.js?v=20260726a"></script>
 """
     return head_html + header(L, "tools") + body + footer(L)
 
@@ -1372,7 +1426,8 @@ def build_memory_game_pt(L):
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/site.css">
-  <link rel="stylesheet" href="../assets/css/memory-game.css?v=20260722-cardfix2">
+  <link rel="stylesheet" href="../assets/css/educa4good-sheet.css?v=20260726a">
+  <link rel="stylesheet" href="../assets/css/memory-game.css?v=20260726a">
 </head>
 <body>
 """
@@ -1469,6 +1524,58 @@ def build_memory_game_pt(L):
             <label for="mg-shuffle">Embaralhar a ordem das cartas na folha</label>
           </div>
 
+          <fieldset class="mg__fieldset">
+            <legend>Layout e impressão</legend>
+            <div class="mg__grid-2">
+              <div class="mg__field">
+                <label for="mg-theme">Layout</label>
+                <select id="mg-theme">
+                  <option value="classico">Clássico</option>
+                  <option value="editorial">Editorial</option>
+                  <option value="infantil">Infantil</option>
+                  <option value="caderno">Caderno escolar</option>
+                </select>
+              </div>
+              <div class="mg__field">
+                <label for="mg-color-mode">Impressão</label>
+                <select id="mg-color-mode">
+                  <option value="cor">Colorida</option>
+                  <option value="pb">Preto e branco</option>
+                </select>
+              </div>
+            </div>
+            <div class="mg__field mg__check">
+              <input type="checkbox" id="mg-cut-margin">
+              <label for="mg-cut-margin">Margem tracejada para recortar e colar no caderno</label>
+            </div>
+            <div class="mg__field">
+              <label for="mg-cut-inset">Distância da borda (mm)</label>
+              <input type="range" id="mg-cut-inset" min="3" max="15" step="1" value="6">
+            </div>
+          </fieldset>
+
+          <fieldset class="mg__fieldset">
+            <legend>Cabeçalho</legend>
+            <div class="mg__field mg__check">
+              <input type="checkbox" id="mg-show-school" checked>
+              <label for="mg-show-school">Banda com o nome da escola</label>
+            </div>
+            <div class="mg__field">
+              <label for="mg-school-name">Escola</label>
+              <input type="text" id="mg-school-name" maxlength="60" placeholder="Deixe vazio para preencher à mão">
+            </div>
+            <div class="mg__grid-2">
+              <div class="mg__field">
+                <label for="mg-teacher">Professor(a)</label>
+                <input type="text" id="mg-teacher" maxlength="40" placeholder="—">
+              </div>
+              <div class="mg__field">
+                <label for="mg-year">Ano</label>
+                <input type="text" id="mg-year" maxlength="12" placeholder="—">
+              </div>
+            </div>
+          </fieldset>
+
           <div class="mg__field mg__check">
             <input type="checkbox" id="mg-pair-numbers">
             <label for="mg-pair-numbers">Mostrar número pequeno do par para conferência</label>
@@ -1539,7 +1646,8 @@ def build_memory_game_pt(L):
     </div>
   </div>
 </section>
-<script src="../assets/js/memory-game.js?v=20260722-cardfix2"></script>
+<script src="../assets/js/educa4good-sheet.js?v=20260726a"></script>
+<script src="../assets/js/memory-game.js?v=20260726a"></script>
 """
     return head_html + header(L, "tools") + body + footer(L)
 

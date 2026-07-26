@@ -1,6 +1,6 @@
 /* Educa4Good - Caca-palavras (client-side, sem dependencias).
    As palavras digitadas ficam no navegador e nao sao enviadas a servidores. */
-(function () {
+(function (scope) {
   "use strict";
 
   var MAX_WORDS = 10;
@@ -160,8 +160,47 @@
       child: dom.child.value.trim(),
       date: dom.date.value.trim(),
       klass: dom.klass.value.trim(),
-      includeAnswer: dom.answer.checked
+      includeAnswer: dom.answer.checked,
+      // Padrao visual do projeto, compartilhado por todos os geradores.
+      theme: dom.theme ? dom.theme.value : "classico",
+      colorMode: dom.colorMode ? dom.colorMode.value : "cor",
+      cutMargin: dom.cutMargin ? dom.cutMargin.checked : false,
+      cutInset: dom.cutInset ? Number(dom.cutInset.value) : 6,
+      showSchool: dom.showSchool ? dom.showSchool.checked : true,
+      schoolName: dom.schoolName ? dom.schoolName.value.trim() : "",
+      teacherName: dom.teacher ? dom.teacher.value.trim() : "",
+      year: dom.year ? dom.year.value.trim() : ""
     };
+  }
+
+  /* Cabecalho no padrao \BandaEscola + \CamposIdentificacao. O titulo fica
+     no <h2> que ja existe na pagina, para o gabarito poder acrescentar o
+     sufixo "- gabarito". */
+  function headerHtml(config) {
+    if (!scope.Educa4GoodSheet) return metaHtml(config);
+    return scope.Educa4GoodSheet.headerHtml({
+      showSchool: config.showSchool,
+      schoolName: config.schoolName,
+      showFields: true,
+      className: config.klass,
+      teacherName: config.teacherName,
+      year: config.year
+    });
+  }
+
+  /* Publica a paleta do layout nas duas folhas e liga a margem de recorte. */
+  function applyTheme(config) {
+    if (!scope.Educa4GoodSheet) return;
+    var resolved = scope.Educa4GoodSheet.resolve(config.theme, config.colorMode);
+    var pages = [dom.activityPage, dom.answerPage];
+    for (var i = 0; i < pages.length; i++) {
+      var page = pages[i];
+      if (!page) continue;
+      page.classList.add("e4g-sheet");
+      scope.Educa4GoodSheet.applyCssVariables(page, resolved);
+      page.classList.toggle("has-cut-margin", !!config.cutMargin);
+      page.style.setProperty("--e4g-cut-inset", config.cutInset + "mm");
+    }
   }
 
   function directionText(level) {
@@ -357,8 +396,11 @@
     var title = config.title || "Caça-palavras";
     var instruction = directionText(config.level);
 
-    dom.activityMeta.innerHTML = metaHtml(config);
-    dom.answerMeta.innerHTML = metaHtml(config);
+    applyTheme(config);
+    dom.activityMeta.classList.add("e4g-host");
+    dom.answerMeta.classList.add("e4g-host");
+    dom.activityMeta.innerHTML = headerHtml(config);
+    dom.answerMeta.innerHTML = headerHtml(config);
     dom.activityTitle.textContent = title;
     dom.answerTitle.textContent = title + " - gabarito";
     dom.activityInstruction.textContent = instruction;
@@ -428,7 +470,11 @@
     dom.shuffle.addEventListener("click", generatePuzzle);
     dom.print.addEventListener("click", printPuzzle);
 
-    [dom.title, dom.child, dom.date, dom.klass, dom.answer].forEach(function (element) {
+    [dom.title, dom.child, dom.date, dom.klass, dom.answer,
+     dom.theme, dom.colorMode, dom.cutMargin, dom.cutInset,
+     dom.showSchool, dom.schoolName, dom.teacher, dom.year
+    ].forEach(function (element) {
+      if (!element) return;
       element.addEventListener("input", renderGenerated);
       element.addEventListener("change", renderGenerated);
     });
@@ -459,6 +505,16 @@
     dom.generate = byId("ws-generate");
     dom.shuffle = byId("ws-shuffle");
     dom.print = byId("ws-print");
+    dom.theme = byId("ws-theme");
+    dom.colorMode = byId("ws-color-mode");
+    dom.cutMargin = byId("ws-cut-margin");
+    dom.cutInset = byId("ws-cut-inset");
+    dom.showSchool = byId("ws-show-school");
+    dom.schoolName = byId("ws-school-name");
+    dom.teacher = byId("ws-teacher");
+    dom.year = byId("ws-year");
+    dom.activityPage = byId("ws-activity-page");
+    dom.answerPage = byId("ws-answer-page");
     dom.activityMeta = byId("ws-activity-meta");
     dom.answerMeta = byId("ws-answer-meta");
     dom.activityTitle = byId("ws-activity-title");
@@ -483,4 +539,4 @@
   } else {
     init();
   }
-})();
+})(typeof self !== "undefined" ? self : this);

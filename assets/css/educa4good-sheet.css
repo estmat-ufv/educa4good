@@ -1,0 +1,205 @@
+/* ============================================================
+   Educa4Good — padrão visual das folhas de atividade.
+   Estilos COMPARTILHADOS por todos os geradores do site.
+
+   As cores vêm de custom properties publicadas por
+   assets/js/educa4good-sheet.js (Educa4GoodSheet.applyCssVariables),
+   que espelham pacotes/educa4good_temas.sty. Um gerador só precisa
+   incluir este arquivo e chamar headerHtml().
+   ============================================================ */
+
+.e4g-sheet {
+  --e4g-title: #2b6ca3;
+  --e4g-rule: #e88b33;
+  --e4g-fieldLabel: #51667a;
+  --e4g-fieldLine: #b7cadb;
+  --e4g-ink: #1f5180;
+  --e4g-accent: #e88b33;
+  --e4g-brand: #8aa0b4;
+  --e4g-tint: #eef3f8;
+  --e4g-line: #dde7f0;
+  color: var(--e4g-ink);
+}
+
+/* Contêiner do gerador que hospeda o cabeçalho padrão.
+   Os geradores antigos estilizam esse elemento à sua maneira — o
+   caça-palavras, por exemplo, faz dele uma grade de três colunas com
+   sublinhado em cada span. A classe é aplicada pelo próprio gerador, em vez
+   de depender de `:has()`, que falha silenciosamente em navegador um pouco
+   mais antigo. */
+/* Classe repetida de propósito: `.e4g-host` e `.ws__meta` têm a mesma
+   especificidade, e o CSS do gerador é carregado depois — sem isso, quem
+   ganha depende da ordem dos <link>, que é frágil. */
+.e4g-host.e4g-host {
+  display: block;
+  grid-template-columns: none;
+}
+
+.e4g-host .e4g-header span:not(.e4g-blank) {
+  border-bottom: 0;
+  min-height: 0;
+}
+
+/* ---------- Cabeçalho: \BandaEscola + \CamposIdentificacao ---------- */
+.e4g-header {
+  font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+}
+
+.e4g-school {
+  border: 1.2px solid var(--e4g-title);
+  background: var(--e4g-tint);
+  border-radius: 3.2mm;
+  padding: 2.4mm 4mm;
+  text-align: center;
+  font-size: 4.6mm;
+  font-weight: 800;
+  color: var(--e4g-title);
+  margin-bottom: 2.5mm;
+}
+
+.e4g-fields {
+  border: 1px solid var(--e4g-title);
+  border-radius: 2.8mm;
+  padding: 2.6mm 3.5mm;
+  font-size: 3.4mm;
+  color: var(--e4g-fieldLabel);
+}
+
+.e4g-row {
+  display: flex;
+  align-items: baseline;
+  gap: 2mm;
+  min-height: 5.6mm;
+}
+
+/* Data + Turma na mesma linha; Professor(a) + Ano na mesma linha. */
+.e4g-row--split > * {
+  flex: 1 1 0;
+}
+
+.e4g-row--split > *:last-child {
+  flex: 0 0 38%;
+}
+
+.e4g-field {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5mm;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.e4g-field b {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.e4g-value {
+  color: var(--e4g-ink);
+}
+
+/* Campo vazio vira linha pontilhada para preencher — regra do \educa@campo. */
+.e4g-blank {
+  flex: 1 1 auto;
+  border-bottom: 0.3mm dotted var(--e4g-fieldLine);
+  min-width: 12mm;
+  align-self: flex-end;
+  height: 0.9em;
+}
+
+.e4g-date {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6mm;
+}
+
+.e4g-date i {
+  display: inline-block;
+  width: 6mm;
+  border-bottom: 0.3mm dotted var(--e4g-fieldLine);
+  height: 0.9em;
+}
+
+.e4g-date i.is-wide {
+  width: 10mm;
+}
+
+.e4g-title {
+  margin: 3mm 0 0;
+  text-align: center;
+  font-size: 7.2mm;
+  font-weight: 800;
+  color: var(--e4g-title);
+  line-height: 1.15;
+}
+
+/* Régua de destaque sob o título (temas editorial e caderno). */
+.e4g-sheet[data-e4g-theme="editorial"] .e4g-title::after,
+.e4g-sheet[data-e4g-theme="caderno"] .e4g-title::after {
+  content: "";
+  display: block;
+  width: 53mm;
+  max-width: 34%;
+  height: 0.9mm;
+  margin: 1.6mm auto 0;
+  border-radius: 0.45mm;
+  background: var(--e4g-rule);
+}
+
+.e4g-sheet[data-e4g-theme="caderno"] .e4g-title::after {
+  height: 1.6mm;
+  border-radius: 0.8mm;
+}
+
+/* Moldura arredondada do tema infantil. */
+.e4g-sheet[data-e4g-theme="infantil"] .e4g-body {
+  border: 0.5mm solid var(--e4g-fieldLine);
+  border-radius: 6mm;
+  padding: 3mm;
+}
+
+/* Folha pautada do tema caderno, com painel branco para o conteúdo:
+   sem ele a pauta passa por trás da atividade e disputa a atenção. */
+.e4g-sheet[data-e4g-theme="caderno"] {
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 6.7mm,
+      var(--e4g-ruled, #c9e1f0) 6.7mm,
+      var(--e4g-ruled, #c9e1f0) 6.95mm
+    );
+}
+
+.e4g-sheet[data-e4g-theme="caderno"] .e4g-body {
+  background: #fff;
+  border: 0.3mm solid var(--e4g-ruled, #c9e1f0);
+  border-radius: 3mm;
+  padding: 3mm;
+}
+
+/* Margem tracejada de recorte. */
+.e4g-sheet.has-cut-margin {
+  position: relative;
+}
+
+.e4g-sheet.has-cut-margin::before {
+  content: "";
+  position: absolute;
+  inset: var(--e4g-cut-inset, 6mm);
+  border: var(--e4g-cut-width, 0.35mm) dashed var(--e4g-brand);
+  pointer-events: none;
+}
+
+.e4g-brand {
+  font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+  font-size: 2.9mm;
+  font-weight: 700;
+  color: var(--e4g-brand);
+}
+
+@media print {
+  .e4g-sheet {
+    background: #fff;
+  }
+}
