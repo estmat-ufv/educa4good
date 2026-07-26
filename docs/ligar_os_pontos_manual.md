@@ -171,6 +171,31 @@ fundo com opacidade ajustável.
 
 ---
 
+## 6b. Layout, cores e recorte
+
+**Layout.** Os mesmos quatro do resto do Educa4Good, com as cores idênticas às
+dos PDFs:
+
+| Layout | Cara |
+| --- | --- |
+| **Clássico** | o visual original do projeto |
+| **Editorial** | azul e dourado, régua fina sob o título |
+| **Infantil** | verde e turquesa, moldura arredondada |
+| **Caderno escolar** | folha pautada, margem vermelha e furos |
+
+Trocar de layout também troca as cores dos pontos e dos números — os seletores
+de cor passam a mostrar exatamente o que vai imprimir, e você pode ajustar
+depois.
+
+**Impressão colorida ou preto e branco.** Em preto e branco tudo vira preto e
+cinza, inclusive cores que você escolheu à mão. É a mesma opção `pretoebranco`
+dos PDFs: use quando a escola imprime sem cor.
+
+**Margem tracejada.** Marque *Margem tracejada para recortar e colar no
+caderno* e a folha ganha um retângulo pontilhado. O conteúdo recua para dentro
+dele, então a tesoura não corta ponto, número nem campo de identificação. A
+distância da borda é ajustável de 3 a 15 mm.
+
 ## 7. Imprimir ou exportar
 
 Antes de liberar os botões, o programa confere a folha inteira.

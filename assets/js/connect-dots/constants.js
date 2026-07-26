@@ -44,6 +44,13 @@ export const DEFAULT_SETTINGS = {
   pageSize: "A4",
   orientation: "portrait",
   margin: 14,
+  /** Tema visual, espelhando pacotes/educa4good_temas.sty. */
+  theme: "classico",
+  /** Modo de impressão: "cor" ou "pb" (equivale a [pretoebranco] no LaTeX). */
+  colorMode: "cor",
+  /** Margem tracejada para a criança recortar e colar no caderno. */
+  cutMargin: false,
+  cutMarginInset: 6,
   title: "Ligar os pontos",
   showFields: true,
   fieldName: true,
@@ -66,7 +73,8 @@ export const SETTING_RANGES = {
   margin: { min: 5, max: 30 },
   originalOpacity: { min: 0.05, max: 0.6 },
   inspirationSize: { min: 15, max: 70 },
-  startNumber: { min: 0, max: 500 }
+  startNumber: { min: 0, max: 500 },
+  cutMarginInset: { min: 3, max: 15 }
 };
 
 /** DPI oferecidos na exportação PNG. */

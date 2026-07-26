@@ -1026,6 +1026,31 @@ def build_connect_dots_pt(L):
           </div>
           <div class="cd-grid-2">
             <div class="cd-field">
+              <label for="cd-theme">Layout</label>
+              <select id="cd-theme">
+                <option value="classico">Clássico</option>
+                <option value="editorial">Editorial</option>
+                <option value="infantil">Infantil</option>
+                <option value="caderno">Caderno escolar</option>
+              </select>
+            </div>
+            <div class="cd-field">
+              <label for="cd-color-mode">Impressão</label>
+              <select id="cd-color-mode">
+                <option value="cor">Colorida</option>
+                <option value="pb">Preto e branco</option>
+              </select>
+            </div>
+          </div>
+          <p class="cd-note" id="cd-theme-note"></p>
+          <label class="cd-check"><input type="checkbox" id="cd-cut-margin"> <span>Margem tracejada para recortar e colar no caderno</span></label>
+          <div class="cd-field">
+            <label for="cd-cut-inset">Distância da borda (mm) <output id="cd-cut-inset-out">6</output></label>
+            <input type="range" id="cd-cut-inset" min="3" max="15" step="1" value="6">
+          </div>
+
+          <div class="cd-grid-2">
+            <div class="cd-field">
               <label for="cd-orientation">Orientação</label>
               <select id="cd-orientation">
                 <option value="portrait">A4 retrato</option>

@@ -9,6 +9,7 @@
    `validation.acknowledged`. */
 
 import { LIMITS, STEPS, SETTING_RANGES, EXPORT_DPI } from "./constants.js";
+import { THEMES, resolveTheme } from "./theme.js";
 import { validateFile, detectKind, readAsText, loadRaster, analysisImageData } from "./image-loader.js";
 import { sanitizeSvg } from "./svg-sanitizer.js";
 import { importSvg } from "./svg-importer.js";
@@ -86,6 +87,8 @@ export function createUiController(store) {
       "cd-guide-color", "cd-guide-width", "cd-guide-width-out", "cd-show-guide",
       "cd-numbering", "cd-start-number", "cd-hidden-pairs", "cd-reset-manual",
       "cd-title", "cd-orientation", "cd-margin", "cd-margin-out",
+      "cd-theme", "cd-theme-note", "cd-color-mode", "cd-cut-margin",
+      "cd-cut-inset", "cd-cut-inset-out",
       "cd-show-fields", "cd-field-name", "cd-field-date", "cd-field-class", "cd-field-teacher",
       "cd-show-inspiration", "cd-inspiration-size", "cd-inspiration-size-out",
       "cd-inspiration-pos", "cd-show-original", "cd-original-opacity", "cd-original-opacity-out",
@@ -1217,6 +1220,34 @@ export function createUiController(store) {
     });
     bindSelect("cd-orientation", "orientation");
     bindRange("cd-margin", "margin", "cd-margin-out");
+
+    // Trocar de layout traz junto a paleta do tema, e os seletores de cor
+    // passam a mostrar exatamente o que vai imprimir.
+    dom["cd-theme"]?.addEventListener("change", () => {
+      const id = dom["cd-theme"].value;
+      const { palette } = resolveTheme(id, "cor");
+      patchSettings((s) => {
+        s.theme = id;
+        s.pointColor = palette.dot;
+        s.labelColor = palette.label;
+        s.guideColor = palette.guide;
+      }, { history: true });
+      syncControlsFromState();
+      refresh();
+    });
+    dom["cd-color-mode"]?.addEventListener("change", () => {
+      patchSettings((s) => {
+        s.colorMode = dom["cd-color-mode"].value;
+      });
+      syncControlsFromState();
+    });
+    dom["cd-cut-margin"]?.addEventListener("change", () => {
+      patchSettings((s) => {
+        s.cutMargin = dom["cd-cut-margin"].checked;
+      });
+      syncControlsFromState();
+    });
+    bindRange("cd-cut-inset", "cutMarginInset", "cd-cut-inset-out");
     bindCheckbox("cd-show-fields", "showFields");
     bindCheckbox("cd-field-name", "fieldName");
     bindCheckbox("cd-field-date", "fieldDate");
@@ -1342,6 +1373,18 @@ export function createUiController(store) {
     set("cd-orientation", s.orientation);
     set("cd-margin", s.margin);
     out("cd-margin-out", s.margin);
+    set("cd-theme", s.theme);
+    set("cd-color-mode", s.colorMode);
+    check("cd-cut-margin", s.cutMargin);
+    set("cd-cut-inset", s.cutMarginInset);
+    out("cd-cut-inset-out", s.cutMarginInset);
+    if (dom["cd-cut-inset"]) dom["cd-cut-inset"].disabled = !s.cutMargin;
+    if (dom["cd-theme-note"]) {
+      const theme = THEMES[s.theme] || THEMES.classico;
+      dom["cd-theme-note"].textContent =
+        `${theme.name}: ${theme.hint}` +
+        (s.colorMode === "pb" ? " Em preto e branco as cores viram preto e cinza." : "");
+    }
     check("cd-show-fields", s.showFields);
     check("cd-field-name", s.fieldName);
     check("cd-field-date", s.fieldDate);

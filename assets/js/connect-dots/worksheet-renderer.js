@@ -9,6 +9,7 @@
    devolvem dados/string. Isso é o que permite testá-los no Node. */
 
 import { PAPER } from "./constants.js";
+import { resolveTheme, RULED_SHEET, CUT_MARGIN } from "./theme.js";
 import { fitMatrix, pathsBounds, transformPaths } from "./path-normalizer.js";
 import { samplePaths, describeBreaks } from "./path-sampler.js";
 import { layoutLabels } from "./label-layout.js";
@@ -33,7 +34,12 @@ function round(value, digits = 2) {
 /** Geometria da folha: margens, cabeçalho, faixa de inspiração e área de desenho. */
 export function computeSheetLayout(settings) {
   const paper = (PAPER[settings.pageSize] || PAPER.A4)[settings.orientation] || PAPER.A4.portrait;
-  const margin = settings.margin;
+  // Com margem de recorte, o conteúdo recua para dentro do tracejado: a
+  // tesoura não pode passar por cima de ponto, número ou campo.
+  const cutInset = settings.cutMargin ? settings.cutMarginInset : 0;
+  const margin = settings.cutMargin
+    ? Math.max(settings.margin, cutInset + CUT_MARGIN.clearance)
+    : settings.margin;
   const content = {
     x: margin,
     y: margin,
@@ -78,6 +84,7 @@ export function computeSheetLayout(settings) {
   return {
     paper,
     margin,
+    cutInset,
     content,
     drawing,
     inspiration,
@@ -183,7 +190,12 @@ export function buildWorksheetPlan(state, extra = {}) {
     matrix,
     scale,
     sourceBounds,
-    sourcePreview: normalizeSourcePreview(extra.sourcePreview, state)
+    sourcePreview: normalizeSourcePreview(extra.sourcePreview, state),
+    theme: resolveTheme(settings.theme, settings.colorMode, {
+      dot: settings.pointColor,
+      label: settings.labelColor,
+      guide: settings.guideColor
+    })
   };
 }
 
@@ -218,8 +230,9 @@ function fieldParts(settings) {
  * @returns {string}
  */
 export function renderWorksheetSvg(plan, options = {}) {
-  const { sheet, page, points, segments, labelLayout, paths } = plan;
+  const { sheet, page, points, segments, labelLayout } = plan;
   const settings = plan.state.settings;
+  const { palette, chrome } = plan.theme || resolveTheme(settings.theme, settings.colorMode);
   const interactive = options.interactive === true;
   const out = [];
 
@@ -234,13 +247,26 @@ export function renderWorksheetSvg(plan, options = {}) {
   );
   out.push(`<rect x="0" y="0" width="${page.w}" height="${page.h}" fill="#ffffff"/>`);
 
+  // ------------------------------------------------ cromo do tema (ao fundo)
+  out.push(renderThemeChrome(chrome, palette, sheet, page));
+
   // ------------------------------------------------------------- cabeçalho
   const titleY = sheet.content.y + sheet.titleSize * 0.82;
   out.push(
     `<text x="${round(page.w / 2)}" y="${round(titleY)}" text-anchor="middle" ` +
       `font-family="${FONT_STACK}" font-size="${sheet.titleSize}" font-weight="800" ` +
-      `fill="#1f5180">${escapeXml(settings.title || "Ligar os pontos")}</text>`
+      `fill="${escapeXml(palette.title)}">${escapeXml(settings.title || "Ligar os pontos")}</text>`
   );
+
+  // Régua de destaque sob o título, como nos temas editorial e caderno.
+  if (chrome === "rule" || chrome === "ruled") {
+    const ruleW = Math.min(53, sheet.content.w * 0.34);
+    out.push(
+      `<rect x="${round((page.w - ruleW) / 2)}" y="${round(titleY + 1.6)}" ` +
+        `width="${round(ruleW)}" height="${chrome === "ruled" ? 1.6 : 0.9}" ` +
+        `rx="${chrome === "ruled" ? 0.8 : 0.45}" fill="${escapeXml(palette.rule)}"/>`
+    );
+  }
 
   if (settings.showFields) {
     const parts = fieldParts(settings);
@@ -250,7 +276,10 @@ export function renderWorksheetSvg(plan, options = {}) {
       const totalFlex = parts.reduce((a, p) => a + p.flex, 0);
       const usable = sheet.content.w - gap * (parts.length - 1);
       let x = sheet.content.x;
-      out.push(`<g font-family="${FONT_STACK}" font-size="${sheet.fieldSize}" fill="#51667a">`);
+      out.push(
+        `<g font-family="${FONT_STACK}" font-size="${sheet.fieldSize}" ` +
+          `fill="${escapeXml(palette.fieldLabel)}">`
+      );
       for (const part of parts) {
         const width = (usable * part.flex) / totalFlex;
         const labelWidth = part.label.length * sheet.fieldSize * 0.56 + 2;
@@ -260,7 +289,7 @@ export function renderWorksheetSvg(plan, options = {}) {
         out.push(
           `<line x1="${round(x + labelWidth)}" y1="${round(y + 0.8)}" ` +
             `x2="${round(x + width)}" y2="${round(y + 0.8)}" ` +
-            `stroke="#b7cadb" stroke-width="0.3"/>`
+            `stroke="${escapeXml(palette.fieldLine)}" stroke-width="0.3"/>`
         );
         x += width + gap;
       }
@@ -303,7 +332,7 @@ export function renderWorksheetSvg(plan, options = {}) {
     if (d) {
       out.push(
         `<path data-layer="guides" d="${d}" fill="none" ` +
-          `stroke="${escapeXml(settings.guideColor)}" stroke-width="${settings.guideWidth}" ` +
+          `stroke="${escapeXml(palette.guide)}" stroke-width="${settings.guideWidth}" ` +
           `stroke-linecap="round" stroke-dasharray="${round(settings.guideWidth * 4)} ${round(
             settings.guideWidth * 4
           )}"/>`
@@ -312,7 +341,7 @@ export function renderWorksheetSvg(plan, options = {}) {
   }
 
   // ----------------------------------------------------------------- pontos
-  out.push(`<g data-layer="dots" fill="${escapeXml(settings.pointColor)}">`);
+  out.push(`<g data-layer="dots" fill="${escapeXml(palette.dot)}">`);
   points.forEach((point, index) => {
     const attrs = interactive ? ` data-point-index="${index}" class="cd-dot"` : "";
     out.push(
@@ -325,7 +354,7 @@ export function renderWorksheetSvg(plan, options = {}) {
   out.push(
     `<g data-layer="labels" font-family="${FONT_STACK}" ` +
       `font-size="${settings.labelFontSize}" font-weight="700" ` +
-      `fill="${escapeXml(settings.labelColor)}" text-anchor="middle">`
+      `fill="${escapeXml(palette.label)}" text-anchor="middle">`
   );
   labelLayout.labels.forEach((label, index) => {
     const point = points[index];
@@ -355,19 +384,116 @@ export function renderWorksheetSvg(plan, options = {}) {
   const brandY = sheet.content.y + sheet.content.h - 0.6;
   out.push(
     `<text x="${round(sheet.content.x)}" y="${round(brandY)}" ` +
-      `font-family="${FONT_STACK}" font-size="2.9" font-weight="700" fill="#8aa0b4">Educa4Good</text>`
+      `font-family="${FONT_STACK}" font-size="2.9" font-weight="700" fill="${escapeXml(palette.brand)}">Educa4Good</text>`
   );
   const breakNote = plan.breaks.length
     ? `Não ligue: ${plan.breaks.map((b) => `${b.from}–${b.to}`).join(", ")}`
     : `${points.length} pontos`;
   out.push(
     `<text x="${round(sheet.content.x + sheet.content.w)}" y="${round(brandY)}" ` +
-      `text-anchor="end" font-family="${FONT_STACK}" font-size="2.6" fill="#8aa0b4">` +
+      `text-anchor="end" font-family="${FONT_STACK}" font-size="2.6" fill="${escapeXml(palette.brand)}">` +
       `${escapeXml(breakNote)}</text>`
   );
 
+  // ------------------------------------------------- margem de recorte
+  // Por último, para ficar visível sobre tudo. É o guia da tesoura: a criança
+  // recorta a atividade e cola no caderno.
+  if (settings.cutMargin) {
+    out.push(renderCutMargin(sheet.cutInset, palette, page));
+  }
+
   out.push("</svg>");
   return out.join("");
+}
+
+/**
+ * Elementos de fundo que dão identidade ao tema, espelhando o
+ * `educa4good_temas.sty`. Ficam atrás de tudo e nunca sobre os pontos.
+ */
+function renderThemeChrome(chrome, palette, sheet, page) {
+  if (chrome === "plain") return "";
+
+  const band =
+    `<rect x="0" y="0" width="${page.w}" height="${round(sheet.content.y + sheet.headerHeight - 2)}" ` +
+    `fill="${escapeXml(palette.tint)}"/>`;
+
+  if (chrome === "rule") return band;
+
+  if (chrome === "frame") {
+    return (
+      band +
+      `<rect x="${round(sheet.content.x - 2)}" y="${round(sheet.drawing.y - 3)}" ` +
+      `width="${round(sheet.content.w + 4)}" ` +
+      `height="${round(sheet.drawing.h + 6)}" rx="6" ry="6" fill="none" ` +
+      `stroke="${escapeXml(palette.fieldLine)}" stroke-width="0.5"/>`
+    );
+  }
+
+  if (chrome === "ruled") {
+    // Folha pautada: linhas horizontais, margem vertical e furos, nas mesmas
+    // medidas do tema `caderno` em LaTeX.
+    const parts = [band];
+    const lines = [];
+    for (let y = RULED_SHEET.firstLine; y < page.h - 12; y += RULED_SHEET.lineStep) {
+      lines.push(
+        `M${RULED_SHEET.leftInset} ${round(y)} H${round(page.w - RULED_SHEET.rightInset)}`
+      );
+    }
+    parts.push(
+      `<path data-layer="ruled" d="${lines.join(" ")}" fill="none" ` +
+        `stroke="${escapeXml(palette.ruled || palette.fieldLine)}" stroke-width="0.25"/>`
+    );
+    parts.push(
+      `<line x1="${RULED_SHEET.marginX}" y1="${RULED_SHEET.marginTop}" ` +
+        `x2="${RULED_SHEET.marginX}" y2="${round(page.h - RULED_SHEET.marginBottom)}" ` +
+        `stroke="${escapeXml(palette.marginLine || palette.fieldLine)}" stroke-width="0.4"/>`
+    );
+    const holes = [];
+    for (
+      let y = RULED_SHEET.holeFirstY;
+      y < page.h - RULED_SHEET.holeFirstY / 2;
+      y += RULED_SHEET.holeStep
+    ) {
+      holes.push(
+        `<circle cx="${RULED_SHEET.holeX}" cy="${round(y)}" r="${RULED_SHEET.holeRadius}" ` +
+          `fill="#ffffff" stroke="${escapeXml(palette.ruled || palette.fieldLine)}" stroke-width="0.25"/>`
+      );
+    }
+    parts.push(holes.join(""));
+
+    // Painel branco sobre a pauta, na área de desenho. No LaTeX o tema
+    // `caderno` faz o mesmo: as caixas de conteúdo têm `fill=white` sobre o
+    // fundo pautado. Sem isso a pauta passa por trás dos pontos e disputa a
+    // atenção justamente onde a criança precisa enxergar.
+    parts.push(
+      `<rect x="${round(sheet.content.x - 2)}" y="${round(sheet.drawing.y - 3)}" ` +
+        `width="${round(sheet.content.w + 4)}" height="${round(sheet.drawing.h + 6)}" ` +
+        `rx="3" ry="3" fill="#ffffff" ` +
+        `stroke="${escapeXml(palette.ruled || palette.fieldLine)}" stroke-width="0.3"/>`
+    );
+    return parts.join("");
+  }
+  return "";
+}
+
+/**
+ * Retângulo tracejado de recorte.
+ *
+ * Sem texto e sem glifo de tesoura de propósito: um glifo depende da fonte
+ * instalada e vira quadradinho onde falta, e qualquer legenda perto da borda
+ * cai na faixa que a maioria das impressoras não imprime. O tracejado sozinho
+ * já é convenção universal, e o manual explica.
+ */
+function renderCutMargin(inset, palette, page) {
+  const [on, off] = CUT_MARGIN.dash;
+  return (
+    `<g data-layer="cut-margin">` +
+    `<rect x="${round(inset)}" y="${round(inset)}" ` +
+    `width="${round(page.w - inset * 2)}" height="${round(page.h - inset * 2)}" ` +
+    `fill="none" stroke="${escapeXml(palette.brand)}" stroke-width="${CUT_MARGIN.width}" ` +
+    `stroke-dasharray="${on} ${off}" stroke-linecap="butt"/>` +
+    `</g>`
+  );
 }
 
 function inset(rect, amount) {
