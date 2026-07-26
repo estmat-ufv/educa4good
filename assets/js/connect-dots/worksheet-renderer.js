@@ -49,7 +49,22 @@ export function computeSheetLayout(settings) {
 
   const titleSize = 7.2;
   const fieldSize = 3.4;
-  const headerHeight = titleSize + 3 + (settings.showFields ? fieldSize + 5 : 0);
+
+  // Cabeçalho no padrão do projeto, na mesma ordem do LaTeX:
+  // \BandaEscola -> \CamposIdentificacao -> \TituloAtividade.
+  const schoolBand = settings.showSchool
+    ? { x: content.x, y: content.y, w: content.w, h: 10 }
+    : null;
+
+  const fieldRows = countFieldRows(settings);
+  const fieldsTop = content.y + (schoolBand ? schoolBand.h + 2.5 : 0);
+  const fieldsBox =
+    settings.showFields && fieldRows > 0
+      ? { x: content.x, y: fieldsTop, w: content.w, h: 5 + fieldRows * 5.6, rows: fieldRows }
+      : null;
+
+  const titleTop = fieldsBox ? fieldsBox.y + fieldsBox.h + 3 : fieldsTop;
+  const headerHeight = titleTop - content.y + titleSize + 3;
   const footerHeight = 5;
 
   let bandHeight = 0;
@@ -88,11 +103,26 @@ export function computeSheetLayout(settings) {
     content,
     drawing,
     inspiration,
+    schoolBand,
+    fieldsBox,
+    titleTop,
     titleSize,
     fieldSize,
     headerHeight,
     footerHeight
   };
+}
+
+/**
+ * Linhas da caixa de identificação, no formato do `\CamposIdentificacao`:
+ * Nome sozinho, Data + Turma juntos, Professor(a) + Ano juntos.
+ */
+function countFieldRows(settings) {
+  let rows = 0;
+  if (settings.fieldName) rows += 1;
+  if (settings.fieldDate || settings.fieldClass) rows += 1;
+  if (settings.fieldTeacher || settings.fieldYear) rows += 1;
+  return rows;
 }
 
 /**
@@ -251,7 +281,11 @@ export function renderWorksheetSvg(plan, options = {}) {
   out.push(renderThemeChrome(chrome, palette, sheet, page));
 
   // ------------------------------------------------------------- cabeçalho
-  const titleY = sheet.content.y + sheet.titleSize * 0.82;
+  // Mesma estrutura do LaTeX: banda da escola, caixa de identificação com
+  // Nome / Data + Turma / Professor(a) + Ano, e só então o título.
+  out.push(renderHeader(sheet, settings, palette));
+
+  const titleY = sheet.titleTop + sheet.titleSize * 0.82;
   out.push(
     `<text x="${round(page.w / 2)}" y="${round(titleY)}" text-anchor="middle" ` +
       `font-family="${FONT_STACK}" font-size="${sheet.titleSize}" font-weight="800" ` +
@@ -266,35 +300,6 @@ export function renderWorksheetSvg(plan, options = {}) {
         `width="${round(ruleW)}" height="${chrome === "ruled" ? 1.6 : 0.9}" ` +
         `rx="${chrome === "ruled" ? 0.8 : 0.45}" fill="${escapeXml(palette.rule)}"/>`
     );
-  }
-
-  if (settings.showFields) {
-    const parts = fieldParts(settings);
-    if (parts.length) {
-      const y = sheet.content.y + sheet.titleSize + 3 + sheet.fieldSize;
-      const gap = 4;
-      const totalFlex = parts.reduce((a, p) => a + p.flex, 0);
-      const usable = sheet.content.w - gap * (parts.length - 1);
-      let x = sheet.content.x;
-      out.push(
-        `<g font-family="${FONT_STACK}" font-size="${sheet.fieldSize}" ` +
-          `fill="${escapeXml(palette.fieldLabel)}">`
-      );
-      for (const part of parts) {
-        const width = (usable * part.flex) / totalFlex;
-        const labelWidth = part.label.length * sheet.fieldSize * 0.56 + 2;
-        out.push(
-          `<text x="${round(x)}" y="${round(y)}" font-weight="700">${escapeXml(part.label)}:</text>`
-        );
-        out.push(
-          `<line x1="${round(x + labelWidth)}" y1="${round(y + 0.8)}" ` +
-            `x2="${round(x + width)}" y2="${round(y + 0.8)}" ` +
-            `stroke="${escapeXml(palette.fieldLine)}" stroke-width="0.3"/>`
-        );
-        x += width + gap;
-      }
-      out.push("</g>");
-    }
   }
 
   // ------------------------------------------------- imagem original (fundo)
@@ -403,6 +408,143 @@ export function renderWorksheetSvg(plan, options = {}) {
   }
 
   out.push("</svg>");
+  return out.join("");
+}
+
+/** Largura aproximada de um rótulo em negrito, em milímetros. */
+function labelWidth(text, size) {
+  return String(text).length * size * 0.56;
+}
+
+/** Linha pontilhada de preenchimento, equivalente ao `\dotfill` do LaTeX. */
+function dotted(x1, x2, y, color) {
+  if (x2 - x1 < 2) return "";
+  return (
+    `<line x1="${round(x1)}" y1="${round(y)}" x2="${round(x2)}" y2="${round(y)}" ` +
+    `stroke="${escapeXml(color)}" stroke-width="0.3" stroke-linecap="round" ` +
+    `stroke-dasharray="0.15 1.1"/>`
+  );
+}
+
+/**
+ * Campo "Rótulo: ....." — mostra o valor quando existe, senão deixa a linha
+ * pontilhada para preencher à mão. Mesma regra do `\educa@campo`.
+ */
+function field(x, y, width, label, value, size, palette) {
+  const lw = labelWidth(label, size);
+  const parts = [
+    `<text x="${round(x)}" y="${round(y)}" font-weight="700">${escapeXml(label)}</text>`
+  ];
+  const from = x + lw + 1;
+  const to = x + width;
+  if (value) {
+    parts.push(
+      `<text x="${round(from)}" y="${round(y)}" font-weight="400">${escapeXml(value)}</text>`
+    );
+  } else {
+    parts.push(dotted(from, to, y + 0.6, palette.fieldLine));
+  }
+  return parts.join("");
+}
+
+/**
+ * Cabeçalho no padrão do Educa4Good, espelhando `\BandaEscola` e
+ * `\CamposIdentificacao` do `pacotes/educa4good.sty`:
+ *
+ *   [ banda com o nome da escola ]
+ *   [ Nome: ..............................  ]
+ *   [ Data: __/__/____        Turma: ...... ]
+ *   [ Professor(a): .....       Ano: ...... ]
+ */
+function renderHeader(sheet, settings, palette) {
+  const out = [];
+  const size = sheet.fieldSize;
+
+  if (sheet.schoolBand) {
+    const b = sheet.schoolBand;
+    out.push(
+      `<rect x="${round(b.x)}" y="${round(b.y)}" width="${round(b.w)}" height="${round(b.h)}" ` +
+        `rx="3.2" ry="3.2" fill="${escapeXml(palette.tint)}" ` +
+        `stroke="${escapeXml(palette.title)}" stroke-width="0.45"/>`
+    );
+    const baseline = b.y + b.h / 2 + size * 0.45;
+    if (settings.schoolName) {
+      out.push(
+        `<text x="${round(b.x + b.w / 2)}" y="${round(baseline)}" text-anchor="middle" ` +
+          `font-family="${FONT_STACK}" font-size="${round(size * 1.35)}" font-weight="800" ` +
+          `fill="${escapeXml(palette.title)}">${escapeXml(settings.schoolName)}</text>`
+      );
+    } else {
+      out.push(
+        `<g font-family="${FONT_STACK}" font-size="${size}" fill="${escapeXml(palette.fieldLabel)}">` +
+          `<text x="${round(b.x + 4)}" y="${round(baseline)}" font-weight="700">Escola:</text>` +
+          dotted(b.x + 4 + labelWidth("Escola:", size) + 1.5, b.x + b.w - 4, baseline + 0.6, palette.fieldLine) +
+          `</g>`
+      );
+    }
+  }
+
+  if (!sheet.fieldsBox) return out.join("");
+
+  const box = sheet.fieldsBox;
+  out.push(
+    `<rect x="${round(box.x)}" y="${round(box.y)}" width="${round(box.w)}" ` +
+      `height="${round(box.h)}" rx="2.8" ry="2.8" fill="none" ` +
+      `stroke="${escapeXml(palette.title)}" stroke-width="0.4"/>`
+  );
+
+  const pad = 3.5;
+  const rowH = 5.6;
+  const left = box.x + pad;
+  const right = box.x + box.w - pad;
+  const split = box.x + box.w * 0.62;
+  out.push(
+    `<g font-family="${FONT_STACK}" font-size="${size}" fill="${escapeXml(palette.fieldLabel)}">`
+  );
+
+  let row = 0;
+  const baseline = () => box.y + pad + size * 0.8 + row * rowH;
+
+  if (settings.fieldName) {
+    out.push(field(left, baseline(), right - left, "Nome:", "", size, palette));
+    row += 1;
+  }
+
+  if (settings.fieldDate || settings.fieldClass) {
+    const y = baseline();
+    if (settings.fieldDate) {
+      // Data em três lacunas curtas: __/__/____, como no LaTeX.
+      const lw = labelWidth("Data:", size);
+      out.push(`<text x="${round(left)}" y="${round(y)}" font-weight="700">Data:</text>`);
+      let x = left + lw + 1.5;
+      for (const w of [6, 6, 10]) {
+        out.push(dotted(x, x + w, y + 0.6, palette.fieldLine));
+        x += w;
+        if (w !== 10) {
+          out.push(`<text x="${round(x + 0.4)}" y="${round(y)}" font-weight="400">/</text>`);
+          x += 2.2;
+        }
+      }
+    }
+    if (settings.fieldClass) {
+      out.push(field(split, y, right - split, "Turma:", settings.className, size, palette));
+    }
+    row += 1;
+  }
+
+  if (settings.fieldTeacher || settings.fieldYear) {
+    const y = baseline();
+    if (settings.fieldTeacher) {
+      const width = (settings.fieldYear ? split : right) - left - 2;
+      out.push(field(left, y, width, "Professor(a):", settings.teacherName, size, palette));
+    }
+    if (settings.fieldYear) {
+      out.push(field(split, y, right - split, "Ano:", settings.year, size, palette));
+    }
+    row += 1;
+  }
+
+  out.push("</g>");
   return out.join("");
 }
 

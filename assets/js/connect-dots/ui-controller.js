@@ -90,6 +90,8 @@ export function createUiController(store) {
       "cd-theme", "cd-theme-note", "cd-color-mode", "cd-cut-margin",
       "cd-cut-inset", "cd-cut-inset-out",
       "cd-show-fields", "cd-field-name", "cd-field-date", "cd-field-class", "cd-field-teacher",
+      "cd-show-school", "cd-school-name", "cd-field-year",
+      "cd-class-name", "cd-teacher-name", "cd-year",
       "cd-show-inspiration", "cd-inspiration-size", "cd-inspiration-size-out",
       "cd-inspiration-pos", "cd-show-original", "cd-original-opacity", "cd-original-opacity-out",
       "cd-sheet-view", "cd-validation", "cd-breaks", "cd-undo", "cd-redo", "cd-restart",
@@ -1248,7 +1250,21 @@ export function createUiController(store) {
       syncControlsFromState();
     });
     bindRange("cd-cut-inset", "cutMarginInset", "cd-cut-inset-out");
+    bindCheckbox("cd-show-school", "showSchool");
     bindCheckbox("cd-show-fields", "showFields");
+    bindCheckbox("cd-field-year", "fieldYear");
+    for (const [id, key] of [
+      ["cd-school-name", "schoolName"],
+      ["cd-class-name", "className"],
+      ["cd-teacher-name", "teacherName"],
+      ["cd-year", "year"]
+    ]) {
+      dom[id]?.addEventListener("input", () => {
+        patchSettings((s) => {
+          s[key] = dom[id].value;
+        });
+      });
+    }
     bindCheckbox("cd-field-name", "fieldName");
     bindCheckbox("cd-field-date", "fieldDate");
     bindCheckbox("cd-field-class", "fieldClass");
@@ -1385,7 +1401,13 @@ export function createUiController(store) {
         `${theme.name}: ${theme.hint}` +
         (s.colorMode === "pb" ? " Em preto e branco as cores viram preto e cinza." : "");
     }
+    check("cd-show-school", s.showSchool);
+    set("cd-school-name", s.schoolName);
     check("cd-show-fields", s.showFields);
+    check("cd-field-year", s.fieldYear);
+    set("cd-class-name", s.className);
+    set("cd-teacher-name", s.teacherName);
+    set("cd-year", s.year);
     check("cd-field-name", s.fieldName);
     check("cd-field-date", s.fieldDate);
     check("cd-field-class", s.fieldClass);

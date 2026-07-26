@@ -341,14 +341,35 @@
             </div>
           </div>
           <fieldset class="cd-fieldset">
-            <legend>Identificação</legend>
-            <label class="cd-check"><input type="checkbox" id="cd-show-fields" checked> <span>Mostrar linha de identificação</span></label>
-            <div class="cd-grid-2">
+            <legend>Cabeçalho</legend>
+            <label class="cd-check"><input type="checkbox" id="cd-show-school" checked> <span>Banda com o nome da escola</span></label>
+            <div class="cd-field">
+              <label for="cd-school-name">Escola</label>
+              <input type="text" id="cd-school-name" maxlength="60" placeholder="Deixe vazio para preencher à mão">
+            </div>
+            <label class="cd-check"><input type="checkbox" id="cd-show-fields" checked> <span>Caixa de identificação</span></label>
+            <div class="cd-grid-3">
               <label class="cd-check"><input type="checkbox" id="cd-field-name" checked> <span>Nome</span></label>
               <label class="cd-check"><input type="checkbox" id="cd-field-date" checked> <span>Data</span></label>
               <label class="cd-check"><input type="checkbox" id="cd-field-class" checked> <span>Turma</span></label>
-              <label class="cd-check"><input type="checkbox" id="cd-field-teacher"> <span>Professor(a)</span></label>
+              <label class="cd-check"><input type="checkbox" id="cd-field-teacher" checked> <span>Professor(a)</span></label>
+              <label class="cd-check"><input type="checkbox" id="cd-field-year" checked> <span>Ano</span></label>
             </div>
+            <div class="cd-grid-3">
+              <div class="cd-field">
+                <label for="cd-class-name">Turma</label>
+                <input type="text" id="cd-class-name" maxlength="24" placeholder="—">
+              </div>
+              <div class="cd-field">
+                <label for="cd-teacher-name">Professor(a)</label>
+                <input type="text" id="cd-teacher-name" maxlength="40" placeholder="—">
+              </div>
+              <div class="cd-field">
+                <label for="cd-year">Ano</label>
+                <input type="text" id="cd-year" maxlength="12" placeholder="—">
+              </div>
+            </div>
+            <p class="cd-note">Campo preenchido aqui sai impresso; vazio sai como linha pontilhada. Nome e Data ficam sempre em branco, para a criança escrever.</p>
           </fieldset>
           <fieldset class="cd-fieldset">
             <legend>Imagem de inspiração</legend>
