@@ -1,6 +1,6 @@
 /* Educa4Good - Colorir por Numeros (client-side, sem dependencias).
    A imagem escolhida fica no navegador e nao e enviada para servidores. */
-(function () {
+(function (scope) {
   "use strict";
 
   var MAX_FILE_SIZE = 12 * 1024 * 1024;
@@ -127,7 +127,16 @@
       simplifyBg: dom.simplifyBg.checked,
       child: dom.child.value.trim(),
       date: dom.date.value.trim(),
-      klass: dom.klass.value.trim()
+      klass: dom.klass.value.trim(),
+      // Padrao visual do projeto, compartilhado por todos os geradores.
+      theme: dom.theme ? dom.theme.value : "classico",
+      colorMode: dom.colorMode ? dom.colorMode.value : "cor",
+      cutMargin: dom.cutMargin ? dom.cutMargin.checked : false,
+      cutInset: dom.cutInset ? Number(dom.cutInset.value) : 6,
+      showSchool: dom.showSchool ? dom.showSchool.checked : true,
+      schoolName: dom.schoolName ? dom.schoolName.value.trim() : "",
+      teacherName: dom.teacher ? dom.teacher.value.trim() : "",
+      year: dom.year ? dom.year.value.trim() : ""
     };
   }
 
@@ -1107,6 +1116,32 @@
     }).join("");
   }
 
+  /* Cabecalho no padrao \BandaEscola + \CamposIdentificacao. Os <h2> da
+     pagina continuam com o titulo, que distingue atividade e gabarito. */
+  function sheetHeaderHtml(config) {
+    if (!scope.Educa4GoodSheet) return metaHtml(config);
+    return scope.Educa4GoodSheet.headerHtml({
+      showSchool: config.showSchool,
+      schoolName: config.schoolName,
+      showFields: true,
+      className: config.klass,
+      teacherName: config.teacherName,
+      year: config.year
+    });
+  }
+
+  function applyTheme(config) {
+    if (!scope.Educa4GoodSheet) return;
+    var resolved = scope.Educa4GoodSheet.resolve(config.theme, config.colorMode);
+    var pages = document.querySelectorAll(".cbn__page");
+    for (var i = 0; i < pages.length; i++) {
+      pages[i].classList.add("e4g-sheet");
+      scope.Educa4GoodSheet.applyCssVariables(pages[i], resolved);
+      pages[i].classList.toggle("has-cut-margin", !!config.cutMargin);
+      pages[i].style.setProperty("--e4g-cut-inset", config.cutInset + "mm");
+    }
+  }
+
   function legendHtml() {
     if (!state.result) return "";
     return state.result.palette.map(function (item) {
@@ -1120,8 +1155,11 @@
     var config = getConfig();
     var activity = drawActivity(false);
     var answer = drawFlat(state.result.labels, state.result.w, state.result.h, state.result.palette, { boundaries: true, boundaryColor: "rgba(38,57,75,0.32)", boundaryWidth: 1 });
-    dom.printMeta.innerHTML = metaHtml(config);
-    dom.answerMeta.innerHTML = metaHtml(config);
+    applyTheme(config);
+    dom.printMeta.classList.add("e4g-host");
+    dom.answerMeta.classList.add("e4g-host");
+    dom.printMeta.innerHTML = sheetHeaderHtml(config);
+    dom.answerMeta.innerHTML = sheetHeaderHtml(config);
     dom.printTitle.textContent = config.title || "Colorir por números";
     dom.answerTitle.textContent = "Gabarito — " + (config.title || "Colorir por números");
     dom.printActivityImg.src = activity.toDataURL("image/png");
@@ -1443,8 +1481,13 @@
       renderPreview();
       updatePrintAssets();
     });
-    [dom.title, dom.child, dom.date, dom.klass].forEach(function (input) {
+    [dom.title, dom.child, dom.date, dom.klass,
+     dom.theme, dom.colorMode, dom.cutMargin, dom.cutInset,
+     dom.showSchool, dom.schoolName, dom.teacher, dom.year
+    ].forEach(function (input) {
+      if (!input) return;
       input.addEventListener("input", updatePrintAssets);
+      input.addEventListener("change", updatePrintAssets);
     });
     window.addEventListener("afterprint", function () {
       document.body.classList.remove("cbn-print-answer-only");
@@ -1487,6 +1530,14 @@
     dom.selectedLabel = byId("cbn-selected-label");
     dom.paintedCount = byId("cbn-painted-count");
     dom.regionCount = byId("cbn-region-count");
+    dom.theme = byId("cbn-theme");
+    dom.colorMode = byId("cbn-color-mode");
+    dom.cutMargin = byId("cbn-cut-margin");
+    dom.cutInset = byId("cbn-cut-inset");
+    dom.showSchool = byId("cbn-show-school");
+    dom.schoolName = byId("cbn-school-name");
+    dom.teacher = byId("cbn-teacher");
+    dom.year = byId("cbn-year");
     dom.printMeta = byId("cbn-print-meta");
     dom.answerMeta = byId("cbn-answer-meta");
     dom.printTitle = byId("cbn-print-title");
@@ -1507,4 +1558,4 @@
   } else {
     init();
   }
-})();
+})(typeof self !== "undefined" ? self : this);

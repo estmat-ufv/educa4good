@@ -1914,7 +1914,8 @@ def build_color_by_number_pt(L):
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/site.css">
-  <link rel="stylesheet" href="../assets/css/color-by-number.css?v=20260723-cbn5">
+  <link rel="stylesheet" href="../assets/css/educa4good-sheet.css?v=20260726a">
+  <link rel="stylesheet" href="../assets/css/color-by-number.css?v=20260726a">
 </head>
 <body>
 """
@@ -2045,6 +2046,58 @@ def build_color_by_number_pt(L):
             </div>
           </fieldset>
 
+          <fieldset class="cbn__fieldset">
+            <legend>Layout e impressão</legend>
+            <div class="cbn__grid-2">
+              <div class="cbn__field">
+                <label for="cbn-theme">Layout</label>
+                <select id="cbn-theme">
+                  <option value="classico">Clássico</option>
+                  <option value="editorial">Editorial</option>
+                  <option value="infantil">Infantil</option>
+                  <option value="caderno">Caderno escolar</option>
+                </select>
+              </div>
+              <div class="cbn__field">
+                <label for="cbn-color-mode">Impressão da folha</label>
+                <select id="cbn-color-mode">
+                  <option value="cor">Colorida</option>
+                  <option value="pb">Preto e branco</option>
+                </select>
+              </div>
+            </div>
+            <div class="cbn__field cbn__check">
+              <input type="checkbox" id="cbn-cut-margin">
+              <label for="cbn-cut-margin">Margem tracejada para recortar e colar no caderno</label>
+            </div>
+            <div class="cbn__field">
+              <label for="cbn-cut-inset">Distância da borda (mm)</label>
+              <input type="range" id="cbn-cut-inset" min="3" max="15" step="1" value="6">
+            </div>
+          </fieldset>
+
+          <fieldset class="cbn__fieldset">
+            <legend>Cabeçalho</legend>
+            <div class="cbn__field cbn__check">
+              <input type="checkbox" id="cbn-show-school" checked>
+              <label for="cbn-show-school">Banda com o nome da escola</label>
+            </div>
+            <div class="cbn__field">
+              <label for="cbn-school-name">Escola</label>
+              <input type="text" id="cbn-school-name" maxlength="60" placeholder="Deixe vazio para preencher à mão">
+            </div>
+            <div class="cbn__grid-2">
+              <div class="cbn__field">
+                <label for="cbn-teacher">Professor(a)</label>
+                <input type="text" id="cbn-teacher" maxlength="40" placeholder="—">
+              </div>
+              <div class="cbn__field">
+                <label for="cbn-year">Ano</label>
+                <input type="text" id="cbn-year" maxlength="12" placeholder="—">
+              </div>
+            </div>
+          </fieldset>
+
           <div class="cbn__actions">
             <button type="button" class="btn btn--primary" id="cbn-generate"><span aria-hidden="true">↻</span> Gerar atividade</button>
             <button type="button" class="btn btn--ghost" id="cbn-regenerate" disabled><span aria-hidden="true">✦</span> Gerar novamente</button>
@@ -2117,7 +2170,8 @@ def build_color_by_number_pt(L):
     </div>
   </div>
 </section>
-<script src="../assets/js/color-by-number.js?v=20260723-cbn5"></script>
+<script src="../assets/js/educa4good-sheet.js?v=20260726a"></script>
+<script src="../assets/js/color-by-number.js?v=20260726a"></script>
 """
     return head_html + header(L, "tools") + body + footer(L)
 
