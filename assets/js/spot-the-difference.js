@@ -1,6 +1,6 @@
 /* Educa4Good - Encontre as Diferencas (client-side, sem dependencias).
    A imagem escolhida fica no navegador e nao e enviada para servidores. */
-(function () {
+(function (scope) {
   "use strict";
 
   var MAX_FILE_SIZE = 12 * 1024 * 1024;
@@ -54,8 +54,43 @@
       count: Math.max(3, Math.min(10, parseInt(dom.count.value, 10) || 5)),
       child: dom.child.value.trim(),
       date: dom.date.value.trim(),
-      klass: dom.klass.value.trim()
+      klass: dom.klass.value.trim(),
+      // Padrao visual do projeto, compartilhado por todos os geradores.
+      theme: dom.theme ? dom.theme.value : "classico",
+      colorMode: dom.colorMode ? dom.colorMode.value : "cor",
+      cutMargin: dom.cutMargin ? dom.cutMargin.checked : false,
+      cutInset: dom.cutInset ? Number(dom.cutInset.value) : 6,
+      showSchool: dom.showSchool ? dom.showSchool.checked : true,
+      schoolName: dom.schoolName ? dom.schoolName.value.trim() : "",
+      teacherName: dom.teacher ? dom.teacher.value.trim() : "",
+      year: dom.year ? dom.year.value.trim() : ""
     };
+  }
+
+  /* Cabecalho no padrao \BandaEscola + \CamposIdentificacao. O titulo fica
+     nos <h2> proprios da pagina, que distinguem atividade e gabarito. */
+  function sheetHeaderHtml(config) {
+    if (!scope.Educa4GoodSheet) return metaHtml(config);
+    return scope.Educa4GoodSheet.headerHtml({
+      showSchool: config.showSchool,
+      schoolName: config.schoolName,
+      showFields: true,
+      className: config.klass,
+      teacherName: config.teacherName,
+      year: config.year
+    });
+  }
+
+  function applyTheme(config) {
+    if (!scope.Educa4GoodSheet) return;
+    var resolved = scope.Educa4GoodSheet.resolve(config.theme, config.colorMode);
+    var pages = document.querySelectorAll(".diff__page");
+    for (var i = 0; i < pages.length; i++) {
+      pages[i].classList.add("e4g-sheet");
+      scope.Educa4GoodSheet.applyCssVariables(pages[i], resolved);
+      pages[i].classList.toggle("has-cut-margin", !!config.cutMargin);
+      pages[i].style.setProperty("--e4g-cut-inset", config.cutInset + "mm");
+    }
   }
 
   function makeCanvas(w, h) {
@@ -384,8 +419,11 @@
     state.modifiedDataUrl = state.modifiedCanvas.toDataURL("image/png");
     state.answerDataUrl = makeAnswerDataUrl();
 
-    dom.printMeta.innerHTML = metaHtml(config);
-    dom.answerMeta.innerHTML = metaHtml(config);
+    applyTheme(config);
+    dom.printMeta.classList.add("e4g-host");
+    dom.answerMeta.classList.add("e4g-host");
+    dom.printMeta.innerHTML = sheetHeaderHtml(config);
+    dom.answerMeta.innerHTML = sheetHeaderHtml(config);
     dom.printTitle.textContent = config.title || "Encontre as diferenças";
     dom.answerTitle.textContent = "Gabarito — " + (config.title || "Encontre as diferenças");
     dom.printCount.textContent = String(state.diffs.length || config.count);
@@ -703,8 +741,13 @@
     dom.canvasOriginal.addEventListener("click", onCanvasClick);
     dom.canvasModified.addEventListener("click", onCanvasClick);
 
-    [dom.title, dom.child, dom.date, dom.klass].forEach(function (input) {
+    [dom.title, dom.child, dom.date, dom.klass,
+     dom.theme, dom.colorMode, dom.cutMargin, dom.cutInset,
+     dom.showSchool, dom.schoolName, dom.teacher, dom.year
+    ].forEach(function (input) {
+      if (!input) return;
       input.addEventListener("input", updatePrintAssets);
+      input.addEventListener("change", updatePrintAssets);
     });
     dom.count.addEventListener("change", function () {
       updateScore();
@@ -739,6 +782,14 @@
     dom.canvasModified = byId("diff-canvas-modified");
     dom.found = byId("diff-found");
     dom.total = byId("diff-total");
+    dom.theme = byId("diff-theme");
+    dom.colorMode = byId("diff-color-mode");
+    dom.cutMargin = byId("diff-cut-margin");
+    dom.cutInset = byId("diff-cut-inset");
+    dom.showSchool = byId("diff-show-school");
+    dom.schoolName = byId("diff-school-name");
+    dom.teacher = byId("diff-teacher");
+    dom.year = byId("diff-year");
     dom.printMeta = byId("diff-print-meta");
     dom.answerMeta = byId("diff-answer-meta");
     dom.printTitle = byId("diff-print-title");
@@ -758,4 +809,4 @@
   } else {
     init();
   }
-})();
+})(typeof self !== "undefined" ? self : this);

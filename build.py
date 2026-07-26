@@ -1682,7 +1682,8 @@ def build_spot_difference_pt(L):
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/site.css">
-  <link rel="stylesheet" href="../assets/css/spot-the-difference.css?v=20260722-diff1">
+  <link rel="stylesheet" href="../assets/css/educa4good-sheet.css?v=20260726a">
+  <link rel="stylesheet" href="../assets/css/spot-the-difference.css?v=20260726a">
 </head>
 <body>
 """
@@ -1739,6 +1740,58 @@ def build_spot_difference_pt(L):
               <option value="10">10 diferenças — Desafio</option>
             </select>
           </div>
+
+          <fieldset class="diff__fieldset">
+            <legend>Layout e impressão</legend>
+            <div class="diff__grid-2">
+              <div class="diff__field">
+                <label for="diff-theme">Layout</label>
+                <select id="diff-theme">
+                  <option value="classico">Clássico</option>
+                  <option value="editorial">Editorial</option>
+                  <option value="infantil">Infantil</option>
+                  <option value="caderno">Caderno escolar</option>
+                </select>
+              </div>
+              <div class="diff__field">
+                <label for="diff-color-mode">Impressão</label>
+                <select id="diff-color-mode">
+                  <option value="cor">Colorida</option>
+                  <option value="pb">Preto e branco</option>
+                </select>
+              </div>
+            </div>
+            <div class="diff__field diff__check">
+              <input type="checkbox" id="diff-cut-margin">
+              <label for="diff-cut-margin">Margem tracejada para recortar e colar no caderno</label>
+            </div>
+            <div class="diff__field">
+              <label for="diff-cut-inset">Distância da borda (mm)</label>
+              <input type="range" id="diff-cut-inset" min="3" max="15" step="1" value="6">
+            </div>
+          </fieldset>
+
+          <fieldset class="diff__fieldset">
+            <legend>Cabeçalho</legend>
+            <div class="diff__field diff__check">
+              <input type="checkbox" id="diff-show-school" checked>
+              <label for="diff-show-school">Banda com o nome da escola</label>
+            </div>
+            <div class="diff__field">
+              <label for="diff-school-name">Escola</label>
+              <input type="text" id="diff-school-name" maxlength="60" placeholder="Deixe vazio para preencher à mão">
+            </div>
+            <div class="diff__grid-2">
+              <div class="diff__field">
+                <label for="diff-teacher">Professor(a)</label>
+                <input type="text" id="diff-teacher" maxlength="40" placeholder="—">
+              </div>
+              <div class="diff__field">
+                <label for="diff-year">Ano</label>
+                <input type="text" id="diff-year" maxlength="12" placeholder="—">
+              </div>
+            </div>
+          </fieldset>
 
           <fieldset class="diff__fieldset">
             <legend>Identificação opcional</legend>
@@ -1825,7 +1878,8 @@ def build_spot_difference_pt(L):
     </div>
   </div>
 </section>
-<script src="../assets/js/spot-the-difference.js?v=20260722-diff1"></script>
+<script src="../assets/js/educa4good-sheet.js?v=20260726a"></script>
+<script src="../assets/js/spot-the-difference.js?v=20260726a"></script>
 """
     return head_html + header(L, "tools") + body + footer(L)
 
